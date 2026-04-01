@@ -4,7 +4,7 @@ import eventsRaw from '@/data/events.json'
 import partnersRaw from '@/data/partners.json'
 
 const teamData = teamRaw satisfies PoleData[]
-const eventsData = eventsRaw satisfies Event[]
+const eventsData = eventsRaw as Event[]
 const partnersData = partnersRaw satisfies Partner[]
 
 export function getTeam(): PoleData[] {

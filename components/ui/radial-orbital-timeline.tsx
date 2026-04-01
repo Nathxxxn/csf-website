@@ -94,7 +94,7 @@ export default function RadialOrbitalTimeline({
     const update = () => {
       if (containerRef.current) {
         const w = containerRef.current.offsetWidth;
-        setRadius(Math.floor(w * 0.42));
+        setRadius(Math.floor(Math.min(w * 0.32, 420)));
       }
     };
     update();
@@ -145,7 +145,7 @@ export default function RadialOrbitalTimeline({
 
   return (
     <div
-      className="w-full h-full flex flex-col items-center justify-center bg-background overflow-hidden"
+      className="w-full h-full flex flex-col items-center justify-center bg-background overflow-visible"
       ref={containerRef}
       onClick={handleContainerClick}
     >

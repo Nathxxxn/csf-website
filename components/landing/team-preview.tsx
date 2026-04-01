@@ -7,9 +7,9 @@ export function TeamPreview() {
   const team = getTeam()
 
   return (
-    <section className="py-24 border-t border-border">
+    <section className="pt-12 pb-4 border-t border-border">
       <BlurFade delay={0} inView>
-        <div className="flex items-end justify-between mb-4 px-6 max-w-6xl mx-auto">
+        <div className="flex items-end justify-between mb-2 px-6 max-w-6xl mx-auto">
           <div>
             <p className="text-xs tracking-widest uppercase text-muted-foreground mb-2">
               Organisation
@@ -25,7 +25,7 @@ export function TeamPreview() {
         </div>
       </BlurFade>
 
-      <div className="h-[700px]">
+      <div className="h-[900px]">
         <RadialOrbitalTimeline poleData={team} />
       </div>
     </section>

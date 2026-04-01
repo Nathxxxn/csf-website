@@ -1,0 +1,65 @@
+[
+  {
+    "pole": "Bureau",
+    "badge": "Bureau",
+    "description": "Pilote la stratégie de l'association, coordonne les pôles et représente CSF auprès des partenaires et de l'école.",
+    "members": [
+      { "name": "Prénom Nom", "role": "Président(e)", "photo": null, "linkedin": null },
+      { "name": "Prénom Nom", "role": "Vice-Président(e)", "photo": null, "linkedin": null },
+      { "name": "Prénom Nom", "role": "Trésorier(ère)", "photo": null, "linkedin": null },
+      { "name": "Prénom Nom", "role": "Secrétaire", "photo": null, "linkedin": null }
+    ]
+  },
+  {
+    "pole": "Finance de Marché",
+    "badge": "Marchés",
+    "description": "Trading, produits dérivés, analyse quantitative. Organisation de mock-trading sessions et partenariats avec les desks de banques.",
+    "members": [
+      { "name": "Prénom Nom", "role": "Responsable", "photo": null, "linkedin": null },
+      { "name": "Prénom Nom", "role": "Analyste", "photo": null, "linkedin": null },
+      { "name": "Prénom Nom", "role": "Analyste", "photo": null, "linkedin": null },
+      { "name": "Prénom Nom", "role": "Analyste", "photo": null, "linkedin": null },
+      { "name": "Prénom Nom", "role": "Analyste", "photo": null, "linkedin": null }
+    ]
+  },
+  {
+    "pole": "Finance d'Entreprise",
+    "badge": "Corporate",
+    "description": "M&A, LBO, valorisation, conseil stratégique. Crack the Case, workshops avec banques d'affaires et cabinets de conseil.",
+    "members": [
+      { "name": "Prénom Nom", "role": "Responsable", "photo": null, "linkedin": null },
+      { "name": "Prénom Nom", "role": "Analyste", "photo": null, "linkedin": null },
+      { "name": "Prénom Nom", "role": "Analyste", "photo": null, "linkedin": null },
+      { "name": "Prénom Nom", "role": "Analyste", "photo": null, "linkedin": null }
+    ]
+  },
+  {
+    "pole": "Formation",
+    "badge": "Skills",
+    "description": "Excel financier, Python quantitatif, préparation CFA, SIG. Sessions de formation hebdomadaires pour les membres.",
+    "members": [
+      { "name": "Prénom Nom", "role": "Responsable", "photo": null, "linkedin": null },
+      { "name": "Prénom Nom", "role": "Formateur(trice)", "photo": null, "linkedin": null },
+      { "name": "Prénom Nom", "role": "Formateur(trice)", "photo": null, "linkedin": null }
+    ]
+  },
+  {
+    "pole": "Alumni",
+    "badge": "Network",
+    "description": "Réseau des anciens en poste dans la finance. Mentorat, sessions de networking, soirées alumni.",
+    "members": [
+      { "name": "Prénom Nom", "role": "Responsable", "photo": null, "linkedin": null },
+      { "name": "Prénom Nom", "role": "Chargé(e) Alumni", "photo": null, "linkedin": null }
+    ]
+  },
+  {
+    "pole": "Partenariat",
+    "badge": "Business Dev",
+    "description": "Relations entreprises, sponsoring, conventions partenaires. Interface entre CSF et les institutions financières.",
+    "members": [
+      { "name": "Prénom Nom", "role": "Responsable", "photo": null, "linkedin": null },
+      { "name": "Prénom Nom", "role": "Chargé(e) de compte", "photo": null, "linkedin": null },
+      { "name": "Prénom Nom", "role": "Chargé(e) de compte", "photo": null, "linkedin": null }
+    ]
+  }
+]

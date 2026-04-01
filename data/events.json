@@ -1,0 +1,62 @@
+[
+  {
+    "id": "mock-trading-bnp-2025-04",
+    "title": "Mock Trading Session",
+    "date": "2025-04-15",
+    "partner": "BNP Paribas CIB",
+    "pole": "Finance de Marché",
+    "description": "Simulation de trading en live avec des traders senior. Accès aux outils professionnels de BNP Paribas CIB.",
+    "image": null,
+    "status": "upcoming"
+  },
+  {
+    "id": "crack-the-case-mckinsey-2025-04",
+    "title": "Crack the Case",
+    "date": "2025-04-22",
+    "partner": "McKinsey & Company",
+    "pole": "Finance d'Entreprise",
+    "description": "Workshop case study M&A en présence de consultants senior. Simulation d'entretien incluse.",
+    "image": null,
+    "status": "upcoming"
+  },
+  {
+    "id": "alumni-networking-2025-05",
+    "title": "Alumni Networking Evening",
+    "date": "2025-05-05",
+    "partner": "Alumni CSF",
+    "pole": "Alumni",
+    "description": "Soirée networking avec des alumni en poste dans des institutions financières de premier rang.",
+    "image": null,
+    "status": "upcoming"
+  },
+  {
+    "id": "sales-trading-gs-2025-03",
+    "title": "Sales & Trading Day",
+    "date": "2025-03-10",
+    "partner": "Goldman Sachs",
+    "pole": "Finance de Marché",
+    "description": "Une journée immersive dans les desks de trading de Goldman Sachs à Paris. 30 membres présents, sessions Q&A avec des MDs.",
+    "image": null,
+    "status": "past"
+  },
+  {
+    "id": "ma-conference-lazard-2025-02",
+    "title": "M&A Conference",
+    "date": "2025-02-18",
+    "partner": "Lazard",
+    "pole": "Finance d'Entreprise",
+    "description": "Conférence sur les grandes transactions M&A de 2024. Présentation des deals par des banquiers d'affaires Lazard.",
+    "image": null,
+    "status": "past"
+  },
+  {
+    "id": "cfa-bootcamp-2025-01",
+    "title": "CFA Study Bootcamp",
+    "date": "2025-01-25",
+    "partner": "CSF Formation",
+    "pole": "Formation",
+    "description": "Weekend intensif de préparation CFA Level 1. 40 participants, taux de réussite élevé aux sessions suivantes.",
+    "image": null,
+    "status": "past"
+  }
+]

@@ -1,0 +1,8 @@
+{"type":"server-started","port":52767,"host":"127.0.0.1","url_host":"localhost","url":"http://localhost:52767","screen_dir":"/Users/nathandifraja/CSF_website/.superpowers/brainstorm/39709-1775041107/content","state_dir":"/Users/nathandifraja/CSF_website/.superpowers/brainstorm/39709-1775041107/state"}
+{"type":"screen-added","file":"/Users/nathandifraja/CSF_website/.superpowers/brainstorm/39709-1775041107/content/landing-layout.html"}
+{"type":"screen-added","file":"/Users/nathandifraja/CSF_website/.superpowers/brainstorm/39709-1775041107/content/accent-color.html"}
+{"type":"screen-added","file":"/Users/nathandifraja/CSF_website/.superpowers/brainstorm/39709-1775041107/content/waiting.html"}
+{"type":"screen-added","file":"/Users/nathandifraja/CSF_website/.superpowers/brainstorm/39709-1775041107/content/design-landing.html"}
+{"type":"screen-added","file":"/Users/nathandifraja/CSF_website/.superpowers/brainstorm/39709-1775041107/content/design-landing-v2.html"}
+{"type":"screen-added","file":"/Users/nathandifraja/CSF_website/.superpowers/brainstorm/39709-1775041107/content/component-map.html"}
+{"type":"server-stopped","reason":"idle timeout"}

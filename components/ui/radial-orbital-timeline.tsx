@@ -94,7 +94,7 @@ export default function RadialOrbitalTimeline({
     const update = () => {
       if (containerRef.current) {
         const w = containerRef.current.offsetWidth;
-        setRadius(Math.floor(Math.min(w * 0.16, 210)));
+        setRadius(Math.floor(Math.min(w * 0.24, 315)));
       }
     };
     update();

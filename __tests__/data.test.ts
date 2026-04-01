@@ -16,6 +16,7 @@ describe('getEvents', () => {
   it('returns an array of events', () => {
     const events = getEvents()
     expect(Array.isArray(events)).toBe(true)
+    expect(events.length).toBeGreaterThan(0)
     expect(events[0]).toHaveProperty('id')
     expect(events[0]).toHaveProperty('status')
   })
@@ -33,6 +34,14 @@ describe('getUpcomingEvents', () => {
     const events = getUpcomingEvents()
     events.forEach(e => expect(e.status).toBe('upcoming'))
   })
+
+  it('returns upcoming events sorted ascending by date', () => {
+    const events = getUpcomingEvents()
+    for (let i = 1; i < events.length; i++) {
+      expect(new Date(events[i].date).getTime())
+        .toBeGreaterThanOrEqual(new Date(events[i - 1].date).getTime())
+    }
+  })
 })
 
 describe('getPastEvents', () => {
@@ -40,12 +49,21 @@ describe('getPastEvents', () => {
     const events = getPastEvents()
     events.forEach(e => expect(e.status).toBe('past'))
   })
+
+  it('returns past events sorted descending by date', () => {
+    const events = getPastEvents()
+    for (let i = 1; i < events.length; i++) {
+      expect(new Date(events[i].date).getTime())
+        .toBeLessThanOrEqual(new Date(events[i - 1].date).getTime())
+    }
+  })
 })
 
 describe('getPartners', () => {
   it('returns an array of partners', () => {
     const partners = getPartners()
     expect(Array.isArray(partners)).toBe(true)
+    expect(partners.length).toBeGreaterThan(0)
     expect(partners[0]).toHaveProperty('name')
     expect(partners[0]).toHaveProperty('logo')
   })

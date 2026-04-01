@@ -1,10 +1,9 @@
 [
   { "name": "Goldman Sachs", "logo": "/images/partners/goldman.png" },
   { "name": "BNP Paribas CIB", "logo": "/images/partners/bnp.png" },
-  { "name": "McKinsey & Company", "logo": "/images/partners/mckinsey.png" },
   { "name": "Lazard", "logo": "/images/partners/lazard.png" },
-  { "name": "JP Morgan", "logo": "/images/partners/jpmorgan.png" },
   { "name": "Société Générale", "logo": "/images/partners/socgen.png" },
   { "name": "Rothschild & Co", "logo": "/images/partners/rothschild.png" },
-  { "name": "BCG", "logo": "/images/partners/bcg.png" }
+  { "name": "Eight Advisory", "logo": "/images/partners/eight-advisory.png" },
+  { "name": "PMP Strategy", "logo": "/images/partners/pmp-strategy.png" }
 ]

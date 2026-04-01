@@ -63,7 +63,7 @@ export function Hero() {
         <BlurFade delay={0.2} inView>
           <div className="mb-8 rounded-full border border-border px-4 py-1.5">
             <AnimatedShinyText className="text-xs tracking-widest uppercase text-muted-foreground">
-              Association · CentraleSupélec · 2024–2025
+              Association · CentraleSupélec · 2026–2027
             </AnimatedShinyText>
           </div>
         </BlurFade>

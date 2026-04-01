@@ -15,7 +15,7 @@ export function Footer() {
             className="mix-blend-screen opacity-50"
           />
           <span className="text-xs text-muted-foreground">
-            CentraleSupélec Finance · 2024–2025
+            CentraleSupélec Finance · 2026–2027
           </span>
         </div>
         <div className="flex items-center gap-6 text-xs text-muted-foreground">

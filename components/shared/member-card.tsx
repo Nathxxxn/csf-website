@@ -41,11 +41,11 @@ export function MemberCard({ member }: MemberCardProps) {
           </MagicCard>
         </div>
       </HoverCardTrigger>
-      {member.linkedin && (
-        <HoverCardContent className="w-64 bg-card border-border">
-          <div className="flex flex-col gap-2">
-            <p className="text-sm font-semibold">{member.name}</p>
-            <p className="text-xs text-muted-foreground">{member.role}</p>
+      <HoverCardContent className="w-64 bg-card border-border">
+        <div className="flex flex-col gap-2">
+          <p className="text-sm font-semibold">{member.name}</p>
+          <p className="text-xs text-muted-foreground">{member.role}</p>
+          {member.linkedin && (
             <a
               href={member.linkedin}
               target="_blank"
@@ -54,9 +54,9 @@ export function MemberCard({ member }: MemberCardProps) {
             >
               LinkedIn →
             </a>
-          </div>
-        </HoverCardContent>
-      )}
+          )}
+        </div>
+      </HoverCardContent>
     </HoverCard>
   )
 }

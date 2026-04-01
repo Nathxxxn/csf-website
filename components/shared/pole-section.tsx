@@ -9,10 +9,12 @@ interface PoleSectionProps {
 }
 
 export function PoleSection({ pole, index }: PoleSectionProps) {
-  const avatarUrls = pole.members.map(m => ({
-    imageUrl: m.photo ?? '',
-    profileUrl: m.linkedin ?? '#',
-  }))
+  const avatarUrls = pole.members
+    .filter(m => m.photo !== null)
+    .map(m => ({
+      imageUrl: m.photo as string,
+      profileUrl: m.linkedin ?? '#',
+    }))
 
   return (
     <BlurFade delay={index * 0.1} inView>
@@ -24,7 +26,7 @@ export function PoleSection({ pole, index }: PoleSectionProps) {
             </span>
             <h3 className="text-2xl font-bold tracking-tight">{pole.pole}</h3>
             <AvatarCircles
-              numPeople={0}
+              numPeople={pole.members.length - avatarUrls.length}
               avatarUrls={avatarUrls}
               className="mt-1"
             />

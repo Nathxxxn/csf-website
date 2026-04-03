@@ -92,7 +92,6 @@ function MemberCard({ member }: { member: Member }) {
   const hasSkills = Array.isArray(member.skills) && member.skills.length > 0
 
   return (
-    <MotionConfig reducedMotion="user">
     <motion.div variants={itemVariants} className="[perspective:1000px]">
       <motion.div
         style={shouldReduceMotion ? undefined : { rotateX, rotateY, transformStyle: "preserve-3d" }}
@@ -233,7 +232,6 @@ function MemberCard({ member }: { member: Member }) {
         </Card>
       </motion.div>
     </motion.div>
-    </MotionConfig>
   )
 }
 
@@ -295,10 +293,11 @@ interface TeamPolesSectionProps {
 
 export function TeamPolesSection({ poles }: TeamPolesSectionProps) {
   return (
-    <section
-      aria-labelledby="team-poles-heading"
-      className="relative w-full overflow-hidden px-4 py-16 sm:px-6 lg:px-10"
-    >
+    <MotionConfig reducedMotion="user">
+      <section
+        aria-labelledby="team-poles-heading"
+        className="relative w-full overflow-hidden px-4 py-16 sm:px-6 lg:px-10"
+      >
       {/* Background glow */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute -left-32 top-1/4 h-80 w-80 rounded-full bg-primary/10 blur-[120px]" />
@@ -337,6 +336,7 @@ export function TeamPolesSection({ poles }: TeamPolesSectionProps) {
           <PoleSection key={pole.pole} pole={pole} />
         ))}
       </div>
-    </section>
+      </section>
+    </MotionConfig>
   )
 }

@@ -14,10 +14,13 @@ import {
 } from "@/components/ui/animated-gallery"
 import type { Event } from "@/lib/types"
 
-interface EventItemProps {
-  event: Event
-  isRevealed: boolean
-  priority?: boolean
+// One entry per photo — multiple per event
+interface GalleryItem {
+  eventId: string
+  title: string
+  partner: string
+  date: string
+  image: string
 }
 
 function formatDate(dateStr: string): string {
@@ -27,29 +30,49 @@ function formatDate(dateStr: string): string {
   }).format(new Date(dateStr))
 }
 
-function EventItem({ event, isRevealed, priority }: EventItemProps) {
+/** Flatten each event's images[] into individual gallery items */
+function toGalleryItems(events: Event[]): GalleryItem[] {
+  return events.flatMap((event) => {
+    const imgs = event.images.length > 0 ? event.images : event.image ? [event.image] : []
+    return imgs.map((image) => ({
+      eventId: event.id,
+      title: event.title,
+      partner: event.partner,
+      date: event.date,
+      image,
+    }))
+  })
+}
+
+interface GalleryItemCardProps {
+  item: GalleryItem
+  isRevealed: boolean
+  priority?: boolean
+}
+
+function GalleryItemCard({ item, isRevealed, priority }: GalleryItemCardProps) {
   const card = (
-    <div className={cn("relative group aspect-video w-full overflow-hidden rounded-md shadow", isRevealed && "cursor-pointer")}>
-      {event.image ? (
-        <Image
-          src={event.image}
-          alt={event.title}
-          fill
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
-          sizes="(max-width: 768px) 100vw, 33vw"
-          priority={priority}
-        />
-      ) : (
-        <div className="w-full h-full bg-secondary" />
+    <div
+      className={cn(
+        "relative group aspect-video w-full overflow-hidden rounded-md shadow",
+        isRevealed && "cursor-pointer"
       )}
+    >
+      <Image
+        src={item.image}
+        alt={item.title}
+        fill
+        className="object-cover transition-transform duration-500 group-hover:scale-105"
+        sizes="(max-width: 768px) 100vw, 33vw"
+        priority={priority}
+      />
       {/* Hover overlay: partner + date */}
       <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3">
         <p className="text-white text-sm font-semibold leading-tight truncate">
-          {event.partner}
+          {item.partner}
         </p>
-        <p className="text-white/60 text-xs mt-0.5">{formatDate(event.date)}</p>
+        <p className="text-white/60 text-xs mt-0.5">{formatDate(item.date)}</p>
       </div>
-      {/* Ring indicator when gallery is fully revealed */}
       {isRevealed && (
         <div className="absolute inset-0 ring-1 ring-white/10 rounded-md pointer-events-none" />
       )}
@@ -58,7 +81,7 @@ function EventItem({ event, isRevealed, priority }: EventItemProps) {
 
   if (isRevealed) {
     return (
-      <Link href={`/evenements/${event.id}`} className="block">
+      <Link href={`/evenements/${item.eventId}`} className="block">
         {card}
       </Link>
     )
@@ -77,29 +100,57 @@ function ScrollTracker({ events }: ScrollTrackerProps) {
   const [isRevealed, setIsRevealed] = React.useState(false)
 
   useMotionValueEvent(scrollYProgress, "change", (value) => {
-    setIsRevealed(value > 0.75)
+    setIsRevealed(value > 0.25)
   })
 
-  // Distribute 6 events across 3 columns: [0,3], [1,4], [2,5]
-  const col1 = [events[0], events[3]].filter(Boolean)
-  const col2 = [events[1], events[4]].filter(Boolean)
-  const col3 = [events[2], events[5]].filter(Boolean)
+  const items = toGalleryItems(events)
 
+  // Round-robin distribution across 3 columns
+  const col1 = items.filter((_, i) => i % 3 === 0)
+  const col2 = items.filter((_, i) => i % 3 === 1)
+  const col3 = items.filter((_, i) => i % 3 === 2)
+
+  // Scroll range: [0, 0.25] = frozen during flip; [0.25, 1] = browse upward
+  // Small positive initial y on col2/col3 creates stagger without CSS margin hacks
   return (
     <GalleryContainer>
-      <GalleryCol yRange={["-10%", "2%"]} className="-mt-2">
-        {col1.map((event, i) => (
-          <EventItem key={event.id} event={event} isRevealed={isRevealed} priority={i === 0} />
+      <GalleryCol
+        scrollRange={[0, 0.25, 1]}
+        yRange={["0vh", "0vh", "-150vh"]}
+      >
+        {col1.map((item, i) => (
+          <GalleryItemCard
+            key={`${item.eventId}-${item.image}`}
+            item={item}
+            isRevealed={isRevealed}
+            priority={i === 0}
+          />
         ))}
       </GalleryCol>
-      <GalleryCol className="mt-[-40%]" yRange={["15%", "5%"]}>
-        {col2.map((event, i) => (
-          <EventItem key={event.id} event={event} isRevealed={isRevealed} priority={i === 0} />
+      <GalleryCol
+        scrollRange={[0, 0.25, 1]}
+        yRange={["12vh", "12vh", "-138vh"]}
+      >
+        {col2.map((item, i) => (
+          <GalleryItemCard
+            key={`${item.eventId}-${item.image}`}
+            item={item}
+            isRevealed={isRevealed}
+            priority={i === 0}
+          />
         ))}
       </GalleryCol>
-      <GalleryCol yRange={["-10%", "2%"]} className="-mt-2">
-        {col3.map((event, i) => (
-          <EventItem key={event.id} event={event} isRevealed={isRevealed} priority={i === 0} />
+      <GalleryCol
+        scrollRange={[0, 0.25, 1]}
+        yRange={["4vh", "4vh", "-146vh"]}
+      >
+        {col3.map((item, i) => (
+          <GalleryItemCard
+            key={`${item.eventId}-${item.image}`}
+            item={item}
+            isRevealed={isRevealed}
+            priority={i === 0}
+          />
         ))}
       </GalleryCol>
     </GalleryContainer>
@@ -114,7 +165,6 @@ export function EventsGallery({ events }: EventsGalleryProps) {
   return (
     <MotionConfig reducedMotion="user">
       <div className="relative">
-        {/* Subtle ambient glow matching dark theme */}
         <div
           className="pointer-events-none absolute z-10 h-[60vh] w-full top-0"
           style={{
@@ -124,7 +174,7 @@ export function EventsGallery({ events }: EventsGalleryProps) {
             mixBlendMode: "screen",
           }}
         />
-        <ContainerScroll className="relative h-[300vh]">
+        <ContainerScroll className="relative h-[700vh]">
           <ContainerSticky className="h-svh">
             <ScrollTracker events={events} />
           </ContainerSticky>

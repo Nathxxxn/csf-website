@@ -1,8 +1,10 @@
 "use client"
 
 import { useState } from "react"
+import Image from "next/image"
 import {
   motion,
+  MotionConfig,
   useMotionValue,
   useReducedMotion,
   useSpring,
@@ -16,6 +18,15 @@ import { Card } from "@/components/ui/card"
 import type { PoleData, Member } from "@/lib/types"
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function toPoleId(pole: string): string {
+  return pole
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+}
 
 function getInitials(name: string): string {
   return name
@@ -81,6 +92,7 @@ function MemberCard({ member }: { member: Member }) {
   const hasSkills = Array.isArray(member.skills) && member.skills.length > 0
 
   return (
+    <MotionConfig reducedMotion="user">
     <motion.div variants={itemVariants} className="[perspective:1000px]">
       <motion.div
         style={shouldReduceMotion ? undefined : { rotateX, rotateY, transformStyle: "preserve-3d" }}
@@ -114,12 +126,14 @@ function MemberCard({ member }: { member: Member }) {
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
               >
-                <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border border-border/60 bg-secondary">
+                <div className="relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border border-border/60 bg-secondary">
                   {member.photo ? (
-                    <img
+                    <Image
                       src={member.photo}
                       alt={member.name}
-                      className="h-full w-full object-cover"
+                      fill
+                      className="object-cover"
+                      sizes="80px"
                     />
                   ) : (
                     <span className="select-none text-lg font-semibold text-foreground/70">
@@ -161,7 +175,7 @@ function MemberCard({ member }: { member: Member }) {
                   animate={{ opacity: isHovered ? 1 : 0.65 }}
                   transition={{ duration: 0.3 }}
                 >
-                  {member.skills!.map((skill) => (
+                  {member.skills?.map((skill) => (
                     <Badge
                       key={skill}
                       variant="outline"
@@ -188,7 +202,7 @@ function MemberCard({ member }: { member: Member }) {
                       asChild
                     >
                       <a
-                        href={member.linkedin!}
+                        href={member.linkedin ?? "#"}
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={`LinkedIn de ${member.name}`}
@@ -219,6 +233,7 @@ function MemberCard({ member }: { member: Member }) {
         </Card>
       </motion.div>
     </motion.div>
+    </MotionConfig>
   )
 }
 
@@ -233,9 +248,10 @@ function getGridCols(count: number): string {
 
 function PoleSection({ pole }: { pole: PoleData }) {
   const gridCols = getGridCols(pole.members.length)
+  const poleId = toPoleId(pole.pole)
 
   return (
-    <section aria-labelledby={`pole-${pole.badge}-heading`} className="mb-20">
+    <section aria-labelledby={`pole-${poleId}-heading`} className="mb-20">
       {/* Pole header */}
       <div className="mb-8 text-center">
         <Badge
@@ -245,7 +261,7 @@ function PoleSection({ pole }: { pole: PoleData }) {
           {pole.badge}
         </Badge>
         <h3
-          id={`pole-${pole.badge}-heading`}
+          id={`pole-${poleId}-heading`}
           className="mb-2 text-2xl font-semibold tracking-tight text-foreground"
         >
           {pole.pole}
@@ -263,8 +279,8 @@ function PoleSection({ pole }: { pole: PoleData }) {
         viewport={{ once: true, margin: "-60px" }}
         className={`grid gap-5 ${gridCols}`}
       >
-        {pole.members.map((member, idx) => (
-          <MemberCard key={`${pole.pole}-${idx}`} member={member} />
+        {pole.members.map((member) => (
+          <MemberCard key={`${pole.pole}-${member.name}`} member={member} />
         ))}
       </motion.div>
     </section>

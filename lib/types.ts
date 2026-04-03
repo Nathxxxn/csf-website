@@ -3,6 +3,9 @@ export interface Member {
   role: string
   photo: string | null
   linkedin: string | null
+  bio?: string
+  skills?: string[]
+  email?: string
 }
 
 export interface PoleData {

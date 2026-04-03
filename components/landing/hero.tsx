@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -7,7 +8,23 @@ import { AnimatedShinyText } from "@/components/ui/animated-shiny-text";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
 
-function FloatingPaths({ position }: { position: number }) {
+// ─── Timing constants (synchronized with page-loader.tsx) ──────────────────────
+// Loader displays for 1800ms, then fades over 1100ms.
+const PATHS_BLOOM_START_MS = 700   // 200ms before loader starts fading
+const PATHS_BLOOM_DURATION = 0.8   // seconds — paths emerge over this duration
+const TEXT_BADGE_DELAY  = 1.0      // seconds from mount
+const TEXT_TITLE_DELAY  = 1.15
+const TEXT_SUB_DELAY    = 1.35
+const TEXT_BTNS_DELAY   = 1.5
+
+function FloatingPaths({ position, bloomDelay }: { position: number; bloomDelay: number }) {
+  const [bloomed, setBloomed] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setBloomed(true), bloomDelay);
+    return () => clearTimeout(timer);
+  }, [bloomDelay]);
+
   const paths = Array.from({ length: 36 }, (_, i) => ({
     id: i,
     d: `M-${380 - i * 5 * position} -${189 + i * 6}C-${
@@ -31,17 +48,26 @@ function FloatingPaths({ position }: { position: number }) {
             stroke="currentColor"
             strokeWidth={path.width}
             strokeOpacity={0.1 + path.id * 0.03}
-            initial={{ pathLength: 0.3, opacity: 0.6 }}
-            animate={{
-              pathLength: 1,
-              opacity: [0.3, 0.6, 0.3],
-              pathOffset: [0, 1, 0],
-            }}
-            transition={{
-              duration: 20 + Math.random() * 10,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "linear",
-            }}
+            initial={{ pathLength: 0.3, opacity: 0.05 }}
+            animate={
+              bloomed
+                ? {
+                    pathLength: 1,
+                    opacity: [0.3, 0.6, 0.3],
+                    pathOffset: [0, 1, 0],
+                  }
+                : { opacity: 0.05 }
+            }
+            transition={
+              bloomed
+                ? {
+                    duration: 20 + Math.random() * 10,
+                    repeat: Number.POSITIVE_INFINITY,
+                    ease: "linear",
+                    opacity: { duration: PATHS_BLOOM_DURATION, ease: "easeOut" },
+                  }
+                : { duration: PATHS_BLOOM_DURATION, ease: "easeOut" }
+            }
           />
         ))}
       </svg>
@@ -55,12 +81,12 @@ export function Hero() {
   return (
     <section className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-background pt-16">
       <div className="absolute inset-0">
-        <FloatingPaths position={1} />
-        <FloatingPaths position={-1} />
+        <FloatingPaths position={1} bloomDelay={PATHS_BLOOM_START_MS} />
+        <FloatingPaths position={-1} bloomDelay={PATHS_BLOOM_START_MS} />
       </div>
 
       <div className="relative z-10 flex flex-col items-center px-6 max-w-4xl mx-auto text-center">
-        <BlurFade delay={0.2} inView>
+        <BlurFade delay={TEXT_BADGE_DELAY} inView>
           <div className="mb-8 rounded-full border border-border px-4 py-1.5">
             <AnimatedShinyText className="text-xs tracking-widest uppercase text-muted-foreground">
               Association · CentraleSupélec · 2026–2027
@@ -71,7 +97,7 @@ export function Hero() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1 }}
+          transition={{ duration: 0.8, delay: TEXT_TITLE_DELAY }}
         >
           <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold tracking-tighter leading-none mb-6">
             {TITLE_WORDS.map((word, wordIndex) => (
@@ -82,7 +108,7 @@ export function Hero() {
                     initial={{ y: 60, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{
-                      delay: wordIndex * 0.1 + letterIndex * 0.03,
+                      delay: TEXT_TITLE_DELAY + wordIndex * 0.1 + letterIndex * 0.03,
                       type: "spring",
                       stiffness: 150,
                       damping: 25,
@@ -97,13 +123,13 @@ export function Hero() {
           </h1>
         </motion.div>
 
-        <BlurFade delay={0.6} inView>
+        <BlurFade delay={TEXT_SUB_DELAY} inView>
           <p className="text-base sm:text-lg text-muted-foreground max-w-xl leading-relaxed mb-10">
             L&apos;association finance de référence à CentraleSupélec. Événements exclusifs, formations intensives, réseau industrie.
           </p>
         </BlurFade>
 
-        <BlurFade delay={0.75} inView>
+        <BlurFade delay={TEXT_BTNS_DELAY} inView>
           <div className="flex flex-col sm:flex-row gap-3 items-center">
             <Link href="/evenements">
               <ShimmerButton className="px-8 py-3 text-sm font-semibold">

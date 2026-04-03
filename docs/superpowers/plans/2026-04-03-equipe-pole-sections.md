@@ -1,32 +1,137 @@
+# Équipe — Sections par pôle Implementation Plan
+
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+
+**Goal:** Ajouter sous le RadialOrbitalTimeline existant une section détaillée par pôle, avec des cartes membres animées (3D tilt, hover effects) adaptées au contexte de l'association CSF.
+
+**Architecture:** Le composant `TeamPolesSection` est un Client Component qui reçoit les données `PoleData[]` depuis la page serveur. Il itère sur les 6 pôles et rend pour chacun une section avec header (badge + titre + description) et une grille responsive de `MemberCard` animés. Le composant s'insère sous le `RadialOrbitalTimeline` dans `app/equipe/page.tsx`, sans remplacer la visualisation existante.
+
+**Tech Stack:** Next.js 16 App Router, TypeScript 5, Tailwind CSS v4, framer-motion v12 (déjà installé), lucide-react (déjà installé), shadcn/ui Badge + Button + Card (déjà présents dans `/components/ui/`)
+
+---
+
+## File Structure
+
+| Fichier | Action | Responsabilité |
+|---------|--------|---------------|
+| `lib/types.ts` | Modify | Étendre `Member` avec champs optionnels `bio?`, `skills?`, `email?` |
+| `components/ui/team-pole-section.tsx` | **Create** | Composant principal `TeamPolesSection` + `PoleSection` + `MemberCard` |
+| `app/equipe/page.tsx` | Modify | Importer et rendre `TeamPolesSection` sous `RadialOrbitalTimeline` |
+
+---
+
+## Task 1: Extend Member type with optional fields
+
+**Files:**
+- Modify: `lib/types.ts:1-6`
+
+- [ ] **Step 1: Update the Member interface**
+
+Remplacer le contenu actuel de `lib/types.ts` (l'interface `Member`) :
+
+```typescript
+export interface Member {
+  name: string
+  role: string
+  photo: string | null
+  linkedin: string | null
+  bio?: string
+  skills?: string[]
+  email?: string
+}
+
+export interface PoleData {
+  pole: string
+  badge: string
+  description: string
+  members: Member[]
+}
+
+export interface Event {
+  id: string
+  title: string
+  date: string
+  partner: string
+  pole: string
+  description: string
+  image: string | null
+  status: 'upcoming' | 'past'
+}
+
+export interface Partner {
+  name: string
+  logo: string
+}
+```
+
+- [ ] **Step 2: Verify TypeScript still compiles**
+
+```bash
+cd /Users/nathandifraja/CSF_website && npx tsc --noEmit
+```
+
+Expected: aucune erreur (les nouveaux champs sont optionnels, les données existantes restent valides).
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add lib/types.ts
+git commit -m "feat: extend Member type with optional bio, skills, email fields"
+```
+
+---
+
+## Task 2: Create TeamPolesSection component
+
+**Files:**
+- Create: `components/ui/team-pole-section.tsx`
+
+Le composant est un Client Component (`"use client"`) car il utilise framer-motion et des hooks React (`useState`).
+
+### Sous-composant `MemberCard`
+
+Carte animée avec :
+- Avatar (photo ou initiales)
+- Nom + badge rôle
+- Bio (si présente)
+- Skills en badges outline (si présents)
+- Boutons LinkedIn + Email (si présents)
+- 3D tilt sur hover (`useMotionValue` + `useSpring` + `useTransform`)
+
+### Sous-composant `PoleSection`
+
+Section par pôle avec :
+- Header : badge du pôle + nom + description
+- Grille responsive de `MemberCard`
+
+### Composant principal `TeamPolesSection`
+
+- Animation d'entrée staggered via `containerVariants`
+- Séparateur visuel entre pôles
+
+- [ ] **Step 1: Créer le fichier**
+
+Créer `/Users/nathandifraja/CSF_website/components/ui/team-pole-section.tsx` avec le contenu suivant :
+
+```tsx
 "use client"
 
 import { useState } from "react"
-import Image from "next/image"
 import {
   motion,
-  MotionConfig,
   useMotionValue,
   useReducedMotion,
   useSpring,
   useTransform,
   type Variants,
 } from "framer-motion"
-import { Mail, Sparkles } from "lucide-react"
+import { Linkedin, Mail, Sparkles } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import type { PoleData, Member } from "@/lib/types"
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function toPoleId(pole: string): string {
-  return pole
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "")
-}
 
 function getInitials(name: string): string {
   return name
@@ -92,9 +197,9 @@ function MemberCard({ member }: { member: Member }) {
   const hasSkills = Array.isArray(member.skills) && member.skills.length > 0
 
   return (
-    <motion.div variants={itemVariants} className="[perspective:1000px]">
+    <motion.div variants={itemVariants} className="perspective-1000">
       <motion.div
-        style={shouldReduceMotion ? undefined : { rotateX, rotateY, transformStyle: "preserve-3d" }}
+        style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
         onMouseMove={handleMouseMove}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={handleMouseLeave}
@@ -103,7 +208,7 @@ function MemberCard({ member }: { member: Member }) {
         <Card className="relative overflow-hidden rounded-2xl border border-border/60 bg-card backdrop-blur-xl transition-shadow duration-500 hover:shadow-xl hover:shadow-black/30">
           {/* Gradient overlay on hover */}
           <motion.div
-            className="absolute inset-0 bg-gradient-to-br from-white/[0.08] via-white/[0.04] to-transparent"
+            className="absolute inset-0 bg-gradient-to-br from-white/8 via-white/4 to-transparent"
             animate={{ opacity: isHovered ? 1 : 0 }}
             transition={{ duration: 0.4 }}
           />
@@ -125,17 +230,15 @@ function MemberCard({ member }: { member: Member }) {
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
               >
-                <div className="relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border border-border/60 bg-secondary">
+                <div className="h-20 w-20 overflow-hidden rounded-full border border-border/60 bg-secondary flex items-center justify-center">
                   {member.photo ? (
-                    <Image
+                    <img
                       src={member.photo}
                       alt={member.name}
-                      fill
-                      className="object-cover"
-                      sizes="80px"
+                      className="h-full w-full object-cover"
                     />
                   ) : (
-                    <span className="select-none text-lg font-semibold text-foreground/70">
+                    <span className="text-lg font-semibold text-foreground/70 select-none">
                       {initials}
                     </span>
                   )}
@@ -155,14 +258,14 @@ function MemberCard({ member }: { member: Member }) {
 
               <Badge
                 variant="secondary"
-                className="mb-3 bg-white/[0.08] text-[10px] uppercase tracking-widest text-muted-foreground backdrop-blur"
+                className="mb-3 bg-white/8 text-[10px] uppercase tracking-widest text-muted-foreground backdrop-blur"
               >
                 {member.role}
               </Badge>
 
               {/* Bio */}
               {member.bio && (
-                <p className="mb-3 text-xs leading-relaxed text-muted-foreground">
+                <p className="mb-3 text-xs text-muted-foreground leading-relaxed">
                   {member.bio}
                 </p>
               )}
@@ -174,11 +277,11 @@ function MemberCard({ member }: { member: Member }) {
                   animate={{ opacity: isHovered ? 1 : 0.65 }}
                   transition={{ duration: 0.3 }}
                 >
-                  {member.skills?.map((skill) => (
+                  {member.skills!.map((skill) => (
                     <Badge
                       key={skill}
                       variant="outline"
-                      className="border-border/50 bg-white/[0.04] text-[10px] text-muted-foreground"
+                      className="border-border/50 bg-white/4 text-[10px] text-muted-foreground"
                     >
                       {skill}
                     </Badge>
@@ -197,18 +300,16 @@ function MemberCard({ member }: { member: Member }) {
                     <Button
                       size="icon"
                       variant="ghost"
-                      className="h-8 w-8 rounded-full border border-border/40 bg-white/5 text-muted-foreground transition-colors hover:border-[#0A66C2]/40 hover:bg-[#0A66C2]/10 hover:text-[#0A66C2]"
+                      className="h-8 w-8 rounded-full border border-border/40 bg-white/5 text-muted-foreground hover:text-foreground"
                       asChild
                     >
                       <a
-                        href={member.linkedin ?? "#"}
+                        href={member.linkedin!}
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={`LinkedIn de ${member.name}`}
                       >
-                        <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-                          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                        </svg>
+                        <Linkedin className="h-3.5 w-3.5" aria-hidden />
                       </a>
                     </Button>
                   )}
@@ -219,10 +320,7 @@ function MemberCard({ member }: { member: Member }) {
                       className="h-8 w-8 rounded-full border border-border/40 bg-white/5 text-muted-foreground hover:text-foreground"
                       asChild
                     >
-                      <a
-                        href={`mailto:${member.email}`}
-                        aria-label={`Email de ${member.name}`}
-                      >
+                      <a href={`mailto:${member.email}`} aria-label={`Email de ${member.name}`}>
                         <Mail className="h-3.5 w-3.5" aria-hidden />
                       </a>
                     </Button>
@@ -248,20 +346,16 @@ function getGridCols(count: number): string {
 
 function PoleSection({ pole }: { pole: PoleData }) {
   const gridCols = getGridCols(pole.members.length)
-  const poleId = toPoleId(pole.pole)
 
   return (
-    <section aria-labelledby={`pole-${poleId}-heading`} className="mb-20">
+    <section aria-labelledby={`pole-${pole.badge}-heading`} className="mb-20">
       {/* Pole header */}
       <div className="mb-8 text-center">
-        <Badge
-          variant="secondary"
-          className="mb-3 bg-white/[0.08] text-xs uppercase tracking-widest text-muted-foreground"
-        >
+        <Badge variant="secondary" className="mb-3 bg-white/8 text-xs uppercase tracking-widest text-muted-foreground">
           {pole.badge}
         </Badge>
         <h3
-          id={`pole-${poleId}-heading`}
+          id={`pole-${pole.badge}-heading`}
           className="mb-2 text-2xl font-semibold tracking-tight text-foreground"
         >
           {pole.pole}
@@ -279,8 +373,8 @@ function PoleSection({ pole }: { pole: PoleData }) {
         viewport={{ once: true, margin: "-60px" }}
         className={`grid gap-5 ${gridCols}`}
       >
-        {pole.members.map((member) => (
-          <MemberCard key={`${pole.pole}-${member.name}`} member={member} />
+        {pole.members.map((member, idx) => (
+          <MemberCard key={`${pole.pole}-${idx}`} member={member} />
         ))}
       </motion.div>
     </section>
@@ -295,15 +389,14 @@ interface TeamPolesSectionProps {
 
 export function TeamPolesSection({ poles }: TeamPolesSectionProps) {
   return (
-    <MotionConfig reducedMotion="user">
-      <section
-        aria-labelledby="team-poles-heading"
-        className="relative w-full overflow-hidden px-4 py-16 sm:px-6 lg:px-10"
-      >
+    <section
+      aria-labelledby="team-poles-heading"
+      className="relative w-full overflow-hidden px-4 py-16 sm:px-6 lg:px-10"
+    >
       {/* Background glow */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute -left-32 top-1/4 h-80 w-80 rounded-full bg-primary/10 blur-[120px]" />
-        <div className="absolute -right-32 bottom-1/4 h-80 w-80 rounded-full bg-emerald-400/[0.08] blur-[120px]" />
+        <div className="absolute -right-32 bottom-1/4 h-80 w-80 rounded-full bg-emerald-400/8 blur-[120px]" />
       </div>
 
       <div className="mx-auto max-w-6xl">
@@ -315,10 +408,7 @@ export function TeamPolesSection({ poles }: TeamPolesSectionProps) {
           transition={{ duration: 0.6 }}
           className="mb-16 text-center"
         >
-          <Badge
-            variant="secondary"
-            className="mb-4 gap-2 bg-white/[0.08] text-muted-foreground backdrop-blur"
-          >
+          <Badge variant="secondary" className="mb-4 gap-2 bg-white/8 text-muted-foreground backdrop-blur">
             <Sparkles className="h-3 w-3" aria-hidden />
             Notre Équipe
           </Badge>
@@ -326,7 +416,7 @@ export function TeamPolesSection({ poles }: TeamPolesSectionProps) {
             id="team-poles-heading"
             className="mb-4 text-4xl font-semibold tracking-tight text-foreground md:text-5xl"
           >
-            Les membres de CS Finance
+            Les membres de CSF
           </h2>
           <p className="mx-auto max-w-2xl text-muted-foreground">
             Une équipe passionnée organisée en pôles thématiques pour vous offrir le meilleur de la finance.
@@ -338,7 +428,113 @@ export function TeamPolesSection({ poles }: TeamPolesSectionProps) {
           <PoleSection key={pole.pole} pole={pole} />
         ))}
       </div>
-      </section>
-    </MotionConfig>
+    </section>
   )
 }
+```
+
+- [ ] **Step 2: Verify TypeScript compiles**
+
+```bash
+cd /Users/nathandifraja/CSF_website && npx tsc --noEmit
+```
+
+Expected: aucune erreur.
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add components/ui/team-pole-section.tsx
+git commit -m "feat: add TeamPolesSection component with animated per-pole member cards"
+```
+
+---
+
+## Task 3: Wire TeamPolesSection into the equipe page
+
+**Files:**
+- Modify: `app/equipe/page.tsx`
+
+- [ ] **Step 1: Mettre à jour la page**
+
+Remplacer le contenu de `app/equipe/page.tsx` :
+
+```tsx
+import { getTeam } from '@/lib/data'
+import RadialOrbitalTimeline from '@/components/ui/radial-orbital-timeline'
+import { TeamPolesSection } from '@/components/ui/team-pole-section'
+
+export const metadata = {
+  title: 'Équipe — CentraleSupélec Finance',
+  description: "Les membres de CentraleSupélec Finance, organisés par pôle.",
+}
+
+export default function TeamPage() {
+  const team = getTeam()
+
+  return (
+    <div className="pt-16">
+      <RadialOrbitalTimeline poleData={team} />
+      <TeamPolesSection poles={team} />
+    </div>
+  )
+}
+```
+
+- [ ] **Step 2: Lancer le serveur de dev et vérifier visuellement**
+
+```bash
+cd /Users/nathandifraja/CSF_website && npm run dev
+```
+
+Ouvrir `http://localhost:3000/equipe` et vérifier :
+- RadialOrbitalTimeline toujours visible en haut
+- 6 sections de pôles visibles en dessous (Bureau, Finance de Marché, Finance d'Entreprise, Formation, Alumni, Partenariat)
+- Chaque section affiche son badge + titre + description
+- Les cartes membres s'animent à l'entrée dans le viewport
+- Hover sur une carte → tilt 3D + gradient + sparkle
+
+- [ ] **Step 3: Vérifier le responsive**
+
+Réduire la fenêtre à < 640px : les cartes doivent passer en colonne unique. Entre 640px et 1024px : 2 colonnes.
+
+- [ ] **Step 4: Build de production**
+
+```bash
+cd /Users/nathandifraja/CSF_website && npm run build
+```
+
+Expected: ✓ Compiled successfully, aucune erreur TypeScript.
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add app/equipe/page.tsx
+git commit -m "feat: integrate TeamPolesSection into equipe page below orbital timeline"
+```
+
+---
+
+## Self-Review
+
+### Spec coverage
+
+| Requirement | Task |
+|---|---|
+| Section par pôle | Task 2 — `PoleSection` | ✓ |
+| Cartes membres animées (3D tilt, hover) | Task 2 — `MemberCard` | ✓ |
+| Adapter composant au contexte CSF (LinkedIn/Email) | Task 2 — social links | ✓ |
+| Conserver RadialOrbitalTimeline existant | Task 3 | ✓ |
+| Graceful fallback si bio/skills absents | Task 2 — conditions `hasSkills`, `member.bio &&` | ✓ |
+| Responsive (mobile → desktop) | Task 2 — `getGridCols()` | ✓ |
+| Types étendus sans casser l'existant | Task 1 — champs optionnels | ✓ |
+
+### Placeholder scan
+
+Aucun TODO/TBD détecté. Tout le code est complet et directement utilisable.
+
+### Type consistency
+
+- `Member` étendu en Task 1, utilisé en Task 2 sous les mêmes noms de propriétés (`member.bio`, `member.skills`, `member.email`, `member.linkedin`, `member.photo`)
+- `PoleData` inchangé, passé comme `poles: PoleData[]` en Task 3
+- Export nommé `TeamPolesSection` en Task 2, importé de même en Task 3

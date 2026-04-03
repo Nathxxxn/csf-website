@@ -34,11 +34,11 @@ export async function sendContactEmail(data: ContactFormData): Promise<ActionRes
   const to = process.env.CONTACT_EMAIL ?? 'contact@csf.fr'
 
   const { error } = await resend.emails.send({
-    from: 'CSF Contact <onboarding@resend.dev>',
+    from: 'CS Finance Contact <onboarding@resend.dev>',
     to,
-    subject: `[CSF] Nouveau message — ${data.subject} (${data.company})`,
+    subject: `[CS Finance] Nouveau message — ${data.subject} (${data.company})`,
     html: `
-      <h2>Nouveau message via le site CSF</h2>
+      <h2>Nouveau message via le site CS Finance</h2>
       <p><strong>Nom :</strong> ${data.name}</p>
       <p><strong>Société :</strong> ${data.company}</p>
       <p><strong>Email :</strong> ${data.email}</p>

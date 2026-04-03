@@ -20,8 +20,7 @@ export function EventsPageHeader() {
       </ContainerAnimated>
       <ContainerAnimated>
         <p className="text-muted-foreground max-w-xl mx-auto">
-          Conférences avec des institutions de premier rang, workshops, networking
-          — une année riche en rencontres professionnelles.
+          Conférences avec des institutions de premier rang, workshops, networking, CS Finance possède une grande expérience en rencontres professionnelles.
         </p>
       </ContainerAnimated>
     </ContainerStagger>

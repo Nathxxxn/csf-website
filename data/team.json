@@ -2,12 +2,12 @@
   {
     "pole": "Bureau",
     "badge": "Bureau",
-    "description": "Pilote la stratégie de l'association, coordonne les pôles et représente CSF auprès des partenaires et de l'école.",
+    "description": "Pilote la stratégie de l'association, coordonne les pôles et représente CS Finance auprès des partenaires et de l'école.",
     "members": [
-      { "name": "Prénom Nom", "role": "Président(e)", "photo": null, "linkedin": null },
-      { "name": "Prénom Nom", "role": "Vice-Président(e)", "photo": null, "linkedin": null },
-      { "name": "Prénom Nom", "role": "Trésorier(ère)", "photo": null, "linkedin": null },
-      { "name": "Prénom Nom", "role": "Secrétaire", "photo": null, "linkedin": null }
+      { "name": "Nathan Di FRAJA", "role": "Président(e)", "photo": null, "linkedin": "https://www.linkedin.com/in/nathan-di-fraja" },
+      { "name": "Léa SEBAG", "role": "Vice-Président(e)", "photo": null, "linkedin": null },
+      { "name": "Tibor DUBOIS", "role": "Trésorier(ère)", "photo": null, "linkedin": null },
+      { "name": "Emna BANNOUR", "role": "Secrétaire Générale", "photo": null, "linkedin": null }
     ]
   },
   {
@@ -55,7 +55,7 @@
   {
     "pole": "Partenariat",
     "badge": "Business Dev",
-    "description": "Relations entreprises, sponsoring, conventions partenaires. Interface entre CSF et les institutions financières.",
+    "description": "Relations entreprises, sponsoring, conventions partenaires. Interface entre CS Finance et les institutions financières.",
     "members": [
       { "name": "Prénom Nom", "role": "Responsable", "photo": null, "linkedin": null },
       { "name": "Prénom Nom", "role": "Chargé(e) de compte", "photo": null, "linkedin": null },

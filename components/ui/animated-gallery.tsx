@@ -168,10 +168,10 @@ export const ContainerStagger = React.forwardRef<
       ref={ref}
       initial="hidden"
       whileInView={"visible"}
-      viewport={{ once: true || viewport?.once, ...viewport }}
+      viewport={{ once: viewport?.once ?? true, ...viewport }}
       transition={{
-        staggerChildren: transition?.staggerChildren || 0.2,
         ...transition,
+        staggerChildren: transition?.staggerChildren ?? 0.2,
       }}
       {...props}
     />

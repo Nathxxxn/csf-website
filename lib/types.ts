@@ -23,6 +23,7 @@ export interface Event {
   pole: string
   description: string
   image: string | null
+  images?: string[]
   status: 'upcoming' | 'past'
 }
 

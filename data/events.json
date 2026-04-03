@@ -7,6 +7,12 @@
     "pole": "Finance de Marché",
     "description": "Simulation de trading en live avec des traders senior. Accès aux outils professionnels de BNP Paribas CIB.",
     "image": "https://images.unsplash.com/photo-1529218402470-5dec8fea0761?w=800&auto=format&fit=crop&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1529218402470-5dec8fea0761?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1542052125323-e69ad37a47c2?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1608875004752-2fdb6a39ba4c?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1528361237150-8a9a7df33035?w=800&auto=format&fit=crop&q=80"
+    ],
     "status": "upcoming"
   },
   {
@@ -17,6 +23,12 @@
     "pole": "Finance d'Entreprise",
     "description": "Workshop case study M&A en présence de consultants senior. Simulation d'entretien incluse.",
     "image": "https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=800&auto=format&fit=crop&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1529218402470-5dec8fea0761?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1564284369929-026ba231f89b?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1542052125323-e69ad37a47c2?w=800&auto=format&fit=crop&q=80"
+    ],
     "status": "upcoming"
   },
   {
@@ -27,6 +39,12 @@
     "pole": "Alumni",
     "description": "Soirée networking avec des alumni en poste dans des institutions financières de premier rang.",
     "image": "https://images.unsplash.com/photo-1564284369929-026ba231f89b?w=800&auto=format&fit=crop&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1564284369929-026ba231f89b?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1608875004752-2fdb6a39ba4c?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1528361237150-8a9a7df33035?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=800&auto=format&fit=crop&q=80"
+    ],
     "status": "upcoming"
   },
   {
@@ -37,6 +55,12 @@
     "pole": "Finance de Marché",
     "description": "Une journée immersive dans les desks de trading de Goldman Sachs à Paris. 30 membres présents, sessions Q&A avec des MDs.",
     "image": "https://images.unsplash.com/photo-1542052125323-e69ad37a47c2?w=800&auto=format&fit=crop&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1542052125323-e69ad37a47c2?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1529218402470-5dec8fea0761?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1564284369929-026ba231f89b?w=800&auto=format&fit=crop&q=80"
+    ],
     "status": "past"
   },
   {
@@ -47,6 +71,12 @@
     "pole": "Finance d'Entreprise",
     "description": "Conférence sur les grandes transactions M&A de 2024. Présentation des deals par des banquiers d'affaires Lazard.",
     "image": "https://images.unsplash.com/photo-1608875004752-2fdb6a39ba4c?w=800&auto=format&fit=crop&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1608875004752-2fdb6a39ba4c?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1528361237150-8a9a7df33035?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1529218402470-5dec8fea0761?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1542052125323-e69ad37a47c2?w=800&auto=format&fit=crop&q=80"
+    ],
     "status": "past"
   },
   {
@@ -57,6 +87,12 @@
     "pole": "Formation",
     "description": "Weekend intensif de préparation CFA Level 1. 40 participants, taux de réussite élevé aux sessions suivantes.",
     "image": "https://images.unsplash.com/photo-1528361237150-8a9a7df33035?w=800&auto=format&fit=crop&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1528361237150-8a9a7df33035?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1564284369929-026ba231f89b?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1608875004752-2fdb6a39ba4c?w=800&auto=format&fit=crop&q=80"
+    ],
     "status": "past"
   }
 ]

@@ -1,4 +1,4 @@
-import { getEvents } from "@/lib/data"
+import { getEvents, getEventById } from "@/lib/data"
 import { notFound } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
@@ -15,7 +15,7 @@ export async function generateMetadata({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  const event = getEvents().find((e) => e.id === id)
+  const event = getEventById(id)
   if (!event) return {}
   return {
     title: `${event.title} — CentraleSupélec Finance`,
@@ -29,7 +29,7 @@ export default async function EventPage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  const event = getEvents().find((e) => e.id === id)
+  const event = getEventById(id)
   if (!event) notFound()
 
   const formattedDate = new Intl.DateTimeFormat("fr-FR", {

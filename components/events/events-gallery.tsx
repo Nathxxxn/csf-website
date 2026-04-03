@@ -17,6 +17,7 @@ import type { Event } from "@/lib/types"
 interface EventItemProps {
   event: Event
   isRevealed: boolean
+  priority?: boolean
 }
 
 function formatDate(dateStr: string): string {
@@ -26,7 +27,7 @@ function formatDate(dateStr: string): string {
   }).format(new Date(dateStr))
 }
 
-function EventItem({ event, isRevealed }: EventItemProps) {
+function EventItem({ event, isRevealed, priority }: EventItemProps) {
   const card = (
     <div className={cn("relative group aspect-video w-full overflow-hidden rounded-md shadow", isRevealed && "cursor-pointer")}>
       {event.image ? (
@@ -36,6 +37,7 @@ function EventItem({ event, isRevealed }: EventItemProps) {
           fill
           className="object-cover transition-transform duration-500 group-hover:scale-105"
           sizes="(max-width: 768px) 100vw, 33vw"
+          priority={priority}
         />
       ) : (
         <div className="w-full h-full bg-secondary" />
@@ -86,18 +88,18 @@ function ScrollTracker({ events }: ScrollTrackerProps) {
   return (
     <GalleryContainer>
       <GalleryCol yRange={["-10%", "2%"]} className="-mt-2">
-        {col1.map((event) => (
-          <EventItem key={event.id} event={event} isRevealed={isRevealed} />
+        {col1.map((event, i) => (
+          <EventItem key={event.id} event={event} isRevealed={isRevealed} priority={i === 0} />
         ))}
       </GalleryCol>
       <GalleryCol className="mt-[-40%]" yRange={["15%", "5%"]}>
-        {col2.map((event) => (
-          <EventItem key={event.id} event={event} isRevealed={isRevealed} />
+        {col2.map((event, i) => (
+          <EventItem key={event.id} event={event} isRevealed={isRevealed} priority={i === 0} />
         ))}
       </GalleryCol>
       <GalleryCol yRange={["-10%", "2%"]} className="-mt-2">
-        {col3.map((event) => (
-          <EventItem key={event.id} event={event} isRevealed={isRevealed} />
+        {col3.map((event, i) => (
+          <EventItem key={event.id} event={event} isRevealed={isRevealed} priority={i === 0} />
         ))}
       </GalleryCol>
     </GalleryContainer>

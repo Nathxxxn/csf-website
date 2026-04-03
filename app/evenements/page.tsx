@@ -19,7 +19,7 @@ export default function EventsPage() {
     <div>
       <EventsPageHeader />
 
-      <EventsGallery events={allEvents} />
+      <EventsGallery events={allEvents.slice(0, 6)} />
 
       {upcoming.length > 0 && (
         <div className="px-6 max-w-6xl mx-auto pb-24">

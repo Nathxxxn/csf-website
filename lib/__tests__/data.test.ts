@@ -14,22 +14,22 @@ describe('getEventById', () => {
 })
 
 describe('event images', () => {
-  it('events have an images array', () => {
+  it('events have a non-empty images array', () => {
     const events = getEvents()
     expect(events.length).toBeGreaterThan(0)
-    events.forEach(event => {
-      expect(Array.isArray(event.images)).toBe(true)
-      expect(event.images!.length).toBeGreaterThan(0)
-    })
+    for (const event of events) {
+      expect(event.images, `event ${event.id} should have images`).toBeDefined()
+      expect(event.images.length, `event ${event.id} images should be non-empty`).toBeGreaterThan(0)
+    }
   })
 
   it('each image is a non-empty string', () => {
     const events = getEvents()
-    events.forEach(event => {
-      event.images!.forEach(img => {
+    for (const event of events) {
+      for (const img of event.images) {
         expect(typeof img).toBe('string')
         expect(img.length).toBeGreaterThan(0)
-      })
-    })
+      }
+    }
   })
 })

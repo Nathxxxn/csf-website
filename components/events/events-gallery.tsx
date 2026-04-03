@@ -30,6 +30,9 @@ function formatDate(dateStr: string): string {
   }).format(new Date(dateStr))
 }
 
+// Progress threshold at which the gallery flips flat and navigation becomes active
+const REVEAL_THRESHOLD = 0.25
+
 /** Flatten each event's images[] into individual gallery items */
 function toGalleryItems(events: Event[]): GalleryItem[] {
   return events.flatMap((event) => {
@@ -67,7 +70,7 @@ function GalleryItemCard({ item, isRevealed, priority }: GalleryItemCardProps) {
         priority={priority}
       />
       {/* Hover overlay: partner + date */}
-      <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3">
+      <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3">
         <p className="text-white text-sm font-semibold leading-tight truncate">
           {item.partner}
         </p>
@@ -87,7 +90,7 @@ function GalleryItemCard({ item, isRevealed, priority }: GalleryItemCardProps) {
     )
   }
 
-  return <div>{card}</div>
+  return <>{card}</>
 }
 
 interface ScrollTrackerProps {
@@ -100,22 +103,20 @@ function ScrollTracker({ events }: ScrollTrackerProps) {
   const [isRevealed, setIsRevealed] = React.useState(false)
 
   useMotionValueEvent(scrollYProgress, "change", (value) => {
-    setIsRevealed(value > 0.25)
+    setIsRevealed(value > REVEAL_THRESHOLD)
   })
 
-  const items = toGalleryItems(events)
+  const items = React.useMemo(() => toGalleryItems(events), [events])
+  const col1 = React.useMemo(() => items.filter((_, i) => i % 3 === 0), [items])
+  const col2 = React.useMemo(() => items.filter((_, i) => i % 3 === 1), [items])
+  const col3 = React.useMemo(() => items.filter((_, i) => i % 3 === 2), [items])
 
-  // Round-robin distribution across 3 columns
-  const col1 = items.filter((_, i) => i % 3 === 0)
-  const col2 = items.filter((_, i) => i % 3 === 1)
-  const col3 = items.filter((_, i) => i % 3 === 2)
-
-  // Scroll range: [0, 0.25] = frozen during flip; [0.25, 1] = browse upward
+  // Scroll range: [0, REVEAL_THRESHOLD] = frozen during flip; [REVEAL_THRESHOLD, 1] = browse upward
   // Small positive initial y on col2/col3 creates stagger without CSS margin hacks
   return (
     <GalleryContainer>
       <GalleryCol
-        scrollRange={[0, 0.25, 1]}
+        scrollRange={[0, REVEAL_THRESHOLD, 1]}
         yRange={["0vh", "0vh", "-150vh"]}
       >
         {col1.map((item, i) => (
@@ -128,7 +129,7 @@ function ScrollTracker({ events }: ScrollTrackerProps) {
         ))}
       </GalleryCol>
       <GalleryCol
-        scrollRange={[0, 0.25, 1]}
+        scrollRange={[0, REVEAL_THRESHOLD, 1]}
         yRange={["12vh", "12vh", "-138vh"]}
       >
         {col2.map((item, i) => (
@@ -141,7 +142,7 @@ function ScrollTracker({ events }: ScrollTrackerProps) {
         ))}
       </GalleryCol>
       <GalleryCol
-        scrollRange={[0, 0.25, 1]}
+        scrollRange={[0, REVEAL_THRESHOLD, 1]}
         yRange={["4vh", "4vh", "-146vh"]}
       >
         {col3.map((item, i) => (

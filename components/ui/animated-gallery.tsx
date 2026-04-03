@@ -188,7 +188,7 @@ export const ContainerAnimated = React.forwardRef<
       ref={ref}
       className={cn(className)}
       variants={blurVariants}
-      transition={SPRING_CONFIG || transition}
+      transition={{ ...SPRING_CONFIG, ...transition }}
       {...props}
     />
   )

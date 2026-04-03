@@ -3,7 +3,8 @@
 import * as React from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { useMotionValueEvent } from "motion/react"
+import { useMotionValueEvent, MotionConfig } from "motion/react"
+import { cn } from "@/lib/utils"
 import {
   ContainerScroll,
   ContainerSticky,
@@ -27,7 +28,7 @@ function formatDate(dateStr: string): string {
 
 function EventItem({ event, isRevealed }: EventItemProps) {
   const card = (
-    <div className="relative group aspect-video w-full overflow-hidden rounded-md shadow cursor-pointer">
+    <div className={cn("relative group aspect-video w-full overflow-hidden rounded-md shadow", isRevealed && "cursor-pointer")}>
       {event.image ? (
         <Image
           src={event.image}
@@ -109,22 +110,24 @@ interface EventsGalleryProps {
 
 export function EventsGallery({ events }: EventsGalleryProps) {
   return (
-    <div className="relative">
-      {/* Subtle ambient glow matching dark theme */}
-      <div
-        className="pointer-events-none absolute z-10 h-[60vh] w-full top-0"
-        style={{
-          background:
-            "radial-gradient(ellipse at center, rgba(255,255,255,0.03) 0%, transparent 70%)",
-          filter: "blur(40px)",
-          mixBlendMode: "screen",
-        }}
-      />
-      <ContainerScroll className="relative h-[300vh]">
-        <ContainerSticky className="h-svh">
-          <ScrollTracker events={events} />
-        </ContainerSticky>
-      </ContainerScroll>
-    </div>
+    <MotionConfig reducedMotion="user">
+      <div className="relative">
+        {/* Subtle ambient glow matching dark theme */}
+        <div
+          className="pointer-events-none absolute z-10 h-[60vh] w-full top-0"
+          style={{
+            background:
+              "radial-gradient(ellipse at center, rgba(255,255,255,0.03) 0%, transparent 70%)",
+            filter: "blur(40px)",
+            mixBlendMode: "screen",
+          }}
+        />
+        <ContainerScroll className="relative h-[300vh]">
+          <ContainerSticky className="h-svh">
+            <ScrollTracker events={events} />
+          </ContainerSticky>
+        </ContainerScroll>
+      </div>
+    </MotionConfig>
   )
 }

@@ -30,3 +30,7 @@ export function getPastEvents(): Event[] {
 export function getPartners(): Partner[] {
   return partnersData
 }
+
+export function getEventById(id: string): Event | undefined {
+  return getEvents().find(e => e.id === id)
+}

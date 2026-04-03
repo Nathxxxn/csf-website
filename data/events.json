@@ -6,7 +6,7 @@
     "partner": "BNP Paribas CIB",
     "pole": "Finance de Marché",
     "description": "Simulation de trading en live avec des traders senior. Accès aux outils professionnels de BNP Paribas CIB.",
-    "image": null,
+    "image": "https://images.unsplash.com/photo-1529218402470-5dec8fea0761?w=800&auto=format&fit=crop&q=80",
     "status": "upcoming"
   },
   {
@@ -16,17 +16,17 @@
     "partner": "McKinsey & Company",
     "pole": "Finance d'Entreprise",
     "description": "Workshop case study M&A en présence de consultants senior. Simulation d'entretien incluse.",
-    "image": null,
+    "image": "https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=800&auto=format&fit=crop&q=80",
     "status": "upcoming"
   },
   {
     "id": "alumni-networking-2025-05",
     "title": "Alumni Networking Evening",
     "date": "2025-05-05",
-    "partner": "Alumni CSF",
+    "partner": "Alumni CS Finance",
     "pole": "Alumni",
     "description": "Soirée networking avec des alumni en poste dans des institutions financières de premier rang.",
-    "image": null,
+    "image": "https://images.unsplash.com/photo-1564284369929-026ba231f89b?w=800&auto=format&fit=crop&q=80",
     "status": "upcoming"
   },
   {
@@ -36,7 +36,7 @@
     "partner": "Goldman Sachs",
     "pole": "Finance de Marché",
     "description": "Une journée immersive dans les desks de trading de Goldman Sachs à Paris. 30 membres présents, sessions Q&A avec des MDs.",
-    "image": null,
+    "image": "https://images.unsplash.com/photo-1542052125323-e69ad37a47c2?w=800&auto=format&fit=crop&q=80",
     "status": "past"
   },
   {
@@ -46,17 +46,17 @@
     "partner": "Lazard",
     "pole": "Finance d'Entreprise",
     "description": "Conférence sur les grandes transactions M&A de 2024. Présentation des deals par des banquiers d'affaires Lazard.",
-    "image": null,
+    "image": "https://images.unsplash.com/photo-1608875004752-2fdb6a39ba4c?w=800&auto=format&fit=crop&q=80",
     "status": "past"
   },
   {
     "id": "cfa-bootcamp-2025-01",
     "title": "CFA Study Bootcamp",
     "date": "2025-01-25",
-    "partner": "CSF Formation",
+    "partner": "CS Finance Formation",
     "pole": "Formation",
     "description": "Weekend intensif de préparation CFA Level 1. 40 participants, taux de réussite élevé aux sessions suivantes.",
-    "image": null,
+    "image": "https://images.unsplash.com/photo-1528361237150-8a9a7df33035?w=800&auto=format&fit=crop&q=80",
     "status": "past"
   }
 ]

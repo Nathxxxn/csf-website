@@ -43,6 +43,10 @@ export function ScrollAnimation({
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: scrollRef,
+    // progress=0 when element top = viewport top (not when it enters from bottom)
+    // progress=1 when element bottom = viewport bottom
+    // Before the section reaches the top: progress clamped at 0 → cards off-screen
+    offset: ['start start', 'end end'],
   });
   const smoothProgress = useSpring(scrollYProgress, {
     damping: 30,

@@ -6,6 +6,7 @@ import {
   HTMLMotionProps,
   motion,
   MotionValue,
+  useInView,
   useReducedMotion,
   useScroll,
   useSpring,
@@ -151,37 +152,31 @@ interface TeamScrollPreviewProps {
 }
 
 export function TeamScrollPreview({ members }: TeamScrollPreviewProps) {
-  const containerRef = React.useRef<HTMLDivElement>(null);
-  // offset ['start end', 'end start']:
-  //   progress=0 when element top enters viewport bottom (section just visible)
-  //   progress=1 when element bottom leaves viewport top (section gone)
-  // For a 300vh element this gives ~400vh of scroll range.
-  // The sticky kicks in at progress≈0.25 (element top reaches viewport top).
-  // Cards are clamped off-screen before 0.25, then animate in 0.25→0.65.
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start end', 'end start'],
-  });
+  const ref = React.useRef<HTMLDivElement>(null);
   const reducedMotion = useReducedMotion();
-  const smoothProgress = useSpring(scrollYProgress, {
-    damping: 30,
-    stiffness: 400,
-    restDelta: 0.001,
-  });
-  const progress = reducedMotion ? scrollYProgress : smoothProgress;
 
-  // Cards start off-screen; animate in during sticky phase (0.25 → 0.65)
-  const x1 = useTransform(progress, [0.25, 0.65], ['-120%', '0%']);
-  const x2 = useTransform(progress, [0.25, 0.65], ['120%', '-30%']);
-  // Heading scales down as cards arrive
-  const scale = useTransform(progress, [0.25, 0.5], [1.4, 1]);
+  // Fires once when the section is 25% into the viewport
+  const isInView = useInView(ref, { once: true, amount: 0.25 });
+
+  const transition = reducedMotion
+    ? { duration: 0 }
+    : { duration: 1.1, ease: [0.22, 1, 0.36, 1] as const };
+
+  const headingTransition = reducedMotion
+    ? { duration: 0 }
+    : { duration: 0.8, ease: 'easeOut' as const };
 
   return (
-    // 300vh container: ~100vh pre-sticky buffer + 200vh sticky scroll range
-    <div ref={containerRef} className="relative h-[300vh]">
-      <div className="sticky top-0 h-screen overflow-hidden flex flex-col justify-center gap-6 py-8">
-        {/* Row 1 — starts off-screen left, slides in on scroll */}
-        <motion.div style={{ x: x1 }} className="flex flex-nowrap gap-4">
+    // overflow-hidden clips the off-screen cards before the animation fires
+    <div ref={ref} className="overflow-hidden py-8">
+      <div className="flex flex-col gap-6">
+        {/* Row 1 — starts off-screen left, guaranteed by initial prop */}
+        <motion.div
+          initial={{ x: '-120%' }}
+          animate={isInView ? { x: '0%' } : { x: '-120%' }}
+          transition={transition}
+          className="flex flex-nowrap gap-4"
+        >
           {members.map((member, index) => (
             <TeamCard
               key={index}
@@ -191,10 +186,12 @@ export function TeamScrollPreview({ members }: TeamScrollPreviewProps) {
           ))}
         </motion.div>
 
-        {/* Central heading — visible from the start, scales down as cards arrive */}
+        {/* Central heading — visible from the start, scales down when cards arrive */}
         <motion.div
-          style={{ scale }}
-          className="w-10/12 mx-auto text-center origin-center"
+          initial={{ scale: 1.4 }}
+          animate={isInView ? { scale: 1 } : { scale: 1.4 }}
+          transition={headingTransition}
+          className="w-10/12 mx-auto text-center origin-center py-4"
         >
           <h2 className="text-4xl md:text-5xl font-bold">
             Une équipe de{' '}
@@ -202,8 +199,13 @@ export function TeamScrollPreview({ members }: TeamScrollPreviewProps) {
           </h2>
         </motion.div>
 
-        {/* Row 2 — starts off-screen right, slides in on scroll */}
-        <motion.div style={{ x: x2 }} className="flex flex-nowrap gap-4">
+        {/* Row 2 — starts off-screen right, guaranteed by initial prop */}
+        <motion.div
+          initial={{ x: '120%' }}
+          animate={isInView ? { x: '-30%' } : { x: '120%' }}
+          transition={transition}
+          className="flex flex-nowrap gap-4"
+        >
           {members.map((member, index) => (
             <TeamCard
               key={index}

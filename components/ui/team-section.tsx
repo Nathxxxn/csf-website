@@ -6,14 +6,13 @@ import {
   HTMLMotionProps,
   motion,
   MotionValue,
-  useInView,
   useReducedMotion,
   useScroll,
   useSpring,
   useTransform,
 } from 'motion/react';
 
-// ─── Scroll animation context ────────────────────────────────────────────────
+// ─── Scroll animation context ─────────────────────────────────────────────────
 
 interface ScrollAnimationContextValue {
   scrollProgress: MotionValue<number>;
@@ -27,13 +26,13 @@ export function useScrollAnimationContext() {
   const context = React.useContext(ScrollAnimationContext);
   if (!context) {
     throw new Error(
-      'useScrollAnimationContext must be used within a ScrollAnimation',
+      'useScrollAnimationContext must be used within a ScrollAnimationContextProvider',
     );
   }
   return context;
 }
 
-// ─── Primitives ───────────────────────────────────────────────────────────────
+// ─── Primitives (exact copy from spec) ───────────────────────────────────────
 
 export function ScrollAnimation({
   spacerClass,
@@ -42,7 +41,9 @@ export function ScrollAnimation({
   ...props
 }: React.ComponentProps<'div'> & { spacerClass?: string }) {
   const scrollRef = React.useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: scrollRef });
+  const { scrollYProgress } = useScroll({
+    target: scrollRef,
+  });
   const smoothProgress = useSpring(scrollYProgress, {
     damping: 30,
     stiffness: 400,
@@ -129,7 +130,7 @@ export function TeamCard({
   ...props
 }: React.ComponentProps<'div'> & { member: TeamMember }) {
   return (
-    <div className={cn('space-y-4', className)} {...props}>
+    <div className={cn('space-y-6', className)} {...props}>
       <Image
         src={member.avatar}
         alt={member.name}
@@ -137,84 +138,67 @@ export function TeamCard({
         height={200}
         className="aspect-square w-full object-cover"
       />
-      <div className="space-y-0.5 pb-4 px-4">
-        <h3 className="text-base font-medium">{member.name}</h3>
-        <p className="text-sm text-muted-foreground">{member.role}</p>
+      <div className="space-y-1 pb-4 px-4">
+        <h3 className="text-xl font-medium">{member.name}</h3>
+        <h4 className="text-muted-foreground">{member.role}</h4>
       </div>
     </div>
   );
 }
 
-// ─── Main preview component ───────────────────────────────────────────────────
+// ─── Team scroll preview (DemoOne pattern from spec) ─────────────────────────
 
-interface TeamScrollPreviewProps {
+export interface TeamScrollPreviewProps {
   members: TeamMember[];
 }
 
 export function TeamScrollPreview({ members }: TeamScrollPreviewProps) {
-  const ref = React.useRef<HTMLDivElement>(null);
-  const reducedMotion = useReducedMotion();
-
-  // Fires once when the section is 25% into the viewport
-  const isInView = useInView(ref, { once: true, amount: 0.25 });
-
-  const transition = reducedMotion
-    ? { duration: 0 }
-    : { duration: 1.1, ease: [0.22, 1, 0.36, 1] as const };
-
-  const headingTransition = reducedMotion
-    ? { duration: 0 }
-    : { duration: 0.8, ease: 'easeOut' as const };
-
   return (
-    // overflow-hidden clips the off-screen cards before the animation fires
-    <div ref={ref} className="overflow-hidden py-8">
-      <div className="flex flex-col gap-6">
-        {/* Row 1 — starts off-screen left, guaranteed by initial prop */}
-        <motion.div
-          initial={{ x: '-120%' }}
-          animate={isInView ? { x: '0%' } : { x: '-120%' }}
-          transition={transition}
-          className="flex flex-nowrap gap-4"
-        >
-          {members.map((member, index) => (
-            <TeamCard
-              key={index}
-              member={member}
-              className="min-w-[48vw] md:min-w-[20vw] bg-card border"
-            />
-          ))}
-        </motion.div>
+    <ScrollAnimation className="overflow-hidden">
+      <ScrollTranslateY className="min-h-svh flex flex-col justify-center items-center gap-6">
+        <div className="w-full">
+          <ScrollTranslateX
+            xRange={['-200%', '0%']}
+            inputRange={[0.4, 0.9]}
+            className="origin-bottom flex flex-nowrap gap-4"
+          >
+            {members.map((member, index) => (
+              <TeamCard
+                key={index}
+                member={member}
+                className="min-w-[48vw] md:min-w-[20vw] bg-card border"
+              />
+            ))}
+          </ScrollTranslateX>
+        </div>
 
-        {/* Central heading — visible from the start, scales down when cards arrive */}
-        <motion.div
-          initial={{ scale: 1.4 }}
-          animate={isInView ? { scale: 1 } : { scale: 1.4 }}
-          transition={headingTransition}
-          className="w-10/12 mx-auto text-center origin-center py-4"
+        <ScrollScale
+          inputRange={[0, 0.5]}
+          scaleRange={[1.4, 1]}
+          className="w-10/12 flex flex-col justify-center text-center items-center mx-auto origin-center"
         >
           <h2 className="text-4xl md:text-5xl font-bold">
             Une équipe de{' '}
             <span className="text-indigo-500">stratèges</span>
           </h2>
-        </motion.div>
+        </ScrollScale>
 
-        {/* Row 2 — starts off-screen right, guaranteed by initial prop */}
-        <motion.div
-          initial={{ x: '120%' }}
-          animate={isInView ? { x: '-30%' } : { x: '120%' }}
-          transition={transition}
-          className="flex flex-nowrap gap-4"
-        >
-          {members.map((member, index) => (
-            <TeamCard
-              key={index}
-              member={member}
-              className="min-w-[48vw] md:min-w-[20vw] bg-card border"
-            />
-          ))}
-        </motion.div>
-      </div>
-    </div>
+        <div className="w-full">
+          <ScrollTranslateX
+            inputRange={[0.4, 0.9]}
+            xRange={['100%', '-50%']}
+            className="flex flex-nowrap gap-4"
+          >
+            {members.map((member, index) => (
+              <TeamCard
+                key={index}
+                member={member}
+                className="min-w-[48vw] md:min-w-[20vw] bg-card border"
+              />
+            ))}
+          </ScrollTranslateX>
+        </div>
+      </ScrollTranslateY>
+    </ScrollAnimation>
   );
 }

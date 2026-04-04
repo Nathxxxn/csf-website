@@ -1,9 +1,8 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import { Toaster } from '@/components/ui/sonner'
-import { Navbar } from '@/components/layout/navbar'
-import { Footer } from '@/components/layout/footer'
 import { PageLoader } from '@/components/ui/page-loader'
+import { SiteChrome } from '@/components/layout/site-chrome'
+import { Toaster } from '@/components/ui/sonner'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' })
@@ -18,9 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="fr" className="dark">
       <body className={`${inter.variable} antialiased`}>
         <PageLoader />
-        <Navbar />
-        <main>{children}</main>
-        <Footer />
+        <SiteChrome>{children}</SiteChrome>
         <Toaster />
       </body>
     </html>

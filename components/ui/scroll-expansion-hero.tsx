@@ -25,7 +25,16 @@ export function ScrollExpansionHero({
   const [showContent, setShowContent] = useState(false)
   const [mediaFullyExpanded, setMediaFullyExpanded] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
-  const touchStartY = useRef(0)
+  const touchStartY = useRef<number | null>(null)
+
+  // Skip animation entirely when user prefers reduced motion
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setScrollProgress(1)
+      setMediaFullyExpanded(true)
+      setShowContent(true)
+    }
+  }, [])
 
   useEffect(() => {
     const checkIfMobile = () => setIsMobile(window.innerWidth < 768)
@@ -61,7 +70,7 @@ export function ScrollExpansionHero({
 
     const handleTouchMove = (e: Event) => {
       const te = e as TouchEvent
-      if (!touchStartY.current) return
+      if (touchStartY.current === null) return
       const deltaY = touchStartY.current - te.touches[0].clientY
       if (mediaFullyExpanded && deltaY < -20 && window.scrollY <= 5) {
         setMediaFullyExpanded(false)
@@ -84,7 +93,7 @@ export function ScrollExpansionHero({
     }
 
     const handleTouchEnd = () => {
-      touchStartY.current = 0
+      touchStartY.current = null
     }
 
     const handleScroll = () => {

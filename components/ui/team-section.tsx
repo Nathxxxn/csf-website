@@ -152,9 +152,15 @@ interface TeamScrollPreviewProps {
 
 export function TeamScrollPreview({ members }: TeamScrollPreviewProps) {
   const containerRef = React.useRef<HTMLDivElement>(null);
+  // offset ['start end', 'end start']:
+  //   progress=0 when element top enters viewport bottom (section just visible)
+  //   progress=1 when element bottom leaves viewport top (section gone)
+  // For a 300vh element this gives ~400vh of scroll range.
+  // The sticky kicks in at progress≈0.25 (element top reaches viewport top).
+  // Cards are clamped off-screen before 0.25, then animate in 0.25→0.65.
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ['start start', 'end end'],
+    offset: ['start end', 'end start'],
   });
   const reducedMotion = useReducedMotion();
   const smoothProgress = useSpring(scrollYProgress, {
@@ -164,15 +170,15 @@ export function TeamScrollPreview({ members }: TeamScrollPreviewProps) {
   });
   const progress = reducedMotion ? scrollYProgress : smoothProgress;
 
-  // Cards start off-screen; slide in as user scrolls (0 → 60% of the section)
-  const x1 = useTransform(progress, [0, 0.6], ['-120%', '0%']);
-  const x2 = useTransform(progress, [0, 0.6], ['120%', '-30%']);
-  // Heading starts large, scales down to normal once cards appear
-  const scale = useTransform(progress, [0, 0.4], [1.4, 1]);
+  // Cards start off-screen; animate in during sticky phase (0.25 → 0.65)
+  const x1 = useTransform(progress, [0.25, 0.65], ['-120%', '0%']);
+  const x2 = useTransform(progress, [0.25, 0.65], ['120%', '-30%']);
+  // Heading scales down as cards arrive
+  const scale = useTransform(progress, [0.25, 0.5], [1.4, 1]);
 
   return (
-    // Tall container creates the scroll range; sticky inner stays pinned
-    <div ref={containerRef} className="relative h-[200vh]">
+    // 300vh container: ~100vh pre-sticky buffer + 200vh sticky scroll range
+    <div ref={containerRef} className="relative h-[300vh]">
       <div className="sticky top-0 h-screen overflow-hidden flex flex-col justify-center gap-6 py-8">
         {/* Row 1 — starts off-screen left, slides in on scroll */}
         <motion.div style={{ x: x1 }} className="flex flex-nowrap gap-4">

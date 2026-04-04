@@ -15,15 +15,28 @@ export interface PoleData {
   members: Member[]
 }
 
+export interface EventHighlight {
+  title: string
+  description: string
+}
+
+export interface EventPhoto {
+  src: string
+  caption: string
+}
+
 export interface Event {
   id: string
   title: string
   date: string
   partner: string
+  partnerDescription: string
   pole: string
   description: string
   image: string | null
   images: string[]
+  highlights: EventHighlight[]
+  photos: EventPhoto[]
   status: 'upcoming' | 'past'
 }
 

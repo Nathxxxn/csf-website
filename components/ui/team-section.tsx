@@ -151,55 +151,62 @@ interface TeamScrollPreviewProps {
 }
 
 export function TeamScrollPreview({ members }: TeamScrollPreviewProps) {
-  return (
-    <ScrollAnimation className="overflow-hidden">
-      <ScrollTranslateY className="min-h-svh flex flex-col justify-center items-center gap-6">
-        {/* Row 1 — slides in from the left */}
-        <div className="w-full">
-          <ScrollTranslateX
-            xRange={['-200%', '0%']}
-            inputRange={[0.4, 0.9]}
-            className="origin-bottom flex flex-nowrap gap-4"
-          >
-            {members.map((member, index) => (
-              <TeamCard
-                key={index}
-                member={member}
-                className="min-w-[48vw] md:min-w-[20vw] bg-card border"
-              />
-            ))}
-          </ScrollTranslateX>
-        </div>
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start start', 'end end'],
+  });
+  const reducedMotion = useReducedMotion();
+  const smoothProgress = useSpring(scrollYProgress, {
+    damping: 30,
+    stiffness: 400,
+    restDelta: 0.001,
+  });
+  const progress = reducedMotion ? scrollYProgress : smoothProgress;
 
-        {/* Central heading — scales down as you scroll */}
-        <ScrollScale
-          inputRange={[0, 0.5]}
-          scaleRange={[1.4, 1]}
-          className="w-10/12 flex flex-col justify-center text-center items-center mx-auto origin-center"
+  // Cards start off-screen; slide in as user scrolls (0 → 60% of the section)
+  const x1 = useTransform(progress, [0, 0.6], ['-120%', '0%']);
+  const x2 = useTransform(progress, [0, 0.6], ['120%', '-30%']);
+  // Heading starts large, scales down to normal once cards appear
+  const scale = useTransform(progress, [0, 0.4], [1.4, 1]);
+
+  return (
+    // Tall container creates the scroll range; sticky inner stays pinned
+    <div ref={containerRef} className="relative h-[200vh]">
+      <div className="sticky top-0 h-screen overflow-hidden flex flex-col justify-center gap-6 py-8">
+        {/* Row 1 — starts off-screen left, slides in on scroll */}
+        <motion.div style={{ x: x1 }} className="flex flex-nowrap gap-4">
+          {members.map((member, index) => (
+            <TeamCard
+              key={index}
+              member={member}
+              className="min-w-[48vw] md:min-w-[20vw] bg-card border"
+            />
+          ))}
+        </motion.div>
+
+        {/* Central heading — visible from the start, scales down as cards arrive */}
+        <motion.div
+          style={{ scale }}
+          className="w-10/12 mx-auto text-center origin-center"
         >
           <h2 className="text-4xl md:text-5xl font-bold">
             Une équipe de{' '}
             <span className="text-indigo-500">stratèges</span>
           </h2>
-        </ScrollScale>
+        </motion.div>
 
-        {/* Row 2 — slides in from the right */}
-        <div className="w-full">
-          <ScrollTranslateX
-            inputRange={[0.4, 0.9]}
-            xRange={['100%', '-50%']}
-            className="flex flex-nowrap gap-4"
-          >
-            {members.map((member, index) => (
-              <TeamCard
-                key={index}
-                member={member}
-                className="min-w-[48vw] md:min-w-[20vw] bg-card border"
-              />
-            ))}
-          </ScrollTranslateX>
-        </div>
-      </ScrollTranslateY>
-    </ScrollAnimation>
+        {/* Row 2 — starts off-screen right, slides in on scroll */}
+        <motion.div style={{ x: x2 }} className="flex flex-nowrap gap-4">
+          {members.map((member, index) => (
+            <TeamCard
+              key={index}
+              member={member}
+              className="min-w-[48vw] md:min-w-[20vw] bg-card border"
+            />
+          ))}
+        </motion.div>
+      </div>
+    </div>
   );
 }

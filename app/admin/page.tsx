@@ -26,7 +26,7 @@ export default async function AdminLoginPage({ searchParams }: AdminLoginPagePro
     <main className="flex min-h-screen items-center justify-center bg-[#0a0a0a] px-6 py-16">
       <Card className="w-full max-w-md border-white/10 bg-[#111111] shadow-[0_24px_80px_rgba(0,0,0,0.45)]">
         <CardHeader className="items-center space-y-5 pb-4 text-center">
-          <Image src="/logo.png" alt="CSF Logo" width={72} height={72} className="h-[72px] w-[72px]" priority />
+          <Image src="/logo.svg" alt="CSF Logo" width={72} height={72} className="h-[72px] w-[72px]" priority />
           <div className="space-y-2">
             <CardTitle className="text-3xl font-bold tracking-tight text-white">
               Espace administrateur

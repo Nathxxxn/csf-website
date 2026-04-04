@@ -20,7 +20,7 @@
 - La spec impose une adaptation du prompt, pas une copie 1:1 :
   - **Ne pas** créer `components/ui/mini-navbar.tsx`
   - **Remplacer** `components/layout/navbar.tsx` en place
-  - **Utiliser** le logo existant `public/logo.png`
+  - **Utiliser** le logo existant `public/logo.svg`
   - **Remplacer** les SVG inline du prompt par `lucide-react` (`Menu`, `X`)
   - **Supprimer** login/signup de la navbar publique
   - **Utiliser** les routes réelles : `/evenements`, `/equipe`, `/a-propos`, `/contact`
@@ -262,7 +262,7 @@ export function Navbar() {
       <div className="flex w-full items-center justify-between gap-6 sm:gap-8">
         <Link href="/" className="flex items-center justify-center" aria-label="Accueil CSF">
           <Image
-            src="/logo.png"
+            src="/logo.svg"
             alt="CSF Logo"
             width={28}
             height={28}
@@ -716,7 +716,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
         <div className="w-full rounded-2xl border border-[#333] bg-white/[0.04] p-8 shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl">
           <div className="mb-8 flex flex-col items-center text-center">
             <Image
-              src="/logo.png"
+              src="/logo.svg"
               alt="CSF Logo"
               width={56}
               height={56}

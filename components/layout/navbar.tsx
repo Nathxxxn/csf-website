@@ -79,7 +79,7 @@ export function Navbar() {
           <div className="flex items-center gap-4 px-4 py-3 sm:px-5">
             <Link href="/" className="flex items-center">
               <Image
-                src="/logo.png"
+                src="/logo.svg"
                 alt="CSF Logo"
                 width={28}
                 height={28}

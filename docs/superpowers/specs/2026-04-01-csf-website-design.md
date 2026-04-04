@@ -78,7 +78,7 @@ Scroll continu — sections dans l'ordre :
 ### 4.1 Navbar
 - Position : `sticky top-0`, z-index élevé
 - Fond : transparent → `backdrop-blur` au scroll (via Framer Motion `useScroll`)
-- Contenu : logo CSF (logo.png, `filter: invert(1)`) + nom · liens de navigation · bouton "Nous contacter"
+- Contenu : logo CSF (logo.svg, `filter: invert(1)`) + nom · liens de navigation · bouton "Nous contacter"
 - Composants : `NavigationMenu` (shadcn) + `blur-fade` (MagicUI, apparition initiale)
 
 ### 4.2 Hero

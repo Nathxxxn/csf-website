@@ -52,7 +52,7 @@
 │   ├── types.ts                      # TypeScript interfaces: Event, Member, PoleData, Partner
 │   └── data.ts                       # Typed getters: getEvents(), getTeam(), getPartners()
 ├── public/
-│   ├── logo.png                      # CSF logo (already present)
+│   ├── logo.svg                      # CSF logo (already present)
 │   └── images/
 │       ├── team/                     # Member photos (placeholder: empty, use AvatarFallback)
 │       └── events/                   # Event photos (placeholder: empty, use gradient)
@@ -867,7 +867,7 @@ export function Navbar() {
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3">
             <Image
-              src="/logo.png"
+              src="/logo.svg"
               alt="CSF Logo"
               width={28}
               height={28}
@@ -917,7 +917,7 @@ export function Footer() {
       <div className="max-w-6xl mx-auto px-6 py-10 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
           <Image
-            src="/logo.png"
+            src="/logo.svg"
             alt="CSF Logo"
             width={22}
             height={22}

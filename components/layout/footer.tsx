@@ -8,7 +8,7 @@ export function Footer() {
       <div className="max-w-6xl mx-auto px-6 py-10 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
           <Image
-            src="/logo.png"
+            src="/logo.svg"
             alt="CSF Logo"
             width={22}
             height={22}

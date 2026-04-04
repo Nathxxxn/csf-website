@@ -44,4 +44,4 @@ node_modules
 .superpowers/
 
 # local SQLite database
-local.db
+local.db*

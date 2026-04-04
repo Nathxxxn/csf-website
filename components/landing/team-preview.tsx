@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { BlurFade } from '@/components/ui/blur-fade'
 import { getTeam } from '@/lib/data'
-import { TeamScrollPreview, type TeamMember } from '@/components/ui/team-section'
+import TeamShowcase, { type TeamMember } from '@/components/ui/team-showcase'
 
 const PLACEHOLDER_AVATARS = [
   'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=700&auto=format&fit=crop&q=60',
@@ -14,16 +14,24 @@ const PLACEHOLDER_AVATARS = [
   'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=700&auto=format&fit=crop&q=60',
 ]
 
+function pickRandom<T>(arr: T[], n: number): T[] {
+  return [...arr].sort(() => Math.random() - 0.5).slice(0, n)
+}
+
 export function TeamPreview() {
   const poles = getTeam()
 
-  const members: TeamMember[] = poles
-    .flatMap(pole => pole.members)
+  const allMembers: TeamMember[] = poles
+    .flatMap((pole) => pole.members)
     .map((member, index) => ({
-      avatar: member.photo ?? PLACEHOLDER_AVATARS[index % PLACEHOLDER_AVATARS.length],
+      id: String(index),
       name: member.name,
       role: member.role,
+      image: member.photo ?? PLACEHOLDER_AVATARS[index % PLACEHOLDER_AVATARS.length],
+      social: member.linkedin ? { linkedin: member.linkedin } : undefined,
     }))
+
+  const displayed = pickRandom(allMembers, 6)
 
   return (
     <section className="pt-12 border-t border-border">
@@ -44,7 +52,7 @@ export function TeamPreview() {
         </div>
       </BlurFade>
 
-      <TeamScrollPreview members={members} />
+      <TeamShowcase members={displayed} />
     </section>
   )
 }

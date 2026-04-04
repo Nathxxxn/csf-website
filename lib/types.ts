@@ -30,13 +30,13 @@ export interface Event {
   title: string
   date: string
   partner: string
-  partnerDescription: string
+  partnerDescription?: string
   pole: string
   description: string
   image: string | null
   images: string[]
-  highlights: EventHighlight[]
-  photos: EventPhoto[]
+  highlights?: EventHighlight[]
+  photos?: EventPhoto[]
   status: 'upcoming' | 'past'
 }
 

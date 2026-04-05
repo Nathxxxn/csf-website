@@ -79,7 +79,7 @@ describe('admin actions', () => {
   it('invalid credentials redirect back to /admin?error=invalid and do not set cookie', async () => {
     const cookieStore = { set: vi.fn(), delete: vi.fn() }
     cookiesMock.mockResolvedValue(cookieStore)
-    const { login } = await import('@/app/admin/actions')
+    const { login } = await import('@/app/admin/actions/auth')
 
     await expect(
       login(
@@ -98,7 +98,7 @@ describe('admin actions', () => {
   it('valid credentials set the signed cookie and redirect to /admin/dashboard', async () => {
     const cookieStore = { set: vi.fn(), delete: vi.fn() }
     cookiesMock.mockResolvedValue(cookieStore)
-    const { login } = await import('@/app/admin/actions')
+    const { login } = await import('@/app/admin/actions/auth')
 
     await expect(
       login(
@@ -128,7 +128,7 @@ describe('admin actions', () => {
   it('logout deletes cookie and redirects to /admin', async () => {
     const cookieStore = { set: vi.fn(), delete: vi.fn() }
     cookiesMock.mockResolvedValue(cookieStore)
-    const { logout } = await import('@/app/admin/actions')
+    const { logout } = await import('@/app/admin/actions/auth')
 
     await expect(logout()).rejects.toThrow('NEXT_REDIRECT:/admin')
 

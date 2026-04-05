@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { logout } from '@/app/admin/actions'
+import { logout } from '@/app/admin/actions/auth'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { SESSION_COOKIE_NAME, verifyCookie } from '@/lib/session'

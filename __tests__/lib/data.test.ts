@@ -141,6 +141,31 @@ describe('getAdminPartners', () => {
   })
 })
 
+describe('getAdminEventById', () => {
+  afterEach(() => { vi.resetAllMocks() })
+
+  it('returns the admin event when found', async () => {
+    executeMock
+      .mockResolvedValueOnce({ rows: [{ id: 'e1', title: 'Conf', date: '2025-05-01', partner: 'GS', partner_description: null, pole: null, description: 'Desc', image_url: null, status: 'upcoming', order_index: 0 }] })
+      .mockResolvedValueOnce({ rows: [] })
+      .mockResolvedValueOnce({ rows: [] })
+    const { getAdminEventById } = await import('@/lib/data')
+    const result = await getAdminEventById('e1')
+    expect(result).toBeDefined()
+    expect(result?.id).toBe('e1')
+  })
+
+  it('returns undefined when not found', async () => {
+    executeMock
+      .mockResolvedValueOnce({ rows: [] })
+      .mockResolvedValueOnce({ rows: [] })
+      .mockResolvedValueOnce({ rows: [] })
+    const { getAdminEventById } = await import('@/lib/data')
+    const result = await getAdminEventById('nonexistent')
+    expect(result).toBeUndefined()
+  })
+})
+
 describe('getSiteContent', () => {
   afterEach(() => { vi.resetAllMocks() })
 

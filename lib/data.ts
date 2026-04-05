@@ -1,6 +1,11 @@
 import type { PoleData, Event, Partner, AdminPole, AdminEvent, AdminPartner, SiteContent } from './types'
 import { getDb } from './db'
 
+function requireString(value: unknown, field: string): string {
+  if (typeof value !== 'string') throw new Error(`Expected string for field "${field}", got ${typeof value}`)
+  return value
+}
+
 // --- Fonctions publiques (utilisées par les pages du site) ---
 
 export async function getTeam(): Promise<PoleData[]> {
@@ -9,14 +14,14 @@ export async function getTeam(): Promise<PoleData[]> {
   const { rows: members } = await db.execute('SELECT * FROM team_members ORDER BY order_index')
 
   return poles.map(pole => ({
-    pole: pole.name as string,
-    badge: pole.badge as string,
-    description: pole.description as string,
+    pole: requireString(pole.name, 'pole.name'),
+    badge: requireString(pole.badge, 'pole.badge'),
+    description: requireString(pole.description, 'pole.description'),
     members: members
       .filter(m => m.pole_id === pole.id)
       .map(m => ({
-        name: m.name as string,
-        role: m.role as string,
+        name: requireString(m.name, 'member.name'),
+        role: requireString(m.role, 'member.role'),
         photo: (m.photo_url as string | null) ?? null,
         linkedin: (m.linkedin as string | null) ?? null,
       })),
@@ -29,24 +34,28 @@ export async function getEvents(): Promise<Event[]> {
   const { rows: highlightRows } = await db.execute('SELECT * FROM event_highlights ORDER BY order_index')
   const { rows: photoRows } = await db.execute('SELECT * FROM event_photos ORDER BY order_index')
 
-  return eventRows.map(e => ({
-    id: e.id as string,
-    title: e.title as string,
-    date: e.date as string,
-    partner: e.partner as string,
-    partnerDescription: (e.partner_description as string | null) ?? undefined,
-    pole: (e.pole as string | null) ?? '',
-    description: e.description as string,
-    image: (e.image_url as string | null) ?? null,
-    images: [],
-    status: e.status as 'upcoming' | 'past',
-    highlights: highlightRows
-      .filter(h => h.event_id === e.id)
-      .map(h => ({ title: h.title as string, description: h.description as string })),
-    photos: photoRows
-      .filter(p => p.event_id === e.id)
-      .map(p => ({ src: p.url as string, caption: (p.caption as string | null) ?? '' })),
-  }))
+  return eventRows.map(e => {
+    const status = requireString(e.status, 'event.status')
+    if (status !== 'upcoming' && status !== 'past') throw new Error(`Invalid event status: "${status}"`)
+    return {
+      id: requireString(e.id, 'event.id'),
+      title: requireString(e.title, 'event.title'),
+      date: requireString(e.date, 'event.date'),
+      partner: requireString(e.partner, 'event.partner'),
+      partnerDescription: (e.partner_description as string | null) ?? undefined,
+      pole: (e.pole as string | null) ?? '',
+      description: requireString(e.description, 'event.description'),
+      image: (e.image_url as string | null) ?? null,
+      images: [],
+      status,
+      highlights: highlightRows
+        .filter(h => h.event_id === e.id)
+        .map(h => ({ title: requireString(h.title, 'highlight.title'), description: requireString(h.description, 'highlight.description') })),
+      photos: photoRows
+        .filter(p => p.event_id === e.id)
+        .map(p => ({ src: requireString(p.url, 'photo.url'), caption: (p.caption as string | null) ?? '' })),
+    }
+  })
 }
 
 export async function getUpcomingEvents(): Promise<Event[]> {
@@ -67,8 +76,8 @@ export async function getPartners(): Promise<Partner[]> {
   const db = getDb()
   const { rows } = await db.execute('SELECT * FROM partners ORDER BY order_index')
   return rows.map(p => ({
-    name: p.name as string,
-    logo: p.logo_url as string,
+    name: requireString(p.name, 'partner.name'),
+    logo: requireString(p.logo_url, 'partner.logo_url'),
   }))
 }
 
@@ -85,20 +94,20 @@ export async function getAdminTeam(): Promise<AdminPole[]> {
   const { rows: members } = await db.execute('SELECT * FROM team_members ORDER BY order_index')
 
   return poles.map(pole => ({
-    id: pole.id as string,
-    name: pole.name as string,
-    badge: pole.badge as string,
-    description: pole.description as string,
+    id: requireString(pole.id, 'pole.id'),
+    name: requireString(pole.name, 'pole.name'),
+    badge: requireString(pole.badge, 'pole.badge'),
+    description: requireString(pole.description, 'pole.description'),
     order_index: pole.order_index as number,
     members: members
       .filter(m => m.pole_id === pole.id)
       .map(m => ({
-        id: m.id as string,
-        name: m.name as string,
-        role: m.role as string,
+        id: requireString(m.id, 'member.id'),
+        name: requireString(m.name, 'member.name'),
+        role: requireString(m.role, 'member.role'),
         photo_url: (m.photo_url as string | null) ?? null,
         linkedin: (m.linkedin as string | null) ?? null,
-        pole_id: m.pole_id as string,
+        pole_id: requireString(m.pole_id, 'member.pole_id'),
         order_index: m.order_index as number,
       })),
   }))
@@ -110,36 +119,40 @@ export async function getAdminEvents(): Promise<AdminEvent[]> {
   const { rows: highlightRows } = await db.execute('SELECT * FROM event_highlights ORDER BY order_index')
   const { rows: photoRows } = await db.execute('SELECT * FROM event_photos ORDER BY order_index')
 
-  return eventRows.map(e => ({
-    id: e.id as string,
-    title: e.title as string,
-    date: e.date as string,
-    partner: e.partner as string,
-    partner_description: (e.partner_description as string | null) ?? null,
-    pole: (e.pole as string | null) ?? null,
-    description: e.description as string,
-    image_url: (e.image_url as string | null) ?? null,
-    status: e.status as 'upcoming' | 'past',
-    order_index: e.order_index as number,
-    highlights: highlightRows
-      .filter(h => h.event_id === e.id)
-      .map(h => ({
-        id: h.id as string,
-        event_id: h.event_id as string,
-        title: h.title as string,
-        description: h.description as string,
-        order_index: h.order_index as number,
-      })),
-    photos: photoRows
-      .filter(p => p.event_id === e.id)
-      .map(p => ({
-        id: p.id as string,
-        event_id: p.event_id as string,
-        url: p.url as string,
-        caption: (p.caption as string | null) ?? null,
-        order_index: p.order_index as number,
-      })),
-  }))
+  return eventRows.map(e => {
+    const status = requireString(e.status, 'event.status')
+    if (status !== 'upcoming' && status !== 'past') throw new Error(`Invalid event status: "${status}"`)
+    return {
+      id: requireString(e.id, 'event.id'),
+      title: requireString(e.title, 'event.title'),
+      date: requireString(e.date, 'event.date'),
+      partner: requireString(e.partner, 'event.partner'),
+      partner_description: (e.partner_description as string | null) ?? null,
+      pole: (e.pole as string | null) ?? null,
+      description: requireString(e.description, 'event.description'),
+      image_url: (e.image_url as string | null) ?? null,
+      status,
+      order_index: e.order_index as number,
+      highlights: highlightRows
+        .filter(h => h.event_id === e.id)
+        .map(h => ({
+          id: requireString(h.id, 'highlight.id'),
+          event_id: requireString(h.event_id, 'highlight.event_id'),
+          title: requireString(h.title, 'highlight.title'),
+          description: requireString(h.description, 'highlight.description'),
+          order_index: h.order_index as number,
+        })),
+      photos: photoRows
+        .filter(p => p.event_id === e.id)
+        .map(p => ({
+          id: requireString(p.id, 'photo.id'),
+          event_id: requireString(p.event_id, 'photo.event_id'),
+          url: requireString(p.url, 'photo.url'),
+          caption: (p.caption as string | null) ?? null,
+          order_index: p.order_index as number,
+        })),
+    }
+  })
 }
 
 export async function getAdminEventById(id: string): Promise<AdminEvent | undefined> {
@@ -151,9 +164,9 @@ export async function getAdminPartners(): Promise<AdminPartner[]> {
   const db = getDb()
   const { rows } = await db.execute('SELECT * FROM partners ORDER BY order_index')
   return rows.map(p => ({
-    id: p.id as string,
-    name: p.name as string,
-    logo_url: p.logo_url as string,
+    id: requireString(p.id, 'partner.id'),
+    name: requireString(p.name, 'partner.name'),
+    logo_url: requireString(p.logo_url, 'partner.logo_url'),
     order_index: p.order_index as number,
   }))
 }

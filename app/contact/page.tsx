@@ -1,5 +1,6 @@
 import { BlurFade } from '@/components/ui/blur-fade'
 import { ContactForm } from '@/components/contact/contact-form'
+import { ScrollingPartnersIntro } from '@/components/ui/scrolling-partners-intro'
 import { getPartners } from '@/lib/data'
 
 export default async function ContactPage() {
@@ -7,9 +8,9 @@ export default async function ContactPage() {
 
   return (
     <>
-      <div className="hidden">{partners.length}</div>
+      <ScrollingPartnersIntro partners={partners} />
 
-      <div className="pt-24 pb-24 px-6 max-w-2xl mx-auto">
+      <div className="mx-auto max-w-2xl px-6 py-24 md:py-28">
         <BlurFade delay={0.1} inView>
           <p className="text-xs tracking-widest uppercase text-muted-foreground mb-2">
             Partenariat

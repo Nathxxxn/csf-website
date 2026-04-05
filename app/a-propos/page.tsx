@@ -15,8 +15,8 @@ const STATS = [
   { value: 20, suffix: '+', label: 'Événements / an' },
 ]
 
-export default function AboutPage() {
-  const team = getTeam()
+export default async function AboutPage() {
+  const team = await getTeam()
 
   return (
     <div className="pt-24 pb-24 max-w-6xl mx-auto px-6">

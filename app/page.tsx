@@ -6,9 +6,9 @@ import { PartnersMarquee } from '@/components/landing/partners-marquee'
 import { PartnersCta } from '@/components/landing/partners-cta'
 import { getUpcomingEvents, getPastEvents } from '@/lib/data'
 
-export default function HomePage() {
-  const upcoming = getUpcomingEvents().slice(0, 3)
-  const past = getPastEvents().slice(0, 3)
+export default async function HomePage() {
+  const upcoming = (await getUpcomingEvents()).slice(0, 3)
+  const past = (await getPastEvents()).slice(0, 3)
 
   return (
     <>

@@ -8,8 +8,8 @@ export const metadata = {
   description: "Tous les événements organisés par CentraleSupélec Finance.",
 }
 
-export default function EventsPage() {
-  const allEvents = getEvents()
+export default async function EventsPage() {
+  const allEvents = await getEvents()
 
   return (
     <div>

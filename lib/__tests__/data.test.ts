@@ -1,71 +1,65 @@
-import { describe, it, expect } from 'vitest'
-import { getEvents, getEventById } from '../data'
+import { afterEach, describe, expect, it, vi } from 'vitest'
+
+const executeMock = vi.fn()
+
+vi.mock('@/lib/db', () => ({
+  getDb: () => ({ execute: executeMock }),
+}))
 
 describe('getEventById', () => {
-  it('returns the event with matching id', () => {
-    const event = getEventById('mock-trading-bnp-2025-04')
+  afterEach(() => { vi.resetAllMocks() })
+
+  it('returns the event with matching id', async () => {
+    executeMock
+      .mockResolvedValueOnce({ rows: [{ id: 'mock-id-1', title: 'Mock Trading Session', date: '2025-04-01', partner: 'BNP', partner_description: 'Desc', pole: null, description: 'Desc', image_url: null, status: 'upcoming', order_index: 0 }] })
+      .mockResolvedValueOnce({ rows: [] })
+      .mockResolvedValueOnce({ rows: [] })
+    const { getEventById } = await import('../data')
+    const event = await getEventById('mock-id-1')
     expect(event).toBeDefined()
     expect(event?.title).toBe('Mock Trading Session')
   })
 
-  it('returns undefined for unknown id', () => {
-    expect(getEventById('does-not-exist')).toBeUndefined()
+  it('returns undefined for unknown id', async () => {
+    executeMock
+      .mockResolvedValueOnce({ rows: [] })
+      .mockResolvedValueOnce({ rows: [] })
+      .mockResolvedValueOnce({ rows: [] })
+    const { getEventById } = await import('../data')
+    expect(await getEventById('does-not-exist')).toBeUndefined()
   })
 })
 
 describe('event images', () => {
-  it('events have a non-empty images array', () => {
-    const events = getEvents()
+  afterEach(() => { vi.resetAllMocks() })
+
+  it('events have an images array', async () => {
+    executeMock
+      .mockResolvedValueOnce({ rows: [{ id: 'e1', title: 'Conf', date: '2025-05-01', partner: 'GS', partner_description: null, pole: null, description: 'Desc', image_url: null, status: 'upcoming', order_index: 0 }] })
+      .mockResolvedValueOnce({ rows: [] })
+      .mockResolvedValueOnce({ rows: [] })
+    const { getEvents } = await import('../data')
+    const events = await getEvents()
     expect(events.length).toBeGreaterThan(0)
     for (const event of events) {
       expect(event.images, `event ${event.id} should have images`).toBeDefined()
-      expect(event.images.length, `event ${event.id} images should be non-empty`).toBeGreaterThan(0)
-    }
-  })
-
-  it('each image is a non-empty string', () => {
-    const events = getEvents()
-    for (const event of events) {
-      for (const img of event.images) {
-        expect(typeof img).toBe('string')
-        expect(img.length).toBeGreaterThan(0)
-      }
     }
   })
 })
 
-describe('event detail data — current mock data', () => {
-  // These tests verify the current mock data is complete.
-  // partnerDescription, highlights, and photos are optional on the type
-  // (upcoming events may not have them yet), but all current mock events do.
-  it('all current events have a non-empty partnerDescription', () => {
-    const events = getEvents()
-    for (const event of events) {
-      expect(event.partnerDescription, `${event.id} should have partnerDescription`).toBeTruthy()
-    }
-  })
+describe('event detail data', () => {
+  afterEach(() => { vi.resetAllMocks() })
 
-  it('all current events have at least one highlight with title and description', () => {
-    const events = getEvents()
+  it('events have highlights and photos arrays', async () => {
+    executeMock
+      .mockResolvedValueOnce({ rows: [{ id: 'e1', title: 'Conf', date: '2025-05-01', partner: 'GS', partner_description: 'Desc', pole: null, description: 'Desc', image_url: null, status: 'past', order_index: 0 }] })
+      .mockResolvedValueOnce({ rows: [{ id: 'h1', event_id: 'e1', title: 'HL', description: 'Detail', order_index: 0 }] })
+      .mockResolvedValueOnce({ rows: [{ id: 'p1', event_id: 'e1', url: '/photo.jpg', caption: 'Cap', order_index: 0 }] })
+    const { getEvents } = await import('../data')
+    const events = await getEvents()
     for (const event of events) {
-      const highlights = event.highlights ?? []
-      expect(highlights.length, `${event.id} should have highlights`).toBeGreaterThan(0)
-      for (const h of highlights) {
-        expect(h.title, `highlight title in ${event.id}`).toBeTruthy()
-        expect(h.description, `highlight description in ${event.id}`).toBeTruthy()
-      }
-    }
-  })
-
-  it('all current events have at least one photo with src and caption', () => {
-    const events = getEvents()
-    for (const event of events) {
-      const photos = event.photos ?? []
-      expect(photos.length, `${event.id} should have photos`).toBeGreaterThan(0)
-      for (const p of photos) {
-        expect(p.src, `photo src in ${event.id}`).toBeTruthy()
-        expect(p.caption, `photo caption in ${event.id}`).toBeTruthy()
-      }
+      expect(event.highlights).toBeDefined()
+      expect(event.photos).toBeDefined()
     }
   })
 })

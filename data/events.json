@@ -4,9 +4,9 @@
     "title": "Mock Trading Session",
     "date": "2025-04-15",
     "partner": "BNP Paribas CIB",
-    "partnerDescription": "BNP Paribas CIB est la division Corporate & Institutional Banking du groupe BNP Paribas, l'une des banques les mieux notées d'Europe. Présente dans 57 pays, elle offre des solutions sur mesure en matière de financement, de marchés de capitaux et de gestion des risques à ses clients institutionnels et grands corporates. Son pôle Global Markets est l'un des plus actifs de la Place de Paris.",
+    "partnerDescription": "BNP Paribas CIB est l'activité de banque de financement et d'investissement du groupe BNP Paribas. Les équipes accompagnent entreprises et investisseurs sur les sujets de financement, de marchés de capitaux et de gestion des risques.",
     "pole": "Finance de Marché",
-    "description": "Simulation de trading en live avec des traders senior. Accès aux outils professionnels de BNP Paribas CIB.",
+    "description": "Une session pour se mettre dans la peau d'un desk de marché, avec mise en situation et échange avec les équipes.",
     "image": "https://images.unsplash.com/photo-1529218402470-5dec8fea0761?w=800&auto=format&fit=crop&q=80",
     "images": [
       "https://images.unsplash.com/photo-1529218402470-5dec8fea0761?w=800&auto=format&fit=crop&q=80",
@@ -17,33 +17,33 @@
     "highlights": [
       {
         "title": "Session de trading live",
-        "description": "Simulation en conditions réelles sur les plateformes professionnelles de BNP Paribas, avec accès aux flux de marché en direct et aux outils d'exécution institutionnels."
+        "description": "Les participants travaillent sur une simulation inspirée d'une vraie séance de marché, avec outils de pricing, prise de décision et débrief en direct."
       },
       {
         "title": "Masterclass traders senior",
-        "description": "Échange approfondi avec des traders du desk sur les stratégies de trading, la gestion du P&L et les parcours de carrière en salle des marchés."
+        "description": "Les équipes reviennent sur leur quotidien, les réflexes attendus et les compétences qui comptent vraiment en début de carrière."
       },
       {
         "title": "Buffet & networking",
-        "description": "Soirée de networking dans les locaux de BNP Paribas CIB, permettant des échanges libres avec les équipes Sales & Trading et Fixed Income."
+        "description": "La session se termine par un moment plus libre pour poser les questions qu'on n'ose pas toujours poser pendant la présentation."
       }
     ],
     "photos": [
       {
         "src": "https://images.unsplash.com/photo-1529218402470-5dec8fea0761?w=800&auto=format&fit=crop&q=80",
-        "caption": "Accès direct aux plateformes de trading de BNP Paribas CIB en conditions de marché réelles, avec supervision des traders en poste."
+        "caption": "Une mise en situation sur écran, avec les équipes pour expliquer les choix et commenter les mouvements de marché."
       },
       {
         "src": "https://images.unsplash.com/photo-1542052125323-e69ad37a47c2?w=800&auto=format&fit=crop&q=80",
-        "caption": "Présentation des stratégies de gestion de portefeuille par un trader senior du desk Rates, devant l'ensemble des participants."
+        "caption": "Un temps d'échange plus posé pour revenir sur les logiques de marché et la manière dont un desk raisonne au quotidien."
       },
       {
         "src": "https://images.unsplash.com/photo-1608875004752-2fdb6a39ba4c?w=800&auto=format&fit=crop&q=80",
-        "caption": "Sessions de simulation en binôme : prise de position, gestion du P&L et analyse post-trade en conditions réelles."
+        "caption": "Travail en binôme sur une séquence de trading, puis débrief sur les décisions prises pendant l'exercice."
       },
       {
         "src": "https://images.unsplash.com/photo-1528361237150-8a9a7df33035?w=800&auto=format&fit=crop&q=80",
-        "caption": "Moment de networking avec les équipes Sales & Trading autour d'un buffet dans les locaux parisiens de la banque."
+        "caption": "La fin de session laisse de la place aux questions plus directes et aux échanges informels avec les équipes."
       }
     ],
     "status": "upcoming"
@@ -53,9 +53,9 @@
     "title": "Crack the Case",
     "date": "2025-04-22",
     "partner": "McKinsey & Company",
-    "partnerDescription": "McKinsey & Company est l'un des cabinets de conseil en stratégie les plus reconnus au monde, présent dans plus de 65 pays. Ses consultants accompagnent les dirigeants des plus grandes entreprises et institutions publiques sur leurs enjeux de transformation, de fusion-acquisition et de performance opérationnelle. Le bureau de Paris est l'un des plus importants en Europe.",
+    "partnerDescription": "McKinsey & Company est un cabinet de conseil en stratégie présent dans de nombreux pays. Les équipes interviennent notamment sur des sujets de transformation, de performance et de transactions.",
     "pole": "Finance d'Entreprise",
-    "description": "Workshop case study M&A en présence de consultants senior. Simulation d'entretien incluse.",
+    "description": "Un cas M&A pour travailler la structure, les chiffres et la restitution, puis un échange sur les entretiens.",
     "image": "https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=800&auto=format&fit=crop&q=80",
     "images": [
       "https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=800&auto=format&fit=crop&q=80",
@@ -66,33 +66,33 @@
     "highlights": [
       {
         "title": "Workshop case M&A",
-        "description": "Résolution d'un cas de fusion-acquisition réel présenté par des consultants senior de McKinsey, avec analyse financière et recommandation stratégique en équipe."
+        "description": "Les participants avancent en équipe sur un cas de fusion-acquisition, avec un vrai travail de structuration, d'analyse et de restitution."
       },
       {
         "title": "Simulation d'entretien",
-        "description": "Entraînement aux entretiens de conseil en conditions réelles : présentation de pitch, questions de fit et correction en direct par les consultants présents."
+        "description": "Une partie de la session est dédiée aux entretiens, avec retours concrets sur la manière de répondre, de structurer et de tenir le rythme."
       },
       {
         "title": "Speed networking",
-        "description": "Séquence de rencontres courtes avec les consultants pour recueillir des conseils personnalisés sur les candidatures et les parcours de carrière en conseil."
+        "description": "La fin de l'atelier permet de discuter plus librement des candidatures, des parcours et de ce que les consultants regardent vraiment."
       }
     ],
     "photos": [
       {
         "src": "https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=800&auto=format&fit=crop&q=80",
-        "caption": "Présentation du cas M&A par des consultants senior de McKinsey : structuration du problème et identification des leviers de valeur."
+        "caption": "Présentation du cas et cadrage du travail attendu avant le passage en groupe."
       },
       {
         "src": "https://images.unsplash.com/photo-1529218402470-5dec8fea0761?w=800&auto=format&fit=crop&q=80",
-        "caption": "Travail en groupe sur l'analyse financière du cas : modélisation des synergies et construction de la recommandation stratégique."
+        "caption": "Travail en équipe sur les hypothèses, les chiffres clés et la manière d'argumenter une recommandation."
       },
       {
         "src": "https://images.unsplash.com/photo-1564284369929-026ba231f89b?w=800&auto=format&fit=crop&q=80",
-        "caption": "Restitution des livrables devant un jury de consultants McKinsey simulant les conditions réelles d'un entretien de recrutement."
+        "caption": "Restitution finale devant les intervenants, avec des questions qui obligent à défendre le raisonnement jusqu'au bout."
       },
       {
         "src": "https://images.unsplash.com/photo-1542052125323-e69ad37a47c2?w=800&auto=format&fit=crop&q=80",
-        "caption": "Échanges informels après les sessions pour des conseils personnalisés sur les candidatures et les parcours en conseil stratégique."
+        "caption": "Après le cas, les discussions continuent sur les candidatures, les attentes du métier et les débuts en conseil."
       }
     ],
     "status": "upcoming"
@@ -102,9 +102,9 @@
     "title": "Alumni Networking Evening",
     "date": "2025-05-05",
     "partner": "Alumni CS Finance",
-    "partnerDescription": "Le réseau alumni de CentraleSupélec Finance regroupe des professionnels de la finance issus de l'association, travaillant aujourd'hui au sein des plus grandes institutions financières — banques d'investissement, fonds de private equity, asset managers et cabinets de conseil. Leur engagement auprès des étudiants actuels est au cœur de la mission de l'association.",
+    "partnerDescription": "Le réseau alumni de CS Finance rassemble d'anciens membres aujourd'hui en stage ou en poste dans différentes branches de la finance. Ces soirées servent surtout à créer des échanges plus directs entre promotions.",
     "pole": "Alumni",
-    "description": "Soirée networking avec des alumni en poste dans des institutions financières de premier rang.",
+    "description": "Une soirée pour discuter parcours, stages, choix de métier et premiers pas dans le secteur avec des anciens de l'association.",
     "image": "https://images.unsplash.com/photo-1564284369929-026ba231f89b?w=800&auto=format&fit=crop&q=80",
     "images": [
       "https://images.unsplash.com/photo-1564284369929-026ba231f89b?w=800&auto=format&fit=crop&q=80",
@@ -115,33 +115,33 @@
     "highlights": [
       {
         "title": "Tables rondes thématiques",
-        "description": "Échanges structurés par thème — Private Equity, M&A, Sales & Trading — avec des alumni en poste dans les institutions de référence de la Place."
+        "description": "Des tables par métier pour discuter sans filtre de ce qu'on fait réellement en stage ou en poste, et de ce qui surprend au début."
       },
       {
         "title": "Témoignages de parcours",
-        "description": "Interventions d'alumni sur leurs trajectoires depuis CentraleSupélec jusqu'aux postes qu'ils occupent aujourd'hui, avec les conseils qu'ils auraient aimé recevoir."
+        "description": "Les alumni reviennent sur leur parcours, les bifurcations, les erreurs utiles et les conseils qu'ils auraient aimé entendre plus tôt."
       },
       {
         "title": "Cocktail networking",
-        "description": "Soirée ouverte pour créer des contacts durables avec un réseau de professionnels engagés auprès de l'association depuis leurs débuts de carrière."
+        "description": "Le format laisse aussi du temps pour parler simplement, reprendre contact et mettre un visage sur des parcours qu'on croise souvent sur LinkedIn."
       }
     ],
     "photos": [
       {
         "src": "https://images.unsplash.com/photo-1564284369929-026ba231f89b?w=800&auto=format&fit=crop&q=80",
-        "caption": "Soirée d'ouverture en présence d'alumni occupant des postes dans les principales institutions financières de la Place de Paris."
+        "caption": "Ouverture de la soirée avec quelques repères sur les parcours présents et les secteurs représentés."
       },
       {
         "src": "https://images.unsplash.com/photo-1608875004752-2fdb6a39ba4c?w=800&auto=format&fit=crop&q=80",
-        "caption": "Tables rondes thématiques par secteur d'activité — PE, M&A, marchés — permettant des échanges approfondis en petits groupes."
+        "caption": "Des petits groupes par sujet pour permettre des échanges moins formels et des questions plus précises."
       },
       {
         "src": "https://images.unsplash.com/photo-1528361237150-8a9a7df33035?w=800&auto=format&fit=crop&q=80",
-        "caption": "Témoignages de parcours : les alumni reviennent sur leur passage à CS Finance et les portes qu'il leur a ouvertes dans leurs carrières."
+        "caption": "Les alumni racontent ce qui a compté dans leur parcours, sans essayer de lisser les zones de doute."
       },
       {
         "src": "https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=800&auto=format&fit=crop&q=80",
-        "caption": "Cocktail de clôture pour prolonger les échanges et consolider les connexions établies au cours de la soirée."
+        "caption": "La fin de soirée sert surtout à prolonger les conversations commencées pendant les tables rondes."
       }
     ],
     "status": "upcoming"
@@ -151,9 +151,9 @@
     "title": "Sales & Trading Day",
     "date": "2025-03-10",
     "partner": "Goldman Sachs",
-    "partnerDescription": "Goldman Sachs est l'une des banques d'investissement les plus influentes au monde, présente dans plus de 40 pays. Reconnue pour son excellence en fusion-acquisition, sur les marchés de capitaux et en gestion d'actifs, sa présence à Paris en fait un acteur central de la Place financière européenne et un partenaire de premier rang pour nos membres.",
+    "partnerDescription": "Goldman Sachs est une banque d'investissement présente à Paris comme dans d'autres grandes places financières. Les échanges ont porté ici sur les métiers de marchés et les trajectoires de début de carrière.",
     "pole": "Finance de Marché",
-    "description": "Une journée immersive dans les desks de trading de Goldman Sachs à Paris. 30 membres présents, sessions Q&A avec des MDs.",
+    "description": "Une journée dans les équipes de marchés à Paris, avec visite, questions ouvertes et discussions en petit comité.",
     "image": "https://images.unsplash.com/photo-1542052125323-e69ad37a47c2?w=800&auto=format&fit=crop&q=80",
     "images": [
       "https://images.unsplash.com/photo-1542052125323-e69ad37a47c2?w=800&auto=format&fit=crop&q=80",
@@ -164,33 +164,33 @@
     "highlights": [
       {
         "title": "Visite des desks de trading",
-        "description": "Immersion au sein des desks Equities, Fixed Income et FX de Goldman Sachs à Paris, avec présentation des outils, flux d'information et organisation des équipes."
+        "description": "Les membres ont pu voir comment les équipes s'organisent, quels outils elles utilisent et comment circule l'information pendant la journée."
       },
       {
         "title": "Sessions Q&A avec des MDs",
-        "description": "Questions-réponses ouvertes avec des Managing Directors sur les carrières en Sales & Trading, les processus de recrutement et les dynamiques de marché actuelles."
+        "description": "Le temps de questions-réponses a permis d'aborder les trajectoires, les attentes au recrutement et les différences entre desks."
       },
       {
         "title": "Déjeuner avec les équipes",
-        "description": "Déjeuner informel en petits groupes permettant des échanges libres avec les collaborateurs Goldman Sachs, en dehors du cadre formel des présentations."
+        "description": "Le déjeuner a servi à poursuivre les discussions dans un cadre plus simple, avec des questions plus concrètes sur le quotidien et les stages."
       }
     ],
     "photos": [
       {
         "src": "https://images.unsplash.com/photo-1542052125323-e69ad37a47c2?w=800&auto=format&fit=crop&q=80",
-        "caption": "Visite des desks de trading Goldman Sachs à Paris, en présence de 30 membres de l'association accompagnés par les équipes RH."
+        "caption": "Passage dans les équipes de marchés pour voir de près l'environnement de travail et la répartition des rôles."
       },
       {
         "src": "https://images.unsplash.com/photo-1529218402470-5dec8fea0761?w=800&auto=format&fit=crop&q=80",
-        "caption": "Présentation des marchés actions et fixed income par des Managing Directors en poste, avec focus sur les stratégies de 2025."
+        "caption": "Présentation plus large des métiers et des logiques de desk avant les échanges de questions."
       },
       {
         "src": "https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=800&auto=format&fit=crop&q=80",
-        "caption": "Sessions Q&A ouvertes avec les MDs sur les parcours en Sales & Trading, les stages d'été et les programmes de graduate."
+        "caption": "Le format ouvert a permis de poser des questions plus précises sur les stages, les débuts de carrière et le rythme du métier."
       },
       {
         "src": "https://images.unsplash.com/photo-1564284369929-026ba231f89b?w=800&auto=format&fit=crop&q=80",
-        "caption": "Déjeuner avec les équipes Goldman Sachs : l'occasion d'échanges informels et de contacts durables avec des professionnels en poste."
+        "caption": "Le déjeuner a prolongé les échanges dans un cadre plus détendu, loin du format présentation."
       }
     ],
     "status": "past"
@@ -200,9 +200,9 @@
     "title": "M&A Conference",
     "date": "2025-02-18",
     "partner": "Lazard",
-    "partnerDescription": "Lazard est l'un des cabinets de conseil financier indépendants les plus prestigieux au monde, spécialisé dans le conseil en fusion-acquisition et la gestion d'actifs. Fondé en 1848, il compte parmi ses références les plus grandes transactions de marché et opère dans plus de 40 pays, avec une présence historique à Paris.",
+    "partnerDescription": "Lazard est une banque d'affaires et un cabinet de conseil financier actif sur les sujets de fusion-acquisition et de restructuration, avec une présence historique à Paris.",
     "pole": "Finance d'Entreprise",
-    "description": "Conférence sur les grandes transactions M&A de 2024. Présentation des deals par des banquiers d'affaires Lazard.",
+    "description": "Une conférence pour revenir sur quelques deals récents et comprendre comment les équipes les abordent.",
     "image": "https://images.unsplash.com/photo-1608875004752-2fdb6a39ba4c?w=800&auto=format&fit=crop&q=80",
     "images": [
       "https://images.unsplash.com/photo-1608875004752-2fdb6a39ba4c?w=800&auto=format&fit=crop&q=80",
@@ -213,33 +213,33 @@
     "highlights": [
       {
         "title": "Décryptage de deals 2024",
-        "description": "Présentation détaillée des plus grandes transactions M&A de l'année par des banquiers d'affaires Lazard : méthodologie, structuration et enjeux de négociation."
+        "description": "Les intervenants sont revenus sur plusieurs transactions récentes pour expliquer comment on lit un deal au-delà des titres de presse."
       },
       {
         "title": "Panel de discussion",
-        "description": "Table ronde sur les tendances du marché M&A en Europe : secteurs actifs, dynamiques de valorisation et perspectives pour 2025 animée par des professionnels Lazard."
+        "description": "La discussion a ensuite porté sur le marché, les secteurs qui bougent et la manière dont les équipes regardent les valorisations."
       },
       {
         "title": "Networking banque d'affaires",
-        "description": "Moment dédié aux échanges avec l'équipe Lazard sur les opportunités de stage, les processus de recrutement et les conseils pour intégrer la banque d'affaires."
+        "description": "Un dernier temps a été gardé pour parler stages, recrutement et attentes réelles en début de parcours."
       }
     ],
     "photos": [
       {
         "src": "https://images.unsplash.com/photo-1608875004752-2fdb6a39ba4c?w=800&auto=format&fit=crop&q=80",
-        "caption": "Conférence d'ouverture sur les grandes transactions M&A de 2024 présentée par des banquiers d'affaires Lazard devant nos membres."
+        "caption": "Ouverture de la conférence avec quelques transactions choisies pour illustrer différentes logiques de deal."
       },
       {
         "src": "https://images.unsplash.com/photo-1528361237150-8a9a7df33035?w=800&auto=format&fit=crop&q=80",
-        "caption": "Décryptage d'un deal step-by-step : de la due diligence à la structuration de l'offre, en passant par la négociation et le closing."
+        "caption": "Retour détaillé sur un deal, étape par étape, pour voir ce qui se passe vraiment derrière le résumé final."
       },
       {
         "src": "https://images.unsplash.com/photo-1529218402470-5dec8fea0761?w=800&auto=format&fit=crop&q=80",
-        "caption": "Panel de discussion sur les tendances M&A en Europe pour 2025 : secteurs sous tension, consolidation et nouvelles dynamiques de valorisation."
+        "caption": "La discussion s'est ensuite déplacée vers le marché, les secteurs actifs et les points de vigilance sur les valorisations."
       },
       {
         "src": "https://images.unsplash.com/photo-1542052125323-e69ad37a47c2?w=800&auto=format&fit=crop&q=80",
-        "caption": "Networking avec l'équipe Lazard : échanges sur les stages, le processus de recrutement et les conseils pour intégrer la banque d'affaires."
+        "caption": "La fin de l'événement a permis de poser les questions plus pratiques sur les stages et le recrutement."
       }
     ],
     "status": "past"
@@ -249,9 +249,9 @@
     "title": "CFA Study Bootcamp",
     "date": "2025-01-25",
     "partner": "CS Finance Formation",
-    "partnerDescription": "CS Finance Formation est le pôle pédagogique interne de CentraleSupélec Finance, dédié à la préparation des certifications professionnelles et au renforcement des fondamentaux financiers. En partenariat avec des formateurs certifiés CFA, il propose des sessions intensives tout au long de l'année pour accompagner nos membres vers l'excellence technique.",
+    "partnerDescription": "CS Finance Formation est le pôle pédagogique de l'association. Il organise des formats de travail pour consolider les bases techniques et préparer certaines certifications.",
     "pole": "Formation",
-    "description": "Weekend intensif de préparation CFA Level 1. 40 participants, taux de réussite élevé aux sessions suivantes.",
+    "description": "Un week-end dense pour réviser le CFA Level I, faire des annales et repartir avec un plan de travail clair.",
     "image": "https://images.unsplash.com/photo-1528361237150-8a9a7df33035?w=800&auto=format&fit=crop&q=80",
     "images": [
       "https://images.unsplash.com/photo-1528361237150-8a9a7df33035?w=800&auto=format&fit=crop&q=80",
@@ -262,33 +262,33 @@
     "highlights": [
       {
         "title": "Révisions intensives",
-        "description": "Sessions thématiques couvrant l'intégralité du programme CFA Level 1 : Fixed Income, Equity, Derivatives, Economics et Ethical Standards, animées par des formateurs certifiés."
+        "description": "Les séances reprennent les grands blocs du programme pour remettre les bases au clair et pointer les chapitres qui bloquent le plus."
       },
       {
         "title": "Examens blancs chronométrés",
-        "description": "Simulations d'examens en conditions réelles suivies de corrections collectives et d'analyse des erreurs fréquentes pour maximiser le score le jour J."
+        "description": "Des annales chronométrées permettent de se remettre dans le rythme, puis la correction revient sur les erreurs qui coûtent le plus cher."
       },
       {
         "title": "Coaching personnalisé",
-        "description": "Accompagnement individuel pour identifier les points faibles de chaque participant et construire un plan de révision ciblé pour les semaines suivant le bootcamp."
+        "description": "Chaque participant repart avec des priorités de révision plus claires et une idée plus nette de la suite du travail."
       }
     ],
     "photos": [
       {
         "src": "https://images.unsplash.com/photo-1528361237150-8a9a7df33035?w=800&auto=format&fit=crop&q=80",
-        "caption": "Weekend intensif de préparation CFA Level 1 avec 40 participants et des formateurs certifiés, dans les salles de CentraleSupélec."
+        "caption": "Le bootcamp alterne rappels de cours, questions ciblées et temps de travail plus appliqués."
       },
       {
         "src": "https://images.unsplash.com/photo-1564284369929-026ba231f89b?w=800&auto=format&fit=crop&q=80",
-        "caption": "Sessions de révision thématiques en groupes de travail : Fixed Income et Derivatives avec analyse de cas pratiques."
+        "caption": "Les groupes avancent par thème pour remettre les notions en place et repérer les angles morts."
       },
       {
         "src": "https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=800&auto=format&fit=crop&q=80",
-        "caption": "Simulations d'examens chronométrées en conditions réelles, suivies d'une correction collective des points difficiles."
+        "caption": "Les annales servent de test grandeur nature, puis la correction permet de comprendre où partent les points."
       },
       {
         "src": "https://images.unsplash.com/photo-1608875004752-2fdb6a39ba4c?w=800&auto=format&fit=crop&q=80",
-        "caption": "Bilan de fin de bootcamp : analyse des performances individuelles et construction du plan de révision personnalisé pour chaque participant."
+        "caption": "En fin de week-end, chacun repart avec un plan de révision plus concret pour les semaines suivantes."
       }
     ],
     "status": "past"

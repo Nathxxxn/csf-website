@@ -2,7 +2,7 @@
   {
     "pole": "Bureau",
     "badge": "Bureau",
-    "description": "Pilote la stratégie de l'association, coordonne les pôles et représente CS Finance auprès des partenaires et de l'école.",
+    "description": "Donne la direction de l'association, coordonne les pôles et suit les relations avec l'école comme avec les partenaires.",
     "members": [
       { "name": "Nathan Di FRAJA", "role": "Président(e)", "photo": null, "linkedin": "https://www.linkedin.com/in/nathan-di-fraja" },
       { "name": "Léa SEBAG", "role": "Vice-Président(e)", "photo": null, "linkedin": null },
@@ -13,7 +13,7 @@
   {
     "pole": "Finance de Marché",
     "badge": "Marchés",
-    "description": "Trading, produits dérivés, analyse quantitative. Organisation de mock-trading sessions et partenariats avec les desks de banques.",
+    "description": "Le pôle qui creuse les marchés, le trading et les produits dérivés. Il organise aussi les simulations et les échanges avec les desks.",
     "members": [
       { "name": "Prénom Nom", "role": "Responsable", "photo": null, "linkedin": null },
       { "name": "Prénom Nom", "role": "Analyste", "photo": null, "linkedin": null },
@@ -25,7 +25,7 @@
   {
     "pole": "Finance d'Entreprise",
     "badge": "Corporate",
-    "description": "M&A, LBO, valorisation, conseil stratégique. Crack the Case, workshops avec banques d'affaires et cabinets de conseil.",
+    "description": "Le pôle des sujets M&A, LBO, valorisation et case studies. C'est là qu'on travaille les formats orientés deal et conseil.",
     "members": [
       { "name": "Prénom Nom", "role": "Responsable", "photo": null, "linkedin": null },
       { "name": "Prénom Nom", "role": "Analyste", "photo": null, "linkedin": null },
@@ -36,7 +36,7 @@
   {
     "pole": "Formation",
     "badge": "Skills",
-    "description": "Excel financier, Python quantitatif, préparation CFA, SIG. Sessions de formation hebdomadaires pour les membres.",
+    "description": "Le pôle formation travaille les bases qui servent vraiment : Excel, modélisation, Python, compta et préparation aux certifications selon les besoins.",
     "members": [
       { "name": "Prénom Nom", "role": "Responsable", "photo": null, "linkedin": null },
       { "name": "Prénom Nom", "role": "Formateur(trice)", "photo": null, "linkedin": null },
@@ -46,7 +46,7 @@
   {
     "pole": "Alumni",
     "badge": "Network",
-    "description": "Réseau des anciens en poste dans la finance. Mentorat, sessions de networking, soirées alumni.",
+    "description": "Fait vivre le lien avec les anciens et crée des occasions d'échanger franchement sur les parcours, les stages et les débuts de carrière.",
     "members": [
       { "name": "Prénom Nom", "role": "Responsable", "photo": null, "linkedin": null },
       { "name": "Prénom Nom", "role": "Chargé(e) Alumni", "photo": null, "linkedin": null }
@@ -55,7 +55,7 @@
   {
     "pole": "Partenariat",
     "badge": "Business Dev",
-    "description": "Relations entreprises, sponsoring, conventions partenaires. Interface entre CS Finance et les institutions financières.",
+    "description": "Cherche de nouveaux formats avec les entreprises et suit les relations avec les partenaires de l'association.",
     "members": [
       { "name": "Prénom Nom", "role": "Responsable", "photo": null, "linkedin": null },
       { "name": "Prénom Nom", "role": "Chargé(e) de compte", "photo": null, "linkedin": null },

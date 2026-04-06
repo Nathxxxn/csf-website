@@ -1,11 +1,16 @@
-import Link from 'next/link'
+'use client'
+
+import { useRouter } from 'next/navigation'
 import { DotPattern } from '@/components/ui/dot-pattern'
 import { TextAnimate } from '@/components/ui/text-animate'
-import { ShimmerButton } from '@/components/ui/shimmer-button'
+import { FlowButton } from '@/components/ui/flow-button'
+import { LiquidButton } from '@/components/ui/liquid-glass-button'
 import { BlurFade } from '@/components/ui/blur-fade'
 import { cn } from '@/lib/utils'
 
 export function PartnersCta() {
+  const router = useRouter()
+
   return (
     <section className="relative py-32 px-6 overflow-hidden border-t border-border">
       <DotPattern
@@ -28,28 +33,28 @@ export function PartnersCta() {
           by="word"
           className="text-4xl sm:text-5xl font-extrabold tracking-tighter leading-tight mb-6"
         >
-          Collaborez avec CentraleSupélec Finance.
+          Monter un événement avec CS Finance.
         </TextAnimate>
 
         <BlurFade delay={0.4} inView>
           <p className="text-muted-foreground leading-relaxed mb-10 text-base">
-            Accédez à un vivier d&apos;étudiants d&apos;excellence en finance. Workshops, sponsoring, conférences — construisons quelque chose ensemble.
+            Vous voulez organiser une conférence, un workshop ou une rencontre avec nos membres ? On prépare des formats simples, sérieux et utiles pour tout le monde.
           </p>
         </BlurFade>
 
         <BlurFade delay={0.5} inView>
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
-            <Link href="/contact">
-              <ShimmerButton className="px-8 py-3 text-sm font-semibold">
-                Nous contacter →
-              </ShimmerButton>
-            </Link>
-            <a
-              href="#partenaires"
-              className="px-8 py-3 text-sm border border-border rounded-lg text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors"
+            <FlowButton
+              text="En discuter"
+              onClick={() => router.push('/contact')}
+              className="h-[46px] w-[13.5rem] justify-center"
+            />
+            <LiquidButton
+              className="h-[46px] w-[13.5rem] rounded-full px-8 py-3 text-sm font-semibold text-white"
+              onClick={() => router.push('/#partenaires')}
             >
-              Voir nos partenaires
-            </a>
+              Voir les partenaires
+            </LiquidButton>
           </div>
         </BlurFade>
       </div>

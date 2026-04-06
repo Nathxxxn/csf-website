@@ -320,7 +320,7 @@ export function TeamPolesSection({ poles }: TeamPolesSectionProps) {
             className="mb-4 gap-2 bg-white/[0.08] text-muted-foreground backdrop-blur"
           >
             <Sparkles className="h-3 w-3" aria-hidden />
-            Notre Équipe
+            L&apos;équipe
           </Badge>
           <h2
             id="team-poles-heading"
@@ -329,7 +329,7 @@ export function TeamPolesSection({ poles }: TeamPolesSectionProps) {
             Les membres de CS Finance
           </h2>
           <p className="mx-auto max-w-2xl text-muted-foreground">
-            Une équipe passionnée organisée en pôles thématiques pour vous offrir le meilleur de la finance.
+            Des profils différents, répartis par pôle, avec un point commun : faire vivre l&apos;association et transmettre ce qu&apos;ils apprennent.
           </p>
         </motion.div>
 

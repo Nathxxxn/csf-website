@@ -5,7 +5,7 @@ import { getTeam } from '@/lib/data'
 
 export const metadata = {
   title: 'À propos — CentraleSupélec Finance',
-  description: "Histoire, mission et valeurs de CentraleSupélec Finance.",
+  description: "L'esprit, les pôles et le fonctionnement de CentraleSupélec Finance.",
 }
 
 const STATS = [
@@ -25,10 +25,10 @@ export default async function AboutPage() {
           À propos
         </p>
         <h1 className="text-5xl font-extrabold tracking-tighter mb-8 max-w-2xl">
-          L&apos;association finance de référence à CentraleSupélec.
+          CS Finance, c&apos;est une association pour apprendre la finance au contact du terrain.
         </h1>
         <p className="text-muted-foreground leading-relaxed max-w-2xl text-base mb-12">
-          CentraleSupélec Finance rassemble les étudiants passionnés par la finance. Nous organisons des événements de haut niveau avec les meilleures institutions financières, proposons des formations intensives, et construisons un réseau solide entre membres et alumni.
+          On organise des rencontres avec des professionnels, des formats de travail entre membres et des échanges avec les alumni. L&apos;idée est simple : mieux comprendre les métiers, progresser techniquement et créer des liens qui restent utiles après l&apos;école.
         </p>
       </BlurFade>
 

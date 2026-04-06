@@ -37,6 +37,12 @@ export function ScrollExpansionHero({
   }, [])
 
   useEffect(() => {
+    if (!window.location.hash) {
+      window.scrollTo(0, 0)
+    }
+  }, [])
+
+  useEffect(() => {
     const checkIfMobile = () => setIsMobile(window.innerWidth < 768)
     checkIfMobile()
     window.addEventListener('resize', checkIfMobile)

@@ -1,8 +1,6 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import Image from 'next/image'
-
 import type { Partner } from '@/lib/types'
 import { cn } from '@/lib/utils'
 
@@ -45,12 +43,10 @@ function OrbitCard({ partner, angle, radius, mobile }: OrbitCardProps) {
         </div>
       ) : (
         <div className="relative h-full w-full bg-[#0d0d0d]">
-          <Image
+          <img
             src={partner.logo}
             alt={`Logo ${partner.name}`}
-            fill
-            className="object-contain p-3"
-            sizes={mobile ? '72px' : '96px'}
+            className="h-full w-full object-contain p-3"
             onError={() => setImageFailed(true)}
           />
         </div>

@@ -11,7 +11,7 @@ export const metadata = {
 const STATS = [
   { value: 6, suffix: '', label: 'Pôles' },
   { value: 200, suffix: '+', label: 'Membres' },
-  { value: 30, suffix: '+', label: 'Partenaires' },
+  { value: 4000, suffix: '+', label: 'Étudiants' },
   { value: 20, suffix: '+', label: 'Événements / an' },
 ]
 

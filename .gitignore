@@ -42,3 +42,6 @@ node_modules
 .superpowers/
 .worktrees/
 .superpowers/
+
+# local SQLite database
+local.db*

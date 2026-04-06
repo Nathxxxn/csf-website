@@ -5,7 +5,7 @@ import { getTeam } from '@/lib/data'
 
 export const metadata = {
   title: 'À propos — CentraleSupélec Finance',
-  description: "Histoire, mission et valeurs de CentraleSupélec Finance.",
+  description: "L'esprit, les pôles et le fonctionnement de CentraleSupélec Finance.",
 }
 
 const STATS = [
@@ -15,20 +15,20 @@ const STATS = [
   { value: 20, suffix: '+', label: 'Événements / an' },
 ]
 
-export default function AboutPage() {
-  const team = getTeam()
+export default async function AboutPage() {
+  const team = await getTeam()
 
   return (
-    <div className="pt-24 pb-24 max-w-6xl mx-auto px-6">
+    <div className="mx-auto max-w-screen-2xl px-6 pt-24 pb-24 lg:px-10">
       <BlurFade delay={0.1} inView>
         <p className="text-xs tracking-widest uppercase text-muted-foreground mb-2">
           À propos
         </p>
         <h1 className="text-5xl font-extrabold tracking-tighter mb-8 max-w-2xl">
-          L&apos;association finance de référence à CentraleSupélec.
+          CS Finance, c&apos;est une association pour apprendre la finance au contact du terrain.
         </h1>
         <p className="text-muted-foreground leading-relaxed max-w-2xl text-base mb-12">
-          CentraleSupélec Finance rassemble les étudiants passionnés par la finance. Nous organisons des événements de haut niveau avec les meilleures institutions financières, proposons des formations intensives, et construisons un réseau solide entre membres et alumni.
+          On organise des rencontres avec des professionnels, des formats de travail entre membres et des échanges avec les alumni. L&apos;idée est simple : mieux comprendre les métiers, progresser techniquement et créer des liens qui restent utiles après l&apos;école.
         </p>
       </BlurFade>
 
@@ -54,10 +54,10 @@ export default function AboutPage() {
 
       <BlurFade delay={0.3} inView>
         <h2 className="text-2xl font-bold tracking-tight mb-8">Nos pôles</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid auto-rows-fr grid-cols-1 items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {team.map((pole, i) => (
-            <BlurFade key={pole.pole} delay={0.3 + i * 0.07} inView>
-              <div className="rounded-xl border border-border bg-card p-6">
+            <BlurFade key={pole.pole} delay={0.3 + i * 0.07} inView className="h-full">
+              <div className="flex h-full min-h-[160px] flex-col rounded-xl border border-border bg-card p-6 sm:aspect-[2/1]">
                 <span className="text-xs tracking-widest uppercase text-muted-foreground">
                   {pole.badge}
                 </span>

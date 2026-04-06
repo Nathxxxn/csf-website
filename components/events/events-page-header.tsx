@@ -15,12 +15,12 @@ export function EventsPageHeader() {
       </ContainerAnimated>
       <ContainerAnimated>
         <h1 className="text-5xl md:text-7xl font-extrabold tracking-tighter mb-4">
-          Nos Événements
+          Événements
         </h1>
       </ContainerAnimated>
       <ContainerAnimated>
         <p className="text-muted-foreground max-w-xl mx-auto">
-          Conférences avec des institutions de premier rang, workshops, networking, CS Finance possède une grande expérience en rencontres professionnelles.
+          Conférences, ateliers, visites, rencontres alumni. On essaie surtout de faire des formats utiles, avec des intervenants qui connaissent vraiment le terrain.
         </p>
       </ContainerAnimated>
     </ContainerStagger>

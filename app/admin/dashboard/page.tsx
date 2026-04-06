@@ -1,39 +1,83 @@
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { logout } from '@/app/admin/actions'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { SESSION_COOKIE_NAME, verifyCookie } from '@/lib/session'
+import { verifyCookie, SESSION_COOKIE_NAME } from '@/lib/session'
+import { logout } from '@/app/admin/actions/auth'
+import { AccueilTab } from '@/components/admin/tabs/accueil-tab'
+import { EvenementsTab } from '@/components/admin/tabs/evenements-tab'
+import { EquipeTab } from '@/components/admin/tabs/equipe-tab'
+import { PartenairesTab } from '@/components/admin/tabs/partenaires-tab'
+import { AProposTab } from '@/components/admin/tabs/apropos-tab'
+import { getSiteContent, getAdminEvents, getAdminTeam, getAdminPartners } from '@/lib/data'
+import Link from 'next/link'
 
-export default async function AdminDashboardPage() {
+const TABS = ['accueil', 'evenements', 'equipe', 'partenaires', 'apropos'] as const
+type Tab = typeof TABS[number]
+
+const TAB_LABELS: Record<Tab, string> = {
+  accueil: 'Accueil',
+  evenements: 'Événements',
+  equipe: 'Équipe',
+  partenaires: 'Partenaires',
+  apropos: 'À propos',
+}
+
+interface Props {
+  searchParams: Promise<{ tab?: string }>
+}
+
+export default async function AdminDashboardPage({ searchParams }: Props) {
   const cookieStore = await cookies()
-  const session = verifyCookie(cookieStore.get(SESSION_COOKIE_NAME)?.value)
+  const token = cookieStore.get(SESSION_COOKIE_NAME)?.value
+  const session = verifyCookie(token)
+  if (!session) redirect('/admin')
 
-  if (!session) {
-    redirect('/admin')
-  }
+  const { tab: rawTab } = await searchParams
+  const activeTab: Tab = TABS.includes(rawTab as Tab) ? (rawTab as Tab) : 'accueil'
+
+  const [content, events, team, partners] = await Promise.all([
+    getSiteContent(),
+    getAdminEvents(),
+    getAdminTeam(),
+    getAdminPartners(),
+  ])
 
   return (
-    <main className="min-h-screen bg-[#0a0a0a] px-6 py-10 text-white">
-      <div className="mx-auto flex w-full max-w-5xl flex-col gap-8">
-        <header className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-white/45">Administration</p>
-            <h1 className="mt-2 text-3xl font-bold tracking-tight">Console administrateur</h1>
-          </div>
-          <form action={logout}>
-            <Button type="submit" variant="outline" className="border-white/15 bg-transparent text-white hover:bg-white/10">
-              Se déconnecter
-            </Button>
-          </form>
-        </header>
+    <div className="min-h-screen bg-[#0a0a0a] text-white">
+      {/* Header */}
+      <header className="flex items-center justify-between border-b border-white/10 bg-[#111] px-6 py-3">
+        <span className="font-bold">Console Admin</span>
+        <form action={logout}>
+          <button type="submit" className="rounded border border-white/20 px-3 py-1 text-sm text-white/60 hover:border-white/40 hover:text-white">
+            Déconnexion
+          </button>
+        </form>
+      </header>
 
-        <Card className="border-white/10 bg-[#111111] text-white shadow-[0_24px_80px_rgba(0,0,0,0.35)]">
-          <CardContent className="p-8">
-            <p className="text-lg font-medium">Console en cours de développement</p>
-          </CardContent>
-        </Card>
-      </div>
-    </main>
+      {/* Tab navigation */}
+      <nav className="flex border-b border-white/10 bg-[#111] px-6">
+        {TABS.map(tab => (
+          <Link
+            key={tab}
+            href={`/admin/dashboard?tab=${tab}`}
+            className={`px-4 py-2.5 text-sm transition-colors ${
+              activeTab === tab
+                ? 'border-b-2 border-blue-500 font-semibold text-white'
+                : 'text-white/40 hover:text-white/70'
+            }`}
+          >
+            {TAB_LABELS[tab]}
+          </Link>
+        ))}
+      </nav>
+
+      {/* Tab content */}
+      <main className="p-6">
+        {activeTab === 'accueil' && <AccueilTab content={content} />}
+        {activeTab === 'evenements' && <EvenementsTab events={events} />}
+        {activeTab === 'equipe' && <EquipeTab team={team} />}
+        {activeTab === 'partenaires' && <PartenairesTab partners={partners} />}
+        {activeTab === 'apropos' && <AProposTab content={content} team={team} />}
+      </main>
+    </div>
   )
 }

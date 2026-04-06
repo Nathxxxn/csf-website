@@ -7,6 +7,7 @@ interface EventHighlightsSectionProps {
 export function EventHighlightsSection({ event }: EventHighlightsSectionProps) {
   const highlights = event.highlights ?? []
   if (highlights.length === 0) return null
+  const title = event.status === 'upcoming' ? 'Au programme' : "Ce qu'on a fait"
 
   return (
     <section className="px-6 max-w-5xl mx-auto pt-16 pb-0">
@@ -14,7 +15,7 @@ export function EventHighlightsSection({ event }: EventHighlightsSectionProps) {
         Programme
       </p>
       <h2 className="text-2xl font-bold tracking-tighter mb-8">
-        Ce que nous avons organisé
+        {title}
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {highlights.map((highlight) => (

@@ -6,8 +6,8 @@ export const metadata = {
   description: "Les membres de CentraleSupélec Finance, organisés par pôle.",
 }
 
-export default function TeamPage() {
-  const team = getTeam()
+export default async function TeamPage() {
+  const team = await getTeam()
 
   return (
     <div className="pt-16">

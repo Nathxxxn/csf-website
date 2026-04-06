@@ -7,7 +7,7 @@ import { EventPhotosSection } from "@/components/events/event-photos-section"
 import { PartnershipCTA } from "@/components/shared/partnership-cta"
 
 export async function generateStaticParams() {
-  return getEvents().map((e) => ({ id: e.id }))
+  return (await getEvents()).map((e) => ({ id: e.id }))
 }
 
 export async function generateMetadata({
@@ -16,7 +16,7 @@ export async function generateMetadata({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  const event = getEventById(id)
+  const event = await getEventById(id)
   if (!event) return {}
   return {
     title: `${event.title} — CentraleSupélec Finance`,
@@ -30,7 +30,7 @@ export default async function EventPage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  const event = getEventById(id)
+  const event = await getEventById(id)
   if (!event) notFound()
 
   const formattedDate = new Intl.DateTimeFormat("fr-FR", {

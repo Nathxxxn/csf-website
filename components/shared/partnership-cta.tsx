@@ -7,18 +7,16 @@ export function PartnershipCTA() {
         Partenariats
       </p>
       <h2 className="text-3xl font-bold tracking-tighter mb-4">
-        Vous souhaitez collaborer avec nous&nbsp;?
+        Un format à construire avec nous ?
       </h2>
       <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
-        Nous sommes toujours à la recherche de nouvelles entreprises partenaires
-        pour organiser des événements à forte valeur ajoutée pour nos membres.
-        Conférences, workshops, visites de desk&nbsp;— parlons-en.
+        Si vous voulez venir parler d&apos;un métier, proposer un case study ou rencontrer nos membres, on peut en discuter simplement.
       </p>
       <Link
         href="/contact"
         className="inline-flex items-center gap-2 rounded-md bg-white text-black text-sm font-semibold px-6 py-3 transition-opacity hover:opacity-80"
       >
-        Nous contacter
+        Écrire à l&apos;équipe
       </Link>
     </div>
   )

@@ -18,8 +18,8 @@ function pickRandom<T>(arr: T[], n: number): T[] {
   return [...arr].sort(() => Math.random() - 0.5).slice(0, n)
 }
 
-export function TeamPreview() {
-  const poles = getTeam()
+export async function TeamPreview() {
+  const poles = await getTeam()
 
   const allMembers: TeamMember[] = poles
     .flatMap((pole) => pole.members)
@@ -39,15 +39,15 @@ export function TeamPreview() {
         <div className="flex items-end justify-between mb-2 px-6 max-w-6xl mx-auto">
           <div>
             <p className="text-xs tracking-widest uppercase text-muted-foreground mb-2">
-              Organisation
+              L&apos;association
             </p>
-            <h2 className="text-4xl font-bold tracking-tight">Notre équipe</h2>
+            <h2 className="text-4xl font-bold tracking-tight">L&apos;équipe CS Finance</h2>
           </div>
           <Link
             href="/equipe"
             className="text-sm text-muted-foreground border-b border-muted-foreground/30 pb-0.5 hover:text-foreground transition-colors hidden sm:block"
           >
-            Voir tous les membres →
+            Voir toute l&apos;équipe →
           </Link>
         </div>
       </BlurFade>

@@ -163,6 +163,22 @@ interface EventsGalleryProps {
 }
 
 export function EventsGallery({ events }: EventsGalleryProps) {
+  const items = toGalleryItems(events)
+
+  if (items.length === 0) {
+    return (
+      <div className="py-24 text-center text-sm text-muted-foreground">
+        Aucune photo disponible pour l&apos;instant.
+      </div>
+    )
+  }
+
+  // Scale container height based on item count.
+  // Gallery uses ~25% of height for flip animation (175vh) and ~75% for browsing.
+  // Each column needs ~120vh per item; capped between 400vh and 700vh.
+  const maxPerCol = Math.ceil(items.length / 3)
+  const containerVh = Math.min(700, Math.max(400, 175 + maxPerCol * 120))
+
   return (
     <MotionConfig reducedMotion="user">
       <div className="relative">
@@ -175,7 +191,7 @@ export function EventsGallery({ events }: EventsGalleryProps) {
             mixBlendMode: "screen",
           }}
         />
-        <ContainerScroll className="relative h-[700vh]">
+        <ContainerScroll className="relative" style={{ height: `${containerVh}vh` }}>
           <ContainerSticky className="h-svh">
             <ScrollTracker events={events} />
           </ContainerSticky>

@@ -35,37 +35,28 @@ describe('getTeam', () => {
 describe('getEvents', () => {
   afterEach(() => { vi.resetAllMocks() })
 
-  it('returns events with highlights and photos', async () => {
-    executeMock
-      .mockResolvedValueOnce({
-        rows: [{ id: 'e1', title: 'Conf', date: '2025-05-01', partner: 'GS', partner_description: null, pole: null, description: 'Desc', image_url: null, status: 'upcoming', order_index: 0 }],
-      })
-      .mockResolvedValueOnce({ rows: [{ id: 'h1', event_id: 'e1', title: 'HL', description: 'Desc', order_index: 0 }] })
-      .mockResolvedValueOnce({ rows: [] })
-
+  it('returns events with highlights and photos from JSON', async () => {
     const { getEvents } = await import('@/lib/data')
     const result = await getEvents()
 
-    expect(result).toHaveLength(1)
-    expect(result[0].highlights).toHaveLength(1)
-    expect(result[0].photos).toHaveLength(0)
+    expect(result.length).toBeGreaterThan(0)
+    for (const event of result) {
+      expect(Array.isArray(event.highlights)).toBe(true)
+      expect(Array.isArray(event.photos)).toBe(true)
+    }
   })
 })
 
 describe('getPartners', () => {
   afterEach(() => { vi.resetAllMocks() })
 
-  it('returns partners ordered by order_index', async () => {
-    executeMock.mockResolvedValueOnce({
-      rows: [{ id: 'p1', name: 'GS', logo_url: '/gs.png', order_index: 0 }],
-    })
-
+  it('returns partners from JSON', async () => {
     const { getPartners } = await import('@/lib/data')
     const result = await getPartners()
 
-    expect(result).toHaveLength(1)
-    expect(result[0].name).toBe('GS')
-    expect(result[0].logo).toBe('/gs.png')
+    expect(result.length).toBeGreaterThan(0)
+    expect(result[0].name).toBe('Goldman Sachs')
+    expect(result[0].logo).toBe('/images/partners/goldman.png')
   })
 })
 
@@ -73,21 +64,13 @@ describe('getEventById', () => {
   afterEach(() => { vi.resetAllMocks() })
 
   it('returns the event when found', async () => {
-    executeMock
-      .mockResolvedValueOnce({ rows: [{ id: 'e1', title: 'Conf', date: '2025-05-01', partner: 'GS', partner_description: null, pole: null, description: 'Desc', image_url: null, status: 'upcoming', order_index: 0 }] })
-      .mockResolvedValueOnce({ rows: [] })
-      .mockResolvedValueOnce({ rows: [] })
     const { getEventById } = await import('@/lib/data')
-    const result = await getEventById('e1')
+    const result = await getEventById('mock-trading-bnp-2025-04')
     expect(result).toBeDefined()
-    expect(result?.id).toBe('e1')
+    expect(result?.id).toBe('mock-trading-bnp-2025-04')
   })
 
   it('returns undefined when not found', async () => {
-    executeMock
-      .mockResolvedValueOnce({ rows: [] })
-      .mockResolvedValueOnce({ rows: [] })
-      .mockResolvedValueOnce({ rows: [] })
     const { getEventById } = await import('@/lib/data')
     const result = await getEventById('nonexistent')
     expect(result).toBeUndefined()

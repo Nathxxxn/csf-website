@@ -127,9 +127,10 @@ export async function addPhoto(eventId: string, url: string, caption: string) {
   })
 }
 
-export async function updatePhotoCaption(id: string, caption: string) {
+export async function updatePhotoCaption(id: string, formData: FormData) {
   await requireSession()
   const db = getDb()
+  const caption = String(formData.get('caption') ?? '')
   await db.execute({ sql: 'UPDATE event_photos SET caption=? WHERE id=?', args: [caption, id] })
 }
 

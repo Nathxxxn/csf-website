@@ -185,7 +185,7 @@ describe('admin pages', () => {
 
     const { default: AdminDashboardPage } = await import('@/app/admin/dashboard/page')
 
-    await expect(AdminDashboardPage()).rejects.toThrow('NEXT_REDIRECT:/admin')
+    await expect(AdminDashboardPage({ searchParams: Promise.resolve({}) })).rejects.toThrow('NEXT_REDIRECT:/admin')
 
     expect(redirectMock).toHaveBeenCalledWith('/admin')
   })

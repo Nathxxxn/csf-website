@@ -22,9 +22,9 @@ export function Hero() {
 
   return (
     <section className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-background pt-16">
-      <div className="absolute inset-0">
-        <DottedSurface className="absolute inset-0 opacity-70" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08),transparent_40%),linear-gradient(to_bottom,rgba(6,6,6,0.18),rgba(6,6,6,0.82))]" />
+      <div className="absolute inset-0 overflow-hidden">
+        <DottedSurface className="-top-32 h-[calc(100%+8rem)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08),transparent_52%),linear-gradient(to_bottom,rgba(6,6,6,0.04),rgba(6,6,6,0.42))]" />
       </div>
 
       <div className="relative z-10 flex flex-col items-center px-6 max-w-4xl mx-auto text-center">

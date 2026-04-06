@@ -30,8 +30,12 @@ export function DottedSurface({ className, ...props }: DottedSurfaceProps) {
 
     const scene = new THREE.Scene()
     scene.fog = new THREE.Fog(isDark ? 0x060606 : 0xffffff, 2000, 10000)
-
-    const camera = new THREE.PerspectiveCamera(60, width / height, 1, 10000)
+    const camera = new THREE.PerspectiveCamera(
+      60,
+      width / height,
+      1,
+      10000,
+    )
     camera.position.set(0, 355, 1220)
 
     const renderer = new THREE.WebGLRenderer({
@@ -81,7 +85,7 @@ export function DottedSurface({ className, ...props }: DottedSurfaceProps) {
     let animationId = 0
 
     const animate = () => {
-      animationId = window.requestAnimationFrame(animate)
+      animationId = requestAnimationFrame(animate)
 
       const positionAttribute = geometry.attributes.position
       const positionArray = positionAttribute.array as Float32Array
@@ -90,9 +94,11 @@ export function DottedSurface({ className, ...props }: DottedSurfaceProps) {
       for (let ix = 0; ix < AMOUNTX; ix++) {
         for (let iy = 0; iy < AMOUNTY; iy++) {
           const index = i * 3
+
           positionArray[index + 1] =
             Math.sin((ix + count) * 0.3) * 50 +
             Math.sin((iy + count) * 0.5) * 50
+
           i++
         }
       }

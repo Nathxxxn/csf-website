@@ -31,11 +31,13 @@ export async function sendContactEmail(data: ContactFormData): Promise<ActionRes
   }
 
   const resend = new Resend(process.env.RESEND_API_KEY)
-  const to = process.env.CONTACT_EMAIL ?? 'contact@csf.fr'
+  const to = process.env.CONTACT_EMAIL ?? 'contact@csfinance.fr'
+  const fromEmail = process.env.CONTACT_FROM_EMAIL ?? 'noreply@csfinance.fr'
 
   const { error } = await resend.emails.send({
-    from: 'CS Finance Contact <onboarding@resend.dev>',
+    from: `CS Finance <${fromEmail}>`,
     to,
+    replyTo: data.email,
     subject: `[CS Finance] Nouveau message — ${data.subject} (${data.company})`,
     html: `
       <h2>Nouveau message via le site CS Finance</h2>

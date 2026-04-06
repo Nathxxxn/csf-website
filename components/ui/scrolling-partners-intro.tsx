@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import Image from 'next/image'
 
 import type { Partner } from '@/lib/types'
@@ -10,41 +10,41 @@ interface ScrollingPartnersIntroProps {
   partners: Partner[]
 }
 
-interface PartnerCardProps {
+interface OrbitCardProps {
   partner: Partner
-  x: number
-  y: number
+  angle: number
+  radius: number
   mobile: boolean
-  delay: number
 }
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max)
 }
 
-function PartnerCard({ partner, x, y, mobile, delay }: PartnerCardProps) {
+function OrbitCard({ partner, angle, radius, mobile }: OrbitCardProps) {
   const [imageFailed, setImageFailed] = useState(false)
-  const cardSize = mobile ? 72 : 96
+  const size = mobile ? 72 : 96
+  const x = radius * Math.cos(angle)
+  const y = radius * Math.sin(angle)
 
   return (
     <div
       className={cn(
-        'absolute left-1/2 top-1/2 overflow-hidden rounded-[22px] border border-white/12 bg-zinc-950/88 shadow-[0_10px_30px_rgba(0,0,0,0.35)] backdrop-blur-sm',
-        mobile ? 'rounded-[18px]' : 'rounded-[22px]',
+        'absolute z-0 overflow-hidden rounded-2xl border-4 border-white/10 bg-[#111111] shadow-lg transition-transform duration-300 ease-out',
+        mobile ? 'rounded-[18px]' : 'rounded-2xl',
       )}
       style={{
-        width: cardSize,
-        height: cardSize,
-        transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
-        transition: `transform 420ms cubic-bezier(0.22, 1, 0.36, 1) ${delay}ms`,
+        width: size,
+        height: size,
+        transform: `translate(${x}px, ${y}px)`,
       }}
     >
       {imageFailed ? (
-        <div className="flex h-full w-full items-center justify-center p-3 text-center text-[11px] font-semibold leading-tight text-white/88">
+        <div className="flex h-full w-full items-center justify-center p-3 text-center text-[11px] font-semibold leading-tight text-white/85">
           {partner.name}
         </div>
       ) : (
-        <div className="relative h-full w-full p-3">
+        <div className="relative h-full w-full bg-[#0d0d0d]">
           <Image
             src={partner.logo}
             alt={`Logo ${partner.name}`}
@@ -60,100 +60,122 @@ function PartnerCard({ partner, x, y, mobile, delay }: PartnerCardProps) {
 }
 
 export function ScrollingPartnersIntro({ partners }: ScrollingPartnersIntroProps) {
-  const [scrollY, setScrollY] = useState(0)
+  const sectionRef = useRef<HTMLElement | null>(null)
+  const rafRef = useRef<number | null>(null)
+  const [localScroll, setLocalScroll] = useState(0)
   const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
-    const updateViewport = () => setIsMobile(window.innerWidth < 768)
-    const handleScroll = () => setScrollY(window.scrollY)
+    const update = () => {
+      const section = sectionRef.current
+      if (!section) return
 
-    updateViewport()
-    handleScroll()
+      const rect = section.getBoundingClientRect()
+      const maxTravel = Math.max(section.offsetHeight - window.innerHeight, 1)
+      const current = clamp(-rect.top, 0, maxTravel)
+      setLocalScroll(current)
+    }
 
-    window.addEventListener('resize', updateViewport)
+    const handleScroll = () => {
+      if (rafRef.current !== null) return
+      rafRef.current = window.requestAnimationFrame(() => {
+        rafRef.current = null
+        update()
+      })
+    }
+
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768)
+      update()
+    }
+
+    handleResize()
     window.addEventListener('scroll', handleScroll, { passive: true })
+    window.addEventListener('resize', handleResize)
 
     return () => {
-      window.removeEventListener('resize', updateViewport)
       window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('resize', handleResize)
+      if (rafRef.current !== null) {
+        window.cancelAnimationFrame(rafRef.current)
+      }
     }
   }, [])
 
-  const visiblePartners = partners.slice(0, isMobile ? 6 : 8)
-  const progress = clamp(scrollY / (isMobile ? 380 : 560), 0, 1)
-  const maxRadius = isMobile ? 118 : 224
-  const radius = maxRadius * progress
-  const copyOpacity = clamp((progress - 0.32) / 0.4, 0, 1)
-  const ringOpacity = 0.18 + progress * 0.45
+  const orbitCount = isMobile ? 6 : 8
+  const visiblePartners = useMemo(() => {
+    if (partners.length === 0) return []
+    return Array.from({ length: orbitCount }, (_, index) => partners[index % partners.length])
+  }, [orbitCount, partners])
+
+  const animationProgress = clamp(localScroll / (isMobile ? 360 : 500), 0, 1)
+  const expandRadius = animationProgress * (isMobile ? 130 : 300)
+  const centerOpacity = clamp((localScroll - (isMobile ? 160 : 250)) / (isMobile ? 90 : 120), 0, 1)
 
   return (
-    <section className="relative h-[165svh] min-h-[980px] overflow-clip border-b border-border bg-background md:h-[190vh]">
-      <div className="sticky top-0 flex h-svh items-center justify-center overflow-hidden px-4 md:px-8">
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08),transparent_28%),radial-gradient(circle_at_center,rgba(255,255,255,0.03),transparent_52%)]"
-        />
-
-        <div className="relative flex h-[620px] w-full max-w-5xl items-center justify-center md:h-[760px]">
+    <section
+      ref={sectionRef}
+      className="min-h-[170vh] border-b border-border bg-background md:min-h-[200vh]"
+    >
+      <div className="sticky top-0 flex h-screen items-center justify-center overflow-hidden px-4 md:p-8">
+        <div className="relative">
           <div
-            aria-hidden="true"
-            className="absolute rounded-full border border-white/10"
+            className={cn(
+              'flex items-center justify-center rounded-full transition-all duration-500',
+              localScroll > (isMobile ? 220 : 300) ? 'border-2 border-white/10' : 'border-2 border-transparent',
+            )}
             style={{
-              width: isMobile ? 280 : 520,
-              height: isMobile ? 280 : 520,
-              opacity: ringOpacity * 0.65,
+              width: isMobile ? 320 : 600,
+              height: isMobile ? 320 : 600,
             }}
-          />
-          <div
-            aria-hidden="true"
-            className="absolute rounded-full border"
-            style={{
-              width: isMobile ? 210 : 400,
-              height: isMobile ? 210 : 400,
-              borderColor: `rgba(255,255,255,${ringOpacity})`,
-            }}
-          />
-          <div
-            aria-hidden="true"
-            className="absolute rounded-full border border-white/8"
-            style={{
-              width: isMobile ? 150 : 270,
-              height: isMobile ? 150 : 270,
-              opacity: 0.35 + progress * 0.25,
-            }}
-          />
-
-          {visiblePartners.map((partner, index) => {
-            const angle = (Math.PI * 2 * index) / visiblePartners.length - Math.PI / 2
-            const x = radius * Math.cos(angle)
-            const y = radius * Math.sin(angle)
-
-            return (
-              <PartnerCard
-                key={partner.name}
-                partner={partner}
-                x={x}
-                y={y}
-                mobile={isMobile}
-                delay={index * 18}
-              />
-            )
-          })}
-
-          <div className="relative z-20 flex h-[160px] w-[160px] flex-col items-center justify-center rounded-full border border-white/12 bg-zinc-950/88 px-6 text-center shadow-[0_0_80px_rgba(255,255,255,0.03)] backdrop-blur md:h-[220px] md:w-[220px] md:px-10">
-            <p className="text-[10px] font-semibold tracking-[0.32em] uppercase text-white/52 md:text-xs">
-              Partenaires
-            </p>
+          >
             <div
-              className="mt-3 space-y-2 transition-opacity duration-500"
-              style={{ opacity: copyOpacity }}
+              className={cn(
+                'relative flex items-center justify-center rounded-full transition-all duration-500',
+                localScroll > (isMobile ? 90 : 100) ? 'border-2 border-white/16' : 'border-2 border-transparent',
+              )}
+              style={{
+                width: isMobile ? 250 : 500,
+                height: isMobile ? 250 : 500,
+              }}
             >
-              <h2 className="text-xl font-extrabold leading-tight tracking-tight text-white md:text-4xl">
-                Ils nous connaissent deja.
-              </h2>
-              <p className="mx-auto max-w-[180px] text-xs leading-relaxed text-white/62 md:max-w-[220px] md:text-sm">
-                Quelques equipes avec qui nous avons deja travaille, avant meme que la discussion commence.
-              </p>
+              <div
+                className="relative flex items-center justify-center rounded-full bg-gradient-to-r from-white/18 via-white/8 to-white/18 p-px"
+                style={{
+                  width: isMobile ? 190 : 400,
+                  height: isMobile ? 190 : 400,
+                }}
+              >
+                <div className="relative flex h-full w-full items-center justify-center rounded-full bg-background">
+                  {visiblePartners.map((partner, index) => (
+                    <OrbitCard
+                      key={`${partner.name}-${index}`}
+                      partner={partner}
+                      angle={(Math.PI / 4) * index}
+                      radius={expandRadius}
+                      mobile={isMobile}
+                    />
+                  ))}
+
+                  <div
+                    className={cn(
+                      'relative z-20 flex flex-col items-center justify-center text-center transition-opacity duration-500',
+                      centerOpacity > 0 ? 'opacity-100' : 'opacity-0',
+                    )}
+                    style={{ opacity: centerOpacity }}
+                  >
+                    <p className="mb-2 text-[10px] font-semibold tracking-[0.32em] uppercase text-white/48 md:text-xs">
+                      Partenaires
+                    </p>
+                    <h2 className="mb-2 text-3xl font-bold text-white md:text-4xl">
+                      Ils nous connaissent déjà.
+                    </h2>
+                    <p className="max-w-[220px] text-center text-xs leading-relaxed text-white/60 md:max-w-xs md:text-sm">
+                      Quelques équipes avec qui nous avons déjà travaillé et avec qui la discussion existe déjà.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

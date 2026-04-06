@@ -13,12 +13,15 @@ vi.mock('resend', () => {
 
 // Mock environment variables
 vi.stubEnv('RESEND_API_KEY', 'test-key')
-vi.stubEnv('CONTACT_EMAIL', 'contact@csf.fr')
+vi.stubEnv('CONTACT_EMAIL', 'contact@csfinance.fr')
+vi.stubEnv('CONTACT_FROM_EMAIL', 'noreply@csfinance.fr')
 
 const { sendContactEmail } = await import('@/app/contact/actions')
 
 describe('sendContactEmail', () => {
   it('returns success when all fields are valid', async () => {
+    mockSend.mockClear()
+
     const result = await sendContactEmail({
       name: 'Jean Dupont',
       company: 'Goldman Sachs',
@@ -28,6 +31,13 @@ describe('sendContactEmail', () => {
     })
     expect(result.success).toBe(true)
     expect(result.error).toBeUndefined()
+    expect(mockSend).toHaveBeenCalledWith(
+      expect.objectContaining({
+        from: 'CS Finance <noreply@csfinance.fr>',
+        to: 'contact@csfinance.fr',
+        replyTo: 'jean@goldman.com',
+      }),
+    )
   })
 
   it('returns error when email is invalid', async () => {

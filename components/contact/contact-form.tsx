@@ -3,8 +3,8 @@
 import { useState } from 'react'
 import { toast } from 'sonner'
 
+import { RippleArrowButton } from '@/components/ui/ripple-arrow-button'
 import { ShineBorder } from '@/components/ui/shine-border'
-import { ShimmerButton } from '@/components/ui/shimmer-button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import {
@@ -125,13 +125,13 @@ export function ContactForm() {
           />
         </div>
 
-        <ShimmerButton
+        <RippleArrowButton
           type="submit"
           disabled={loading || !subject}
-          className="w-full py-3 text-sm font-semibold"
+          className="mt-1"
         >
-          {loading ? 'Envoi en cours...' : 'Envoyer →'}
-        </ShimmerButton>
+          {loading ? 'Envoi en cours...' : 'Envoyer'}
+        </RippleArrowButton>
       </form>
     </div>
   )

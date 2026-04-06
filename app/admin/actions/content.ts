@@ -4,6 +4,7 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { verifyCookie, SESSION_COOKIE_NAME } from '@/lib/session'
 import { getDb } from '@/lib/db'
+import { handleUpload, type HandleUploadBody } from '@vercel/blob/client'
 
 async function requireSession() {
   const cookieStore = await cookies()
@@ -25,4 +26,14 @@ export async function upsertContent(formData: FormData) {
       })
     }
   }
+}
+
+export async function handleBlobUpload(body: HandleUploadBody) {
+  await requireSession()
+  return handleUpload({
+    body,
+    request: { headers: new Headers() } as Request,
+    onBeforeGenerateToken: async () => ({ allowedContentTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'] }),
+    onUploadCompleted: async () => {},
+  })
 }

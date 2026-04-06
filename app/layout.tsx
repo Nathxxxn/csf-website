@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { SiteChrome } from '@/components/layout/site-chrome'
-import { PageLoader } from '@/components/ui/page-loader'
 import { Toaster } from '@/components/ui/sonner'
 import { ThemeProvider } from '@/components/ui/theme-provider'
 import './globals.css'
@@ -18,7 +17,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="fr" suppressHydrationWarning>
       <body className={`${inter.variable} antialiased`}>
         <ThemeProvider>
-          <PageLoader />
           <SiteChrome>{children}</SiteChrome>
           <Toaster />
         </ThemeProvider>

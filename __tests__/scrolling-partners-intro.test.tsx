@@ -3,13 +3,6 @@ import { describe, expect, it, vi } from 'vitest'
 
 import type { Partner } from '@/lib/types'
 
-vi.mock('next/image', () => ({
-  default: ({ alt = '', fill: _fill, ...props }: React.ComponentProps<'img'> & { alt?: string }) => (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img alt={alt} {...props} />
-  ),
-}))
-
 const partners: Partner[] = [
   { name: 'Goldman Sachs', logo: '/images/partners/goldman.png' },
   { name: 'BNP Paribas CIB', logo: '/images/partners/bnp.png' },

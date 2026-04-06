@@ -19,7 +19,7 @@ export default async function AboutPage() {
   const team = await getTeam()
 
   return (
-    <div className="mx-auto max-w-screen-2xl px-6 pt-24 pb-24 lg:px-10">
+    <div className="mx-auto px-6 pt-24 pb-24 lg:px-10">
       <BlurFade delay={0.1} inView>
         <p className="text-xs tracking-widest uppercase text-muted-foreground mb-2">
           À propos

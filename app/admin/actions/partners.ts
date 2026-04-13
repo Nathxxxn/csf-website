@@ -4,25 +4,28 @@ import { revalidatePath } from 'next/cache'
 import { randomUUID } from 'crypto'
 import { requireAdminSession } from '@/lib/session'
 import { getDb } from '@/lib/db'
+import { partnerSchema, parseFormData } from '@/lib/validation'
 
 export async function createPartner(formData: FormData) {
   await requireAdminSession()
+  const data = parseFormData(partnerSchema, formData)
   const db = getDb()
   const { rows } = await db.execute('SELECT MAX(order_index) as m FROM partners')
   const maxOrder = (rows[0]?.m as number | null) ?? -1
   await db.execute({
     sql: 'INSERT INTO partners (id, name, logo_url, order_index) VALUES (?, ?, ?, ?)',
-    args: [randomUUID(), String(formData.get('name') ?? ''), String(formData.get('logo_url') ?? ''), maxOrder + 1],
+    args: [randomUUID(), data.name, data.logo_url, maxOrder + 1],
   })
   revalidatePath('/')
 }
 
 export async function updatePartner(id: string, formData: FormData) {
   await requireAdminSession()
+  const data = parseFormData(partnerSchema, formData)
   const db = getDb()
   await db.execute({
     sql: 'UPDATE partners SET name=?, logo_url=? WHERE id=?',
-    args: [String(formData.get('name') ?? ''), String(formData.get('logo_url') ?? ''), id],
+    args: [data.name, data.logo_url, id],
   })
   revalidatePath('/')
 }

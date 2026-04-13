@@ -1,5 +1,3 @@
-import eventsJson from '@/data/events.json'
-import partnersJson from '@/data/partners.json'
 import type { PoleData, Event, Partner, AdminPole, AdminEvent, AdminPartner, SiteContent } from './types'
 import { getDb } from './db'
 
@@ -31,10 +29,43 @@ export async function getTeam(): Promise<PoleData[]> {
 }
 
 export async function getEvents(): Promise<Event[]> {
-  return eventsJson.map(e => ({
-    ...e,
-    status: e.status as 'upcoming' | 'past',
-  }))
+  const db = getDb()
+  const { rows: eventRows } = await db.execute('SELECT * FROM events ORDER BY order_index')
+  const { rows: highlightRows } = await db.execute('SELECT * FROM event_highlights ORDER BY order_index')
+  const { rows: photoRows } = await db.execute('SELECT * FROM event_photos ORDER BY order_index')
+
+  return eventRows.map(e => {
+    const status = requireString(e.status, 'event.status')
+    if (status !== 'upcoming' && status !== 'past') {
+      throw new Error(`Invalid event status: "${status}"`)
+    }
+    const photos = photoRows
+      .filter(p => p.event_id === e.id)
+      .map(p => ({
+        src: requireString(p.url, 'photo.url'),
+        caption: (p.caption as string | null) ?? '',
+      }))
+
+    return {
+      id: requireString(e.id, 'event.id'),
+      title: requireString(e.title, 'event.title'),
+      date: requireString(e.date, 'event.date'),
+      partner: requireString(e.partner, 'event.partner'),
+      partnerDescription: (e.partner_description as string | null) ?? null,
+      pole: (e.pole as string | null) ?? null,
+      description: requireString(e.description, 'event.description'),
+      image: (e.image_url as string | null) ?? null,
+      images: photos.map(p => p.src),
+      highlights: highlightRows
+        .filter(h => h.event_id === e.id)
+        .map(h => ({
+          title: requireString(h.title, 'highlight.title'),
+          description: requireString(h.description, 'highlight.description'),
+        })),
+      photos,
+      status,
+    }
+  })
 }
 
 export async function getUpcomingEvents(): Promise<Event[]> {
@@ -52,7 +83,12 @@ export async function getPastEvents(): Promise<Event[]> {
 }
 
 export async function getPartners(): Promise<Partner[]> {
-  return partnersJson as Partner[]
+  const db = getDb()
+  const { rows } = await db.execute('SELECT * FROM partners ORDER BY order_index')
+  return rows.map(p => ({
+    name: requireString(p.name, 'partner.name'),
+    logo: requireString(p.logo_url, 'partner.logo_url'),
+  }))
 }
 
 export async function getEventById(id: string): Promise<Event | undefined> {

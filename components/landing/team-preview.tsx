@@ -23,11 +23,12 @@ export async function TeamPreview() {
 
   const allMembers: TeamMember[] = poles
     .flatMap((pole) => pole.members)
+    .filter((member) => member.photo !== null)
     .map((member, index) => ({
       id: String(index),
       name: member.name,
       role: member.role,
-      image: member.photo ?? PLACEHOLDER_AVATARS[index % PLACEHOLDER_AVATARS.length],
+      image: member.photo!,
       social: member.linkedin ? { linkedin: member.linkedin } : undefined,
     }))
 

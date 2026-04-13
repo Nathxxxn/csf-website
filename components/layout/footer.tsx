@@ -20,7 +20,7 @@ export function Footer() {
         </div>
         <div className="flex items-center gap-6 text-xs text-muted-foreground">
           <Link
-            href="https://linkedin.com"
+            href="https://www.linkedin.com/company/centralesup%C3%A9lec-finance"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-foreground transition-colors"
@@ -29,7 +29,7 @@ export function Footer() {
           </Link>
           <Separator orientation="vertical" className="h-3" />
           <Link
-            href="https://instagram.com"
+            href="https://www.instagram.com/centralesupelec_finance/"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-foreground transition-colors"

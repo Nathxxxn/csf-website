@@ -8,10 +8,10 @@ import { DottedSurface } from "@/components/ui/dotted-surface";
 import { LiquidButton } from "@/components/ui/liquid-glass-button";
 import MotionButton from "@/components/ui/motion-button";
 
-const TEXT_BADGE_DELAY  = 1.0      // seconds from mount
-const TEXT_TITLE_DELAY  = 1.15
-const TEXT_SUB_DELAY    = 1.35
-const TEXT_BTNS_DELAY   = 1.5
+const TEXT_BADGE_DELAY  = 0.05     // seconds from mount
+const TEXT_TITLE_DELAY  = 0.1
+const TEXT_SUB_DELAY    = 0.25
+const TEXT_BTNS_DELAY   = 0.4
 
 const TITLE_WORDS = ["La", "finance,", "en", "vrai."];
 const LIQUID_CTA_CLASS = "h-[46px] w-[13.5rem] rounded-full px-8 py-3 text-sm font-semibold text-white"

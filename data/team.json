@@ -4,10 +4,10 @@
     "badge": "Bureau",
     "description": "Donne la direction de l'association, coordonne les pôles et suit les relations avec l'école comme avec les partenaires.",
     "members": [
-      { "name": "Nathan Di FRAJA", "role": "Président(e)", "photo": null, "linkedin": "https://www.linkedin.com/in/nathan-di-fraja" },
-      { "name": "Léa SEBAG", "role": "Vice-Président(e)", "photo": null, "linkedin": "https://www.linkedin.com/in/l%C3%A9asebag/" },
-      { "name": "Tibor DUBOIS", "role": "Trésorier(ère)", "photo": null, "linkedin": "https://www.linkedin.com/in/tibordubois/" },
-      { "name": "Emna BANNOUR", "role": "Secrétaire Générale", "photo": null, "linkedin": "https://www.linkedin.com/in/emna-bannour/" }
+      { "name": "Nathan Di FRAJA", "role": "Président(e)", "photo": "/team/nathan.jpeg", "linkedin": "https://www.linkedin.com/in/nathan-di-fraja" },
+      { "name": "Léa SEBAG", "role": "Vice-Président(e)", "photo": "/team/l%C3%A9a.jpeg", "linkedin": "https://www.linkedin.com/in/l%C3%A9asebag/" },
+      { "name": "Tibor DUBOIS", "role": "Trésorier(ère)", "photo": "/team/tibor.jpeg", "linkedin": "https://www.linkedin.com/in/tibordubois/" },
+      { "name": "Emna BANNOUR", "role": "Secrétaire Générale", "photo": "/team/emna.jpeg", "linkedin": "https://www.linkedin.com/in/emna-bannour/" }
     ]
   },
   {
@@ -16,10 +16,10 @@
     "description": "Le pôle qui creuse les marchés, le trading et les produits dérivés. Il organise aussi les simulations et les échanges avec les desks.",
     "members": [
       { "name": "Luis Bessa Leite", "role": "VP Market", "photo": null, "linkedin": "https://www.linkedin.com/in/luisbessaleite/" },
-      { "name": "Bourhan Kayal", "role": "Membre", "photo": null, "linkedin": "https://www.linkedin.com/in/bourhan-kayal-4b913118a/" },
-      { "name": "Johary Meraud", "role": "Membre", "photo": null, "linkedin": "https://www.linkedin.com/in/joharymeraud/" },
-      { "name": "Alexandre Camps", "role": "Membre", "photo": null, "linkedin": "https://www.linkedin.com/in/alexandre-camps-36a916217/" },
-      { "name": "Malek Ait Mokhtar", "role": "Membre", "photo": null, "linkedin": "https://www.linkedin.com/in/malekaitmokhtar/" }
+      { "name": "Bourhan Kayal", "role": "Membre", "photo": "/team/bourhan.jpeg", "linkedin": "https://www.linkedin.com/in/bourhan-kayal-4b913118a/" },
+      { "name": "Johary Meraud", "role": "Membre", "photo": "/team/johary.jpeg", "linkedin": "https://www.linkedin.com/in/joharymeraud/" },
+      { "name": "Alexandre Camps", "role": "Membre", "photo": "/team/alexandre.jpeg", "linkedin": "https://www.linkedin.com/in/alexandre-camps-36a916217/" },
+      { "name": "Malek Ait Mokhtar", "role": "Membre", "photo": "/team/malek.jpeg", "linkedin": "https://www.linkedin.com/in/malekaitmokhtar/" }
     ]
   },
   {
@@ -27,11 +27,11 @@
     "badge": "Corporate",
     "description": "Le pôle des sujets M&A, LBO, valorisation et case studies. C'est là qu'on travaille les formats orientés deal et conseil.",
     "members": [
-      { "name": "Hector Marie", "role": "VP Entreprise", "photo": null, "linkedin": "https://www.linkedin.com/in/hector-marie-94a545385/" },
+      { "name": "Hector Marie", "role": "VP Entreprise", "photo": "/team/hector.jpeg", "linkedin": "https://www.linkedin.com/in/hector-marie-94a545385/" },
       { "name": "Maxime Negre", "role": "Membre", "photo": null, "linkedin": "https://www.linkedin.com/in/maxime-n%C3%A8gre-409b57287/" },
-      { "name": "Jared Bilstein", "role": "Membre", "photo": null, "linkedin": "https://www.linkedin.com/in/jared-bilstein-232b0b2a6/" },
-      { "name": "Noah Cohen", "role": "Membre", "photo": null, "linkedin": "https://www.linkedin.com/in/noah-cohen-441b04377/" },
-      { "name": "Tibor Dubois", "role": "Membre", "photo": null, "linkedin": "https://www.linkedin.com/in/tibordubois/" }
+      { "name": "Jared Bilstein", "role": "Membre", "photo": "/team/jared.jpeg", "linkedin": "https://www.linkedin.com/in/jared-bilstein-232b0b2a6/" },
+      { "name": "Noah Cohen", "role": "Membre", "photo": "/team/noah.jpeg", "linkedin": "https://www.linkedin.com/in/noah-cohen-441b04377/" },
+      { "name": "Tibor Dubois", "role": "Membre", "photo": "/team/tibor.jpeg", "linkedin": "https://www.linkedin.com/in/tibordubois/" }
     ]
   },
   {
@@ -40,8 +40,8 @@
     "description": "Le pôle formation travaille les bases qui servent vraiment : Excel, modélisation, Python, compta et préparation aux certifications selon les besoins.",
     "members": [
       { "name": "Akram Merik", "role": "VP Formation", "photo": null, "linkedin": "https://www.linkedin.com/in/akram-merik-4b0205320/" },
-      { "name": "Marc Burghgraeve", "role": "Membre", "photo": null, "linkedin": "https://www.linkedin.com/in/marc-burghgraeve/" },
-      { "name": "Azer Daly", "role": "Membre", "photo": null, "linkedin": "https://www.linkedin.com/in/azer-daly-b40514382/" }
+      { "name": "Marc Burghgraeve", "role": "Membre", "photo": "/team/marc.jpeg", "linkedin": "https://www.linkedin.com/in/marc-burghgraeve/" },
+      { "name": "Azer Daly", "role": "Membre", "photo": "/team/azer.jpeg", "linkedin": "https://www.linkedin.com/in/azer-daly-b40514382/" }
     ]
   },
   {
@@ -50,7 +50,7 @@
     "description": "Fait vivre le lien avec les anciens et crée des occasions d'échanger franchement sur les parcours, les stages et les débuts de carrière.",
     "members": [
       { "name": "Alexis Sdika", "role": "VP Alumni", "photo": null, "linkedin": "https://www.linkedin.com/in/alexis-sdika/" },
-      { "name": "Alexandre Camps", "role": "Membre", "photo": null, "linkedin": "https://www.linkedin.com/in/alexandre-camps-36a916217/" }
+      { "name": "Alexandre Camps", "role": "Membre", "photo": "/team/alexandre.jpeg", "linkedin": "https://www.linkedin.com/in/alexandre-camps-36a916217/" }
     ]
   },
   {
@@ -58,7 +58,7 @@
     "badge": "Business Dev",
     "description": "Cherche de nouveaux formats avec les entreprises et suit les relations avec les partenaires de l'association.",
     "members": [
-      { "name": "Sacha Micheneau", "role": "VP Partenariat", "photo": null, "linkedin": "https://www.linkedin.com/in/sachamicheneau/" },
+      { "name": "Sacha Micheneau", "role": "VP Partenariat", "photo": "/team/sacha.jpeg", "linkedin": "https://www.linkedin.com/in/sachamicheneau/" },
       { "name": "Salma Lakim", "role": "Membre", "photo": null, "linkedin": "https://www.linkedin.com/in/salma-lakim-2004sl/" }
     ]
   }

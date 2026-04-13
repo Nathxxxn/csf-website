@@ -15,14 +15,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { sendContactEmail } from '@/app/contact/actions'
-
-const SUBJECTS = [
-  { value: 'partnership', label: 'Partenariat événementiel' },
-  { value: 'sponsoring', label: 'Sponsoring' },
-  { value: 'conference', label: 'Conférence / Workshop' },
-  { value: 'recruiting', label: 'Recrutement' },
-  { value: 'other', label: 'Autre' },
-]
+import { CONTACT_SUBJECTS } from '@/lib/constants'
 
 export function ContactForm() {
   const [loading, setLoading] = useState(false)
@@ -100,7 +93,7 @@ export function ContactForm() {
               <SelectValue placeholder="Choisir un sujet" />
             </SelectTrigger>
             <SelectContent>
-              {SUBJECTS.map(subjectOption => (
+              {CONTACT_SUBJECTS.map(subjectOption => (
                 <SelectItem key={subjectOption.value} value={subjectOption.value}>
                   {subjectOption.label}
                 </SelectItem>

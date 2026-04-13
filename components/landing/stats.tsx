@@ -1,12 +1,6 @@
 import { NumberTicker } from '@/components/ui/number-ticker'
 import { BlurFade } from '@/components/ui/blur-fade'
-
-const STATS = [
-  { value: 6, suffix: '', label: 'Pôles' },
-  { value: 200, suffix: '+', label: 'Membres' },
-  { value: 4000, suffix: '+', label: 'Étudiants' },
-  { value: 20, suffix: '+', label: 'Événements / an' },
-]
+import { STATS } from '@/lib/constants'
 
 export function Stats() {
   return (

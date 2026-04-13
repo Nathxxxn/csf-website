@@ -2,18 +2,12 @@ import { BlurFade } from '@/components/ui/blur-fade'
 import { NumberTicker } from '@/components/ui/number-ticker'
 import { Separator } from '@/components/ui/separator'
 import { getTeam } from '@/lib/data'
+import { STATS } from '@/lib/constants'
 
 export const metadata = {
   title: 'À propos — CentraleSupélec Finance',
   description: "L'esprit, les pôles et le fonctionnement de CentraleSupélec Finance.",
 }
-
-const STATS = [
-  { value: 6, suffix: '', label: 'Pôles' },
-  { value: 200, suffix: '+', label: 'Membres' },
-  { value: 4000, suffix: '+', label: 'Étudiants' },
-  { value: 20, suffix: '+', label: 'Événements / an' },
-]
 
 export default async function AboutPage() {
   const team = await getTeam()

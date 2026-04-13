@@ -29,7 +29,7 @@ export function EventPhotosSection({ event }: EventPhotosSectionProps) {
           <div className="w-full md:w-1/2 aspect-video relative rounded-xl overflow-hidden border border-border flex-shrink-0">
             <Image
               src={photo.src}
-              alt={photo.caption}
+              alt={photo.caption ?? ''}
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 50vw"

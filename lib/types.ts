@@ -22,7 +22,7 @@ export interface EventHighlight {
 
 export interface EventPhoto {
   src: string
-  caption: string
+  caption: string | null
 }
 
 export interface Event {

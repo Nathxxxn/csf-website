@@ -3,17 +3,11 @@
 import Link from 'next/link'
 import { MagicCard } from '@/components/ui/magic-card'
 import { Badge } from '@/components/ui/badge'
+import { formatEventDate } from '@/lib/utils'
 import type { Event } from '@/lib/types'
 
 interface EventCardProps {
   event: Event
-}
-
-function formatDate(dateStr: string): string {
-  return new Date(dateStr + 'T00:00:00').toLocaleDateString('fr-FR', {
-    month: 'long',
-    year: 'numeric',
-  })
 }
 
 export function EventCard({ event }: EventCardProps) {
@@ -39,7 +33,7 @@ export function EventCard({ event }: EventCardProps) {
         <div className="p-5 flex flex-col flex-1">
           <div className="flex items-center gap-2 mb-3">
             <span className="text-xs tracking-widest uppercase text-muted-foreground">
-              {formatDate(event.date)}
+              {formatEventDate(event.date)}
             </span>
             <span className="text-muted-foreground">·</span>
             <span className="text-xs text-muted-foreground">{event.partner}</span>

@@ -1,20 +1,11 @@
 'use server'
 
-import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation'
-import { verifyCookie, SESSION_COOKIE_NAME } from '@/lib/session'
+import { requireAdminSession } from '@/lib/session'
 import { getDb } from '@/lib/db'
 import { handleUpload, type HandleUploadBody } from '@vercel/blob/client'
 
-async function requireSession() {
-  const cookieStore = await cookies()
-  const token = cookieStore.get(SESSION_COOKIE_NAME)?.value
-  const session = verifyCookie(token)
-  if (!session) redirect('/admin')
-}
-
 export async function upsertContent(formData: FormData) {
-  await requireSession()
+  await requireAdminSession()
   const db = getDb()
   const keys = ['hero_title', 'hero_subtitle', 'stats_poles', 'stats_membres', 'stats_evenements', 'apropos_mission_title', 'apropos_mission_text']
   for (const key of keys) {
@@ -29,7 +20,7 @@ export async function upsertContent(formData: FormData) {
 }
 
 export async function handleBlobUpload(body: HandleUploadBody) {
-  await requireSession()
+  await requireAdminSession()
   return handleUpload({
     body,
     request: { headers: new Headers() } as Request,

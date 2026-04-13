@@ -1,21 +1,13 @@
 'use server'
 
-import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
 import { randomUUID } from 'crypto'
-import { verifyCookie, SESSION_COOKIE_NAME } from '@/lib/session'
+import { requireAdminSession } from '@/lib/session'
 import { getDb } from '@/lib/db'
 
-async function requireSession() {
-  const cookieStore = await cookies()
-  const token = cookieStore.get(SESSION_COOKIE_NAME)?.value
-  const session = verifyCookie(token)
-  if (!session) redirect('/admin')
-}
-
 export async function createEvent(formData: FormData) {
-  await requireSession()
+  await requireAdminSession()
   const db = getDb()
   const { rows } = await db.execute('SELECT MAX(order_index) as max_order FROM events')
   const maxOrder = (rows[0]?.max_order as number | null) ?? -1
@@ -40,7 +32,7 @@ export async function createEvent(formData: FormData) {
 }
 
 export async function updateEvent(id: string, formData: FormData) {
-  await requireSession()
+  await requireAdminSession()
   const db = getDb()
   await db.execute({
     sql: 'UPDATE events SET title=?, date=?, partner=?, partner_description=?, pole=?, description=?, status=? WHERE id=?',
@@ -60,14 +52,14 @@ export async function updateEvent(id: string, formData: FormData) {
 }
 
 export async function updateEventImage(id: string, imageUrl: string) {
-  await requireSession()
+  await requireAdminSession()
   const db = getDb()
   await db.execute({ sql: 'UPDATE events SET image_url=? WHERE id=?', args: [imageUrl, id] })
   revalidatePath(`/evenements/${id}`)
 }
 
 export async function deleteEvent(id: string) {
-  await requireSession()
+  await requireAdminSession()
   const db = getDb()
   await db.execute({ sql: 'DELETE FROM events WHERE id=?', args: [id] })
   revalidatePath('/evenements')
@@ -75,7 +67,7 @@ export async function deleteEvent(id: string) {
 }
 
 export async function reorderEvents(ids: string[]) {
-  await requireSession()
+  await requireAdminSession()
   const db = getDb()
   for (let i = 0; i < ids.length; i++) {
     await db.execute({ sql: 'UPDATE events SET order_index=? WHERE id=?', args: [i, ids[i]] })
@@ -83,7 +75,7 @@ export async function reorderEvents(ids: string[]) {
 }
 
 export async function createHighlight(eventId: string, formData: FormData) {
-  await requireSession()
+  await requireAdminSession()
   const db = getDb()
   const { rows } = await db.execute({ sql: 'SELECT MAX(order_index) as m FROM event_highlights WHERE event_id=?', args: [eventId] })
   const maxOrder = (rows[0]?.m as number | null) ?? -1
@@ -94,7 +86,7 @@ export async function createHighlight(eventId: string, formData: FormData) {
 }
 
 export async function updateHighlight(id: string, formData: FormData) {
-  await requireSession()
+  await requireAdminSession()
   const db = getDb()
   await db.execute({
     sql: 'UPDATE event_highlights SET title=?, description=? WHERE id=?',
@@ -103,13 +95,13 @@ export async function updateHighlight(id: string, formData: FormData) {
 }
 
 export async function deleteHighlight(id: string) {
-  await requireSession()
+  await requireAdminSession()
   const db = getDb()
   await db.execute({ sql: 'DELETE FROM event_highlights WHERE id=?', args: [id] })
 }
 
 export async function reorderHighlights(ids: string[]) {
-  await requireSession()
+  await requireAdminSession()
   const db = getDb()
   for (let i = 0; i < ids.length; i++) {
     await db.execute({ sql: 'UPDATE event_highlights SET order_index=? WHERE id=?', args: [i, ids[i]] })
@@ -117,7 +109,7 @@ export async function reorderHighlights(ids: string[]) {
 }
 
 export async function addPhoto(eventId: string, url: string, caption: string) {
-  await requireSession()
+  await requireAdminSession()
   const db = getDb()
   const { rows } = await db.execute({ sql: 'SELECT MAX(order_index) as m FROM event_photos WHERE event_id=?', args: [eventId] })
   const maxOrder = (rows[0]?.m as number | null) ?? -1
@@ -128,20 +120,20 @@ export async function addPhoto(eventId: string, url: string, caption: string) {
 }
 
 export async function updatePhotoCaption(id: string, formData: FormData) {
-  await requireSession()
+  await requireAdminSession()
   const db = getDb()
   const caption = String(formData.get('caption') ?? '')
   await db.execute({ sql: 'UPDATE event_photos SET caption=? WHERE id=?', args: [caption, id] })
 }
 
 export async function deletePhoto(id: string) {
-  await requireSession()
+  await requireAdminSession()
   const db = getDb()
   await db.execute({ sql: 'DELETE FROM event_photos WHERE id=?', args: [id] })
 }
 
 export async function reorderPhotos(ids: string[]) {
-  await requireSession()
+  await requireAdminSession()
   const db = getDb()
   for (let i = 0; i < ids.length; i++) {
     await db.execute({ sql: 'UPDATE event_photos SET order_index=? WHERE id=?', args: [i, ids[i]] })

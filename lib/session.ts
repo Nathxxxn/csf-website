@@ -1,4 +1,6 @@
 import { createHmac, timingSafeEqual } from 'node:crypto'
+import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
 
 export const SESSION_COOKIE_NAME = 'csf_admin_session'
 export const SESSION_MAX_AGE_SECONDS = 60 * 60 * 8
@@ -128,4 +130,15 @@ export function getSessionCookieOptions(): CookieOptions {
     secure: process.env.NODE_ENV === 'production',
     maxAge: SESSION_MAX_AGE_SECONDS,
   }
+}
+
+/**
+ * À appeler en début de chaque Server Action admin.
+ * Redirige vers /admin si la session est absente ou invalide.
+ */
+export async function requireAdminSession(): Promise<void> {
+  const cookieStore = await cookies()
+  const token = cookieStore.get(SESSION_COOKIE_NAME)?.value
+  const session = verifyCookie(token)
+  if (!session) redirect('/admin')
 }

@@ -85,11 +85,11 @@ export function ContactForm() {
         </div>
 
         <div className="flex flex-col gap-2">
-          <label className="text-xs tracking-widest uppercase text-muted-foreground">
+          <label htmlFor="subject" className="text-xs tracking-widest uppercase text-muted-foreground">
             Sujet *
           </label>
           <Select onValueChange={setSubject} value={subject}>
-            <SelectTrigger>
+            <SelectTrigger id="subject">
               <SelectValue placeholder="Choisir un sujet" />
             </SelectTrigger>
             <SelectContent>

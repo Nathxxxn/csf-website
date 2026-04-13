@@ -14,3 +14,6 @@ export const CONTACT_SUBJECTS = [
   { value: 'recruiting',  label: 'Recrutement' },
   { value: 'other',       label: 'Autre' },
 ] as const
+
+export type Stat = typeof STATS[number]
+export type ContactSubject = typeof CONTACT_SUBJECTS[number]

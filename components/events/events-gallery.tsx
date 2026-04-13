@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/animated-gallery"
 import type { Event } from "@/lib/types"
 
-// One entry per photo — multiple per event
+// One entry per event
 interface GalleryItem {
   eventId: string
   title: string
@@ -33,18 +33,17 @@ function formatDate(dateStr: string): string {
 // Progress threshold at which the gallery flips flat and navigation becomes active
 const REVEAL_THRESHOLD = 0.25
 
-/** Flatten each event's images[] into individual gallery items */
+/** One gallery item per event, using the event's main image */
 function toGalleryItems(events: Event[]): GalleryItem[] {
-  return events.flatMap((event) => {
-    const imgs = event.images.length > 0 ? event.images : event.image ? [event.image] : []
-    return imgs.map((image) => ({
+  return events
+    .filter((event) => !!event.image)
+    .map((event) => ({
       eventId: event.id,
       title: event.title,
       partner: event.partner,
       date: event.date,
-      image,
+      image: event.image,
     }))
-  })
 }
 
 interface GalleryItemCardProps {
@@ -112,12 +111,16 @@ function ScrollTracker({ events }: ScrollTrackerProps) {
   const col3 = React.useMemo(() => items.filter((_, i) => i % 3 === 2), [items])
 
   // Scroll range: [0, REVEAL_THRESHOLD] = frozen during flip; [REVEAL_THRESHOLD, 1] = browse upward
-  // Small positive initial y on col2/col3 creates stagger without CSS margin hacks
+  // Small positive initial y on col2/col3 creates stagger without CSS margin hacks.
+  // yEnd matches the containerVh formula so columns finish exiting right as scroll ends.
+  const maxPerCol = Math.ceil(items.length / 3)
+  const yEnd = -(maxPerCol * 20 + 10)
+
   return (
     <GalleryContainer>
       <GalleryCol
         scrollRange={[0, REVEAL_THRESHOLD, 1]}
-        yRange={["0vh", "0vh", "-150vh"]}
+        yRange={["0vh", "0vh", `${yEnd}vh`]}
       >
         {col1.map((item, i) => (
           <GalleryItemCard
@@ -130,7 +133,7 @@ function ScrollTracker({ events }: ScrollTrackerProps) {
       </GalleryCol>
       <GalleryCol
         scrollRange={[0, REVEAL_THRESHOLD, 1]}
-        yRange={["12vh", "12vh", "-138vh"]}
+        yRange={["12vh", "12vh", `${yEnd + 12}vh`]}
       >
         {col2.map((item, i) => (
           <GalleryItemCard
@@ -143,7 +146,7 @@ function ScrollTracker({ events }: ScrollTrackerProps) {
       </GalleryCol>
       <GalleryCol
         scrollRange={[0, REVEAL_THRESHOLD, 1]}
-        yRange={["4vh", "4vh", "-146vh"]}
+        yRange={["4vh", "4vh", `${yEnd + 4}vh`]}
       >
         {col3.map((item, i) => (
           <GalleryItemCard
@@ -173,11 +176,14 @@ export function EventsGallery({ events }: EventsGalleryProps) {
     )
   }
 
-  // Scale container height based on item count.
-  // Gallery uses ~25% of height for flip animation (175vh) and ~75% for browsing.
-  // Each column needs ~120vh per item; capped between 400vh and 700vh.
+  // Each column item is ~20vh tall (aspect-video at 33vw ≈ 18.5vh + gap).
+  // yEnd: how far columns scroll up — just past the full column height.
+  // containerVh: sized so columns finish exiting right as scroll ends,
+  //   using the formula 4/3 * (flip_base + column_height) to leave ~25% for the
+  //   flip animation and ~75% for browsing with minimal void at the end.
   const maxPerCol = Math.ceil(items.length / 3)
-  const containerVh = Math.min(700, Math.max(400, 175 + maxPerCol * 120))
+  const yEndVh = -(maxPerCol * 20 + 10)
+  const containerVh = Math.min(500, Math.max(200, Math.round((4 / 3) * (110 + maxPerCol * 20))))
 
   return (
     <MotionConfig reducedMotion="user">

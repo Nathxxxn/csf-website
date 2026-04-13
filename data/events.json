@@ -1,294 +1,376 @@
 [
   {
-    "id": "mock-trading-bnp-2025-04",
-    "title": "Mock Trading Session",
-    "date": "2025-04-15",
-    "partner": "BNP Paribas CIB",
-    "partnerDescription": "BNP Paribas CIB est l'activité de banque de financement et d'investissement du groupe BNP Paribas. Les équipes accompagnent entreprises et investisseurs sur les sujets de financement, de marchés de capitaux et de gestion des risques.",
+    "id": "visite-barclays-2025-04",
+    "title": "Visite Barclays Investment Bank",
+    "date": "2025-04-10",
+    "partner": "Barclays Investment Bank",
+    "partnerDescription": "Barclays Investment Bank est la branche de banque d'investissement du groupe Barclays, présente à Paris sur les activités de marchés (équité, taux, crédit) et de banque d'affaires. L'équipe française couvre notamment les émetteurs et investisseurs européens sur les marchés de capitaux.",
     "pole": "Finance de Marché",
-    "description": "Une session pour se mettre dans la peau d'un desk de marché, avec mise en situation et échange avec les équipes.",
-    "image": "https://images.unsplash.com/photo-1529218402470-5dec8fea0761?w=800&auto=format&fit=crop&q=80",
+    "description": "Une visite des bureaux parisiens de Barclays pour découvrir les activités de la banque en finance de marché et en finance d'entreprise, avec une présentation des équipes et un échange ouvert.",
+    "image": "/events/csf-visite-barclays-2025-04-1.jpg",
     "images": [
-      "https://images.unsplash.com/photo-1529218402470-5dec8fea0761?w=800&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1542052125323-e69ad37a47c2?w=800&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1608875004752-2fdb6a39ba4c?w=800&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1528361237150-8a9a7df33035?w=800&auto=format&fit=crop&q=80"
+      "/events/csf-visite-barclays-2025-04-1.jpg",
+      "/events/csf-visite-barclays-2025-04-2.jpg",
+      "/events/csf-visite-barclays-2025-04-3.jpg"
     ],
     "highlights": [
       {
-        "title": "Session de trading live",
-        "description": "Les participants travaillent sur une simulation inspirée d'une vraie séance de marché, avec outils de pricing, prise de décision et débrief en direct."
+        "title": "Présentation des activités",
+        "description": "Les équipes ont présenté les différents desks de la banque — marchés de capitaux, équités, taux et crédit — avec un focus sur ce que chaque pôle fait concrètement au quotidien à Paris."
       },
       {
-        "title": "Masterclass traders senior",
-        "description": "Les équipes reviennent sur leur quotidien, les réflexes attendus et les compétences qui comptent vraiment en début de carrière."
+        "title": "Échange avec les professionnels",
+        "description": "Un temps de questions-réponses a permis d'aborder les parcours, les attentes au recrutement et les différences de culture entre un desk de marchés et une équipe M&A."
       },
       {
-        "title": "Buffet & networking",
-        "description": "La session se termine par un moment plus libre pour poser les questions qu'on n'ose pas toujours poser pendant la présentation."
+        "title": "Networking en fin de visite",
+        "description": "La visite s'est terminée par un moment informel pour continuer les échanges, poser des questions plus directes et mettre un visage sur des métiers souvent peu visibles de l'extérieur."
       }
     ],
     "photos": [
       {
-        "src": "https://images.unsplash.com/photo-1529218402470-5dec8fea0761?w=800&auto=format&fit=crop&q=80",
-        "caption": "Une mise en situation sur écran, avec les équipes pour expliquer les choix et commenter les mouvements de marché."
+        "src": "/events/csf-visite-barclays-2025-04-1.jpg",
+        "caption": "Présentation des activités de Barclays à Paris, avec un passage en revue des différents pôles et de leur positionnement sur les marchés européens."
       },
       {
-        "src": "https://images.unsplash.com/photo-1542052125323-e69ad37a47c2?w=800&auto=format&fit=crop&q=80",
-        "caption": "Un temps d'échange plus posé pour revenir sur les logiques de marché et la manière dont un desk raisonne au quotidien."
+        "src": "/events/csf-visite-barclays-2025-04-2.jpg",
+        "caption": "Les membres de CS Finance au contact des équipes, dans les bureaux parisiens de Barclays Investment Bank."
       },
       {
-        "src": "https://images.unsplash.com/photo-1608875004752-2fdb6a39ba4c?w=800&auto=format&fit=crop&q=80",
-        "caption": "Travail en binôme sur une séquence de trading, puis débrief sur les décisions prises pendant l'exercice."
-      },
-      {
-        "src": "https://images.unsplash.com/photo-1528361237150-8a9a7df33035?w=800&auto=format&fit=crop&q=80",
-        "caption": "La fin de session laisse de la place aux questions plus directes et aux échanges informels avec les équipes."
+        "src": "/events/csf-visite-barclays-2025-04-3.jpg",
+        "caption": "Échanges avec les professionnels sur les carrières, les stages et le quotidien des équipes de marchés. Un moment plus informel en fin de visite pour prolonger les discussions dans un cadre plus détendu."
       }
     ],
     "status": "past"
   },
   {
-    "id": "crack-the-case-mckinsey-2025-04",
+    "id": "conference-ma-pe-road2intern-2025-09",
+    "title": "Conférence M&A et Private Equity",
+    "date": "2025-09-30",
+    "partner": "Road 2 Intern × Selescope",
+    "partnerDescription": "Road 2 Intern est une plateforme d'accompagnement pour les étudiants qui préparent leurs candidatures en finance. Selescope est un cabinet spécialisé en évaluation et recrutement de cadres. Ensemble, ils interviennent régulièrement auprès d'étudiants en grande école pour leur présenter les métiers de la banque d'affaires et du capital-investissement.",
+    "pole": "Finance d'Entreprise",
+    "description": "Une conférence introductive sur les métiers du M&A et du Private Equity, animée par Florian Luttmann (Road 2 Intern) et Deborah Benant (Selescope), pour comprendre les différences entre ces deux univers et les attentes des recruteurs.",
+    "image": "/events/csf-conference-ma-pe-road2intern-2025-09-1.jpg",
+    "images": [
+      "/events/csf-conference-ma-pe-road2intern-2025-09-1.jpg",
+      "/events/csf-conference-ma-pe-road2intern-2025-09-2.jpg",
+      "/events/csf-conference-ma-pe-road2intern-2025-09-3.jpg",
+      "/events/csf-conference-ma-pe-road2intern-2025-09-4.jpg"
+    ],
+    "highlights": [
+      {
+        "title": "Introduction M&A et PE",
+        "description": "Florian Luttmann a présenté les fondamentaux des métiers de fusion-acquisition et de capital-investissement — comment les deals se structurent, qui fait quoi, et ce qui distingue une banque d'affaires d'un fonds."
+      },
+      {
+        "title": "Recrutement et parcours",
+        "description": "Deborah Benant a apporté un éclairage concret sur ce que les recruteurs regardent vraiment dans ces secteurs : la manière de structurer un cas, le niveau attendu en modélisation financière et les questions types en entretien."
+      },
+      {
+        "title": "Questions et échanges",
+        "description": "La fin de la conférence a laissé place à des échanges directs sur les candidatures, les différences de culture entre fonds et banques, et les trajectoires possibles après une école d'ingénieurs."
+      }
+    ],
+    "photos": [
+      {
+        "src": "/events/csf-conference-ma-pe-road2intern-2025-09-1.jpg",
+        "caption": "Florian Luttmann présente les métiers du M&A et les différences avec le Private Equity, devant les membres de CS Finance réunis sur le campus."
+      },
+      {
+        "src": "/events/csf-conference-ma-pe-road2intern-2025-09-2.jpg",
+        "caption": "Deborah Benant (Selescope) partage son regard sur les processus de recrutement en banque d'affaires et capital-investissement."
+      },
+      {
+        "src": "/events/csf-conference-ma-pe-road2intern-2025-09-3.jpg",
+        "caption": "Les participants posent des questions sur les différences de culture entre fonds et banques, et sur les trajectoires envisageables après CentraleSupélec."
+      },
+      {
+        "src": "/events/csf-conference-ma-pe-road2intern-2025-09-4.jpg",
+        "caption": "Vue de la salle lors des échanges en fin de conférence — un format ouvert pour aller au-delà des questions génériques."
+      }
+    ],
+    "status": "past"
+  },
+  {
+    "id": "formation-due-diligence-pmp-2025-11",
+    "title": "Formation Due Diligence Stratégique",
+    "date": "2025-11-03",
+    "partner": "PMP Strategy",
+    "partnerDescription": "PMP Strategy est un cabinet de conseil en stratégie parisien qui accompagne ses clients sur des problématiques de transformation, de croissance et de transactions. Le cabinet intervient régulièrement auprès d'étudiants de grandes écoles pour partager ses méthodologies et présenter le métier de consultant.",
+    "pole": "Finance d'Entreprise",
+    "description": "Une session de formation dans les bureaux de PMP Strategy sur la Due Diligence stratégique, animée par deux Partners du cabinet — une approche concrète d'un outil central dans les transactions M&A.",
+    "image": "/events/csf-formation-due-diligence-pmp-2025-11-1.jpg",
+    "images": [
+      "/events/csf-formation-due-diligence-pmp-2025-11-1.jpg",
+      "/events/csf-formation-due-diligence-pmp-2025-11-2.jpg"
+    ],
+    "highlights": [
+      {
+        "title": "Présentation de la DD stratégique",
+        "description": "Lionel Chapelet et Sébastien Charbonnel ont présenté les grandes étapes d'une Due Diligence stratégique — comment analyser un marché, évaluer la position d'une cible et formuler une opinion documentée pour un acquéreur."
+      },
+      {
+        "title": "Application sur cas réel",
+        "description": "La session a inclus un exercice appliqué pour que les membres comprennent comment structurer l'analyse, quelles questions poser et quels livrables produire dans un délai contraint."
+      },
+      {
+        "title": "Échanges sur le métier de consultant",
+        "description": "Les intervenants ont pris du temps pour répondre aux questions sur le quotidien en cabinet de conseil — les missions, le recrutement et ce qui distingue vraiment les candidats en entretien."
+      }
+    ],
+    "photos": [
+      {
+        "src": "/events/csf-formation-due-diligence-pmp-2025-11-1.jpg",
+        "caption": "Lionel Chapelet, Partner chez PMP Strategy, présente la méthodologie de Due Diligence stratégique utilisée en mission. Travail sur un exercice appliqué : structurer une analyse de marché pour un dossier de transaction fictif."
+      },
+      {
+        "src": "/events/csf-formation-due-diligence-pmp-2025-11-2.jpg",
+        "caption": "Les membres de CS Finance dans les bureaux de PMP Strategy, lors de la session de formation sur la Due Diligence. Échanges avec les intervenants sur le métier de consultant en stratégie et les attentes en entretien."
+      }
+    ],
+    "status": "past"
+  },
+  {
+    "id": "crack-the-case-eight-advisory-2025-11",
     "title": "Crack the Case",
-    "date": "2025-04-22",
-    "partner": "McKinsey & Company",
-    "partnerDescription": "McKinsey & Company est un cabinet de conseil en stratégie présent dans de nombreux pays. Les équipes interviennent notamment sur des sujets de transformation, de performance et de transactions.",
+    "date": "2025-11-17",
+    "partner": "Eight Advisory",
+    "partnerDescription": "Eight Advisory est un cabinet de conseil indépendant spécialisé en transactions, restructuring et stratégie. L'équipe Stratégie accompagne entreprises et fonds sur des missions de conseil opérationnel et transactionnel, avec une approche qui valorise l'autonomie et l'esprit analytique.",
     "pole": "Finance d'Entreprise",
-    "description": "Un cas M&A pour travailler la structure, les chiffres et la restitution, puis un échange sur les entretiens.",
-    "image": "https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=800&auto=format&fit=crop&q=80",
+    "description": "Un événement Crack the Case organisé sur le campus CentraleSupélec, animé par l'équipe Stratégie d'Eight Advisory — un cas de conseil en stratégie à résoudre en groupe, suivi d'un debriefing et d'échanges sur le recrutement.",
+    "image": "/events/csf-crack-the-case-eight-advisory-2025-11-1.jpg",
     "images": [
-      "https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=800&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1529218402470-5dec8fea0761?w=800&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1564284369929-026ba231f89b?w=800&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1542052125323-e69ad37a47c2?w=800&auto=format&fit=crop&q=80"
+      "/events/csf-crack-the-case-eight-advisory-2025-11-1.jpg",
+      "/events/csf-crack-the-case-eight-advisory-2025-11-2.jpg",
+      "/events/csf-crack-the-case-eight-advisory-2025-11-3.jpg"
     ],
     "highlights": [
       {
-        "title": "Workshop case M&A",
-        "description": "Les participants avancent en équipe sur un cas de fusion-acquisition, avec un vrai travail de structuration, d'analyse et de restitution."
+        "title": "Résolution du cas en groupe",
+        "description": "Les participants ont travaillé en équipes sur un véritable cas de conseil en stratégie — avec une phase de structuration, d'analyse des données et de construction d'une recommandation à défendre."
       },
       {
-        "title": "Simulation d'entretien",
-        "description": "Une partie de la session est dédiée aux entretiens, avec retours concrets sur la manière de répondre, de structurer et de tenir le rythme."
+        "title": "Debriefing avec les consultants",
+        "description": "L'équipe d'Eight Advisory a corrigé les présentations en direct, en pointant les raisonnements solides et les erreurs classiques — un retour direct et utile pour les futures candidatures."
       },
       {
-        "title": "Speed networking",
-        "description": "La fin de l'atelier permet de discuter plus librement des candidatures, des parcours et de ce que les consultants regardent vraiment."
+        "title": "Questions sur le recrutement",
+        "description": "La dernière partie de la soirée a permis d'aborder les processus d'entretien chez Eight Advisory, les critères de sélection et les différences avec les recrutements d'autres cabinets."
       }
     ],
     "photos": [
       {
-        "src": "https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=800&auto=format&fit=crop&q=80",
-        "caption": "Présentation du cas et cadrage du travail attendu avant le passage en groupe."
+        "src": "/events/csf-crack-the-case-eight-advisory-2025-11-1.jpg",
+        "caption": "Les consultants d'Eight Advisory présentent le cas et expliquent les règles de l'exercice avant le passage en groupe."
       },
       {
-        "src": "https://images.unsplash.com/photo-1529218402470-5dec8fea0761?w=800&auto=format&fit=crop&q=80",
-        "caption": "Travail en équipe sur les hypothèses, les chiffres clés et la manière d'argumenter une recommandation."
+        "src": "/events/csf-crack-the-case-eight-advisory-2025-11-2.jpg",
+        "caption": "Les équipes travaillent sur le cas — structuration du problème, identification des enjeux clés et construction de la recommandation."
       },
       {
-        "src": "https://images.unsplash.com/photo-1564284369929-026ba231f89b?w=800&auto=format&fit=crop&q=80",
-        "caption": "Restitution finale devant les intervenants, avec des questions qui obligent à défendre le raisonnement jusqu'au bout."
-      },
-      {
-        "src": "https://images.unsplash.com/photo-1542052125323-e69ad37a47c2?w=800&auto=format&fit=crop&q=80",
-        "caption": "Après le cas, les discussions continuent sur les candidatures, les attentes du métier et les débuts en conseil."
+        "src": "/events/csf-crack-the-case-eight-advisory-2025-11-3.jpg",
+        "caption": "Restitution devant les consultants, avec retours immédiats sur le raisonnement et la manière de tenir une position sous questions. Un échange plus informel en fin de soirée pour poser les questions sur les stages, le recrutement et le quotidien en cabinet."
       }
     ],
     "status": "past"
   },
   {
-    "id": "alumni-networking-2025-05",
-    "title": "Alumni Networking Evening",
-    "date": "2025-05-05",
-    "partner": "Alumni CS Finance",
-    "partnerDescription": "Le réseau alumni de CS Finance rassemble d'anciens membres aujourd'hui en stage ou en poste dans différentes branches de la finance. Ces soirées servent surtout à créer des échanges plus directs entre promotions.",
-    "pole": "Alumni",
-    "description": "Une soirée pour discuter parcours, stages, choix de métier et premiers pas dans le secteur avec des anciens de l'association.",
-    "image": "https://images.unsplash.com/photo-1564284369929-026ba231f89b?w=800&auto=format&fit=crop&q=80",
+    "id": "perfect-case-pmp-strategy-2025-12",
+    "title": "The Perfect Case",
+    "date": "2025-12-02",
+    "partner": "PMP Strategy",
+    "partnerDescription": "PMP Strategy est un cabinet de conseil en stratégie parisien qui accompagne ses clients sur des problématiques de transformation, de croissance et de transactions. Le cabinet intervient régulièrement auprès d'étudiants de grandes écoles pour partager ses méthodologies et présenter le métier de consultant.",
+    "pole": "Finance d'Entreprise",
+    "description": "Une session Perfect Case dans les bureaux de PMP Strategy : traitement d'un cas d'entretien type cabinet de conseil corrigé en direct, animé par Louis Meurisse et Abdelkarim Khaldi.",
+    "image": "/events/csf-perfect-case-pmp-strategy-2025-12-1.jpg",
     "images": [
-      "https://images.unsplash.com/photo-1564284369929-026ba231f89b?w=800&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1608875004752-2fdb6a39ba4c?w=800&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1528361237150-8a9a7df33035?w=800&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=800&auto=format&fit=crop&q=80"
+      "/events/csf-perfect-case-pmp-strategy-2025-12-1.jpg",
+      "/events/csf-perfect-case-pmp-strategy-2025-12-2.jpg",
+      "/events/csf-perfect-case-pmp-strategy-2025-12-3.jpg"
     ],
     "highlights": [
       {
-        "title": "Tables rondes thématiques",
-        "description": "Des tables par métier pour discuter sans filtre de ce qu'on fait réellement en stage ou en poste, et de ce qui surprend au début."
+        "title": "Cas d'entretien corrigé",
+        "description": "Louis Meurisse et Abdelkarim Khaldi ont présenté et corrigé un cas type d'entretien de cabinet de conseil en stratégie — en montrant pas à pas comment structurer la réponse, quelles hypothèses tester et comment présenter une recommandation."
       },
       {
-        "title": "Témoignages de parcours",
-        "description": "Les alumni reviennent sur leur parcours, les bifurcations, les erreurs utiles et les conseils qu'ils auraient aimé entendre plus tôt."
+        "title": "Décryptage des attentes",
+        "description": "Les intervenants ont expliqué ce qui distingue une bonne réponse d'une excellente dans un entretien de conseil — la clarté du raisonnement, la gestion du temps et la façon de traiter l'incertitude."
       },
       {
-        "title": "Cocktail networking",
-        "description": "Le format laisse aussi du temps pour parler simplement, reprendre contact et mettre un visage sur des parcours qu'on croise souvent sur LinkedIn."
+        "title": "Échanges en petit groupe",
+        "description": "Le format dans les bureaux de PMP Strategy a permis des échanges plus directs sur les parcours des intervenants, les types de missions du cabinet et les opportunités de stage."
       }
     ],
     "photos": [
       {
-        "src": "https://images.unsplash.com/photo-1564284369929-026ba231f89b?w=800&auto=format&fit=crop&q=80",
-        "caption": "Ouverture de la soirée avec quelques repères sur les parcours présents et les secteurs représentés."
+        "src": "/events/csf-perfect-case-pmp-strategy-2025-12-1.jpg",
+        "caption": "Louis Meurisse présente le cas d'entretien et guide les membres de CS Finance à travers la structure de la réponse attendue."
       },
       {
-        "src": "https://images.unsplash.com/photo-1608875004752-2fdb6a39ba4c?w=800&auto=format&fit=crop&q=80",
-        "caption": "Des petits groupes par sujet pour permettre des échanges moins formels et des questions plus précises."
+        "src": "/events/csf-perfect-case-pmp-strategy-2025-12-2.jpg",
+        "caption": "Abdelkarim Khaldi commente les réponses proposées et explique en détail ce qui fonctionne ou non dans la construction du raisonnement."
       },
       {
-        "src": "https://images.unsplash.com/photo-1528361237150-8a9a7df33035?w=800&auto=format&fit=crop&q=80",
-        "caption": "Les alumni racontent ce qui a compté dans leur parcours, sans essayer de lisser les zones de doute."
-      },
-      {
-        "src": "https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=800&auto=format&fit=crop&q=80",
-        "caption": "La fin de soirée sert surtout à prolonger les conversations commencées pendant les tables rondes."
+        "src": "/events/csf-perfect-case-pmp-strategy-2025-12-3.jpg",
+        "caption": "Les membres posent leurs questions sur le cas et les attentes en entretien, dans les bureaux de PMP Strategy à Paris. Un moment plus informel pour parler candidatures, stages et types de missions chez PMP Strategy."
       }
     ],
     "status": "past"
   },
   {
-    "id": "sales-trading-gs-2025-03",
-    "title": "Sales & Trading Day",
-    "date": "2025-03-10",
-    "partner": "Goldman Sachs",
-    "partnerDescription": "Goldman Sachs est une banque d'investissement présente à Paris comme dans d'autres grandes places financières. Les échanges ont porté ici sur les métiers de marchés et les trajectoires de début de carrière.",
+    "id": "visite-sg-cib-2026-02",
+    "title": "Visite Salle des Marchés SG CIB",
+    "date": "2026-02-12",
+    "partner": "Société Générale CIB",
+    "partnerDescription": "Société Générale Corporate & Investment Banking est le pôle de banque de financement et d'investissement du groupe Société Générale. La salle des marchés parisienne regroupe les équipes de trading, de structuration et de sales sur les produits de taux, de crédit, d'équités et de matières premières.",
     "pole": "Finance de Marché",
-    "description": "Une journée dans les équipes de marchés à Paris, avec visite, questions ouvertes et discussions en petit comité.",
-    "image": "https://images.unsplash.com/photo-1542052125323-e69ad37a47c2?w=800&auto=format&fit=crop&q=80",
+    "description": "Une immersion dans la salle des marchés de Société Générale CIB à Paris, au contact des équipes de trading — une occasion rare de voir de près comment s'organise un desk de marché.",
+    "image": "/events/csf-visite-sg-cib-2026-02-1.jpg",
     "images": [
-      "https://images.unsplash.com/photo-1542052125323-e69ad37a47c2?w=800&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1529218402470-5dec8fea0761?w=800&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=800&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1564284369929-026ba231f89b?w=800&auto=format&fit=crop&q=80"
+      "/events/csf-visite-sg-cib-2026-02-1.jpg",
+      "/events/csf-visite-sg-cib-2026-02-2.jpg"
     ],
     "highlights": [
       {
-        "title": "Visite des desks de trading",
-        "description": "Les membres ont pu voir comment les équipes s'organisent, quels outils elles utilisent et comment circule l'information pendant la journée."
+        "title": "Découverte de la salle des marchés",
+        "description": "Les membres de CS Finance ont pu accéder à la salle des marchés de SG CIB et observer l'organisation des desks — équités, taux, crédit, structuration — avec les écrans, les outils et l'ambiance propres à cet environnement."
       },
       {
-        "title": "Sessions Q&A avec des MDs",
-        "description": "Le temps de questions-réponses a permis d'aborder les trajectoires, les attentes au recrutement et les différences entre desks."
+        "title": "Échanges avec les traders et sales",
+        "description": "Des professionnels ont pris le temps d'expliquer leur rôle au quotidien — comment ils interagissent avec les clients, gèrent les positions et travaillent avec les autres équipes de la banque."
       },
       {
-        "title": "Déjeuner avec les équipes",
-        "description": "Le déjeuner a servi à poursuivre les discussions dans un cadre plus simple, avec des questions plus concrètes sur le quotidien et les stages."
+        "title": "Questions sur les stages et le recrutement",
+        "description": "Un moment d'échange plus ciblé sur les programmes de stage de SG CIB, les profils recherchés et les différences entre les desks pour un premier passage en finance de marché."
       }
     ],
     "photos": [
       {
-        "src": "https://images.unsplash.com/photo-1542052125323-e69ad37a47c2?w=800&auto=format&fit=crop&q=80",
-        "caption": "Passage dans les équipes de marchés pour voir de près l'environnement de travail et la répartition des rôles."
+        "src": "/events/csf-visite-sg-cib-2026-02-1.jpg",
+        "caption": "Vue de la salle des marchés de SG CIB — les membres de CS Finance au cœur des desks de trading, entourés des écrans et des équipes. Un moment de questions plus techniques sur les produits traités et les différences entre les activités de sales et de trading."
       },
       {
-        "src": "https://images.unsplash.com/photo-1529218402470-5dec8fea0761?w=800&auto=format&fit=crop&q=80",
-        "caption": "Présentation plus large des métiers et des logiques de desk avant les échanges de questions."
-      },
-      {
-        "src": "https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=800&auto=format&fit=crop&q=80",
-        "caption": "Le format ouvert a permis de poser des questions plus précises sur les stages, les débuts de carrière et le rythme du métier."
-      },
-      {
-        "src": "https://images.unsplash.com/photo-1564284369929-026ba231f89b?w=800&auto=format&fit=crop&q=80",
-        "caption": "Le déjeuner a prolongé les échanges dans un cadre plus détendu, loin du format présentation."
+        "src": "/events/csf-visite-sg-cib-2026-02-2.jpg",
+        "caption": "Échanges avec des professionnels des marchés sur leur rôle, les outils utilisés et l'organisation entre desks. Discussions en fin de visite sur les stages, les processus de recrutement et les attendus en début de carrière chez SG CIB."
       }
     ],
     "status": "past"
   },
   {
-    "id": "ma-conference-lazard-2025-02",
-    "title": "M&A Conference",
-    "date": "2025-02-18",
-    "partner": "Lazard",
-    "partnerDescription": "Lazard est une banque d'affaires et un cabinet de conseil financier actif sur les sujets de fusion-acquisition et de restructuration, avec une présence historique à Paris.",
-    "pole": "Finance d'Entreprise",
-    "description": "Une conférence pour revenir sur quelques deals récents et comprendre comment les équipes les abordent.",
-    "image": "https://images.unsplash.com/photo-1608875004752-2fdb6a39ba4c?w=800&auto=format&fit=crop&q=80",
+    "id": "session-structureurs-bnp-2026-03",
+    "title": "Session Structureurs Produits Dérivés",
+    "date": "2026-03-05",
+    "partner": "BNP Paribas CIB",
+    "partnerDescription": "BNP Paribas CIB est l'activité de banque de financement et d'investissement du groupe BNP Paribas. Les équipes de structuration accompagnent clients et desks de trading dans la conception de produits sur mesure — dérivés actions, taux, crédit — en combinant ingénierie financière et relation commerciale.",
+    "pole": "Finance de Marché",
+    "description": "Deux structureurs de BNP Paribas ont animé une session dédiée au métier de structureur de produits dérivés actions — un métier central en finance de marché, souvent peu connu des étudiants.",
+    "image": "/events/csf-session-structureurs-bnp-2026-03-1.jpg",
     "images": [
-      "https://images.unsplash.com/photo-1608875004752-2fdb6a39ba4c?w=800&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1528361237150-8a9a7df33035?w=800&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1529218402470-5dec8fea0761?w=800&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1542052125323-e69ad37a47c2?w=800&auto=format&fit=crop&q=80"
+      "/events/csf-session-structureurs-bnp-2026-03-1.jpg"
     ],
     "highlights": [
       {
-        "title": "Décryptage de deals 2024",
-        "description": "Les intervenants sont revenus sur plusieurs transactions récentes pour expliquer comment on lit un deal au-delà des titres de presse."
+        "title": "Introduction au métier de structureur",
+        "description": "Les deux intervenants ont présenté le rôle du structureur dans une banque de marché — comment il conçoit des solutions sur mesure pour les clients institutionnels, en lien avec les desks de trading et les équipes de sales."
       },
       {
-        "title": "Panel de discussion",
-        "description": "La discussion a ensuite porté sur le marché, les secteurs qui bougent et la manière dont les équipes regardent les valorisations."
+        "title": "Zoom sur les dérivés actions",
+        "description": "La session a abordé les principales familles de produits dérivés actions — options, produits structurés, autocallables — avec des exemples concrets de structures proposées à des clients."
       },
       {
-        "title": "Networking banque d'affaires",
-        "description": "Un dernier temps a été gardé pour parler stages, recrutement et attentes réelles en début de parcours."
+        "title": "Parcours et recrutement BNP CIB",
+        "description": "Les structureurs ont partagé leur parcours et répondu aux questions sur les profils recherchés, les compétences clés et les différences entre un poste de structureur, de trader et de sales."
       }
     ],
     "photos": [
       {
-        "src": "https://images.unsplash.com/photo-1608875004752-2fdb6a39ba4c?w=800&auto=format&fit=crop&q=80",
-        "caption": "Ouverture de la conférence avec quelques transactions choisies pour illustrer différentes logiques de deal."
-      },
-      {
-        "src": "https://images.unsplash.com/photo-1528361237150-8a9a7df33035?w=800&auto=format&fit=crop&q=80",
-        "caption": "Retour détaillé sur un deal, étape par étape, pour voir ce qui se passe vraiment derrière le résumé final."
-      },
-      {
-        "src": "https://images.unsplash.com/photo-1529218402470-5dec8fea0761?w=800&auto=format&fit=crop&q=80",
-        "caption": "La discussion s'est ensuite déplacée vers le marché, les secteurs actifs et les points de vigilance sur les valorisations."
-      },
-      {
-        "src": "https://images.unsplash.com/photo-1542052125323-e69ad37a47c2?w=800&auto=format&fit=crop&q=80",
-        "caption": "La fin de l'événement a permis de poser les questions plus pratiques sur les stages et le recrutement."
+        "src": "/events/csf-session-structureurs-bnp-2026-03-1.jpg",
+        "caption": "Les deux structureurs de BNP Paribas présentent leur métier devant les membres de CS Finance, sur le campus CentraleSupélec. Introduction aux produits dérivés actions — les intervenants expliquent les logiques de structuration à partir d'exemples de marchés. Questions techniques sur les produits et les interactions avec les autres desks de la banque au quotidien. Échange plus direct sur les stages, les attentes en entretien et les différences de trajectoire selon les desks de BNP CIB."
       }
     ],
     "status": "past"
   },
   {
-    "id": "cfa-bootcamp-2025-01",
-    "title": "CFA Study Bootcamp",
-    "date": "2025-01-25",
-    "partner": "CS Finance Formation",
-    "partnerDescription": "CS Finance Formation est le pôle pédagogique de l'association. Il organise des formats de travail pour consolider les bases techniques et préparer certaines certifications.",
-    "pole": "Formation",
-    "description": "Un week-end dense pour réviser le CFA Level I, faire des annales et repartir avec un plan de travail clair.",
-    "image": "https://images.unsplash.com/photo-1528361237150-8a9a7df33035?w=800&auto=format&fit=crop&q=80",
+    "id": "visite-ofi-invest-2026-03",
+    "title": "Visite OFI Invest Asset Management",
+    "date": "2026-03-19",
+    "partner": "OFI Invest Asset Management",
+    "partnerDescription": "OFI Invest Asset Management est l'un des acteurs majeurs de la gestion d'actifs en France, avec plus de 211 milliards d'euros d'actifs sous gestion. La société gère des fonds sur toutes les classes d'actifs — actions, obligations, immobilier, infrastructure — pour des clients institutionnels et particuliers.",
+    "pole": "Finance de Marché",
+    "description": "Une visite exclusive des bureaux d'OFI Invest à Issy-les-Moulineaux pour une immersion dans les métiers de la gestion d'actifs — présentation de la maison, de ses classes d'actifs et de ses équipes.",
+    "image": "/events/csf-visite-ofi-invest-2026-03-1.jpg",
     "images": [
-      "https://images.unsplash.com/photo-1528361237150-8a9a7df33035?w=800&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1564284369929-026ba231f89b?w=800&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=800&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1608875004752-2fdb6a39ba4c?w=800&auto=format&fit=crop&q=80"
+      "/events/csf-visite-ofi-invest-2026-03-1.jpg",
+      "/events/csf-visite-ofi-invest-2026-03-2.jpg",
+      "/events/csf-visite-ofi-invest-2026-03-3.jpg"
     ],
     "highlights": [
       {
-        "title": "Révisions intensives",
-        "description": "Les séances reprennent les grands blocs du programme pour remettre les bases au clair et pointer les chapitres qui bloquent le plus."
+        "title": "Présentation de la société",
+        "description": "Les équipes d'OFI Invest ont présenté la structure de la maison, ses différentes lignes métiers et son positionnement parmi les gestionnaires d'actifs français — avec un focus sur les classes d'actifs couvertes et les types de clients."
       },
       {
-        "title": "Examens blancs chronométrés",
-        "description": "Des annales chronométrées permettent de se remettre dans le rythme, puis la correction revient sur les erreurs qui coûtent le plus cher."
+        "title": "Immersion dans les métiers de la gestion",
+        "description": "Les membres de CS Finance ont pu rencontrer des professionnels de plusieurs équipes — gestion actions, taux, allocation — et comprendre comment s'articulent les rôles entre gérants, analystes et équipes de distribution."
       },
       {
-        "title": "Coaching personnalisé",
-        "description": "Chaque participant repart avec des priorités de révision plus claires et une idée plus nette de la suite du travail."
+        "title": "Échanges sur les carrières et les stages",
+        "description": "La visite s'est terminée par un moment de questions-réponses sur les profils recherchés en gestion d'actifs, les compétences valorisées par OFI Invest et les voies d'accès à ces métiers après une grande école."
       }
     ],
     "photos": [
       {
-        "src": "https://images.unsplash.com/photo-1528361237150-8a9a7df33035?w=800&auto=format&fit=crop&q=80",
-        "caption": "Le bootcamp alterne rappels de cours, questions ciblées et temps de travail plus appliqués."
+        "src": "/events/csf-visite-ofi-invest-2026-03-1.jpg",
+        "caption": "Présentation des activités d'OFI Invest AM — les membres de CS Finance découvrent l'organisation de la société et ses différentes classes d'actifs."
       },
       {
-        "src": "https://images.unsplash.com/photo-1564284369929-026ba231f89b?w=800&auto=format&fit=crop&q=80",
-        "caption": "Les groupes avancent par thème pour remettre les notions en place et repérer les angles morts."
+        "src": "/events/csf-visite-ofi-invest-2026-03-2.jpg",
+        "caption": "Échanges avec des gérants et analystes sur leur rôle au quotidien, les outils utilisés et les processus de gestion en place."
       },
       {
-        "src": "https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=800&auto=format&fit=crop&q=80",
-        "caption": "Les annales servent de test grandeur nature, puis la correction permet de comprendre où partent les points."
+        "src": "/events/csf-visite-ofi-invest-2026-03-3.jpg",
+        "caption": "Les participants posent leurs questions sur les débuts de carrière en asset management et ce que recherche OFI Invest dans ses recrutements. Un moment de networking dans les bureaux d'Issy-les-Moulineaux pour continuer les échanges en dehors du format structuré."
+      }
+    ],
+    "status": "past"
+  },
+  {
+    "id": "visite-barclays-2-2026-03",
+    "title": "Visite Barclays — Markets & Banking",
+    "date": "2026-03-30",
+    "partner": "Barclays Investment Bank",
+    "partnerDescription": "Barclays Investment Bank est la branche de banque d'investissement du groupe Barclays, présente à Paris sur les activités de marchés (équité, taux, crédit) et de banque d'affaires. L'équipe française couvre notamment les émetteurs et investisseurs européens sur les marchés de capitaux.",
+    "pole": "Finance de Marché",
+    "description": "Une nouvelle visite des bureaux parisiens de Barclays Investment Bank, avec une présentation concrète des métiers de Markets et de Banking et un accueil par Raoul Salomon, CEO France.",
+    "image": "/events/csf-visite-barclays-2-2026-03-1.jpg",
+    "images": [
+      "/events/csf-visite-barclays-2-2026-03-1.jpg",
+      "/events/csf-visite-barclays-2-2026-03-2.jpg"
+    ],
+    "highlights": [
+      {
+        "title": "Présentation Markets et Banking",
+        "description": "Les équipes de Barclays ont présenté les deux grandes activités de la banque à Paris — les marchés de capitaux d'un côté, la banque d'affaires de l'autre — en expliquant comment elles interagissent sur les grands dossiers."
       },
       {
-        "src": "https://images.unsplash.com/photo-1608875004752-2fdb6a39ba4c?w=800&auto=format&fit=crop&q=80",
-        "caption": "En fin de week-end, chacun repart avec un plan de révision plus concret pour les semaines suivantes."
+        "title": "Culture et fonctionnement de Barclays",
+        "description": "Raoul Salomon, CEO France, a pris le temps d'expliquer ce qui distingue Barclays d'autres banques d'investissement — la taille des équipes, le niveau de responsabilité en stage et les valeurs qui structurent le recrutement."
+      },
+      {
+        "title": "Échanges et networking",
+        "description": "Des professionnels de différentes équipes étaient présents pour répondre aux questions des membres de CS Finance sur les stages, les formations internes et les trajectoires de carrière au sein de la banque."
+      }
+    ],
+    "photos": [
+      {
+        "src": "/events/csf-visite-barclays-2-2026-03-1.jpg",
+        "caption": "Les membres de CS Finance accueillis dans les bureaux parisiens de Barclays pour une présentation des activités de Markets et Banking. Un tour des bureaux pour voir l'organisation des équipes et comprendre comment les différents desks et pôles travaillent ensemble."
+      },
+      {
+        "src": "/events/csf-visite-barclays-2-2026-03-2.jpg",
+        "caption": "Échanges avec les équipes de Barclays sur la culture de la banque, les profils recrutés et les différences par rapport à d'autres institutions. Questions directes sur les stages et les opportunités en début de carrière, dans un cadre plus informel en fin de visite."
       }
     ],
     "status": "past"

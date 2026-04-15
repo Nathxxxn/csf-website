@@ -21,6 +21,28 @@ interface TeamShowcaseProps {
   members: TeamMember[]
 }
 
+function MobilePhotoCard({ member }: { member: TeamMember }) {
+  return (
+    <div className="relative aspect-square overflow-hidden rounded-lg bg-secondary">
+      <img
+        src={member.image}
+        alt={member.name}
+        className="h-full w-full object-cover"
+      />
+      <div className="absolute inset-0 bg-linear-to-t from-black/70 via-transparent to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 p-2">
+        <p
+          className="text-xs font-semibold text-white leading-tight truncate"
+          data-member-name
+        >
+          {member.name}
+        </p>
+        <p className="text-[10px] text-white/70 truncate">{member.role}</p>
+      </div>
+    </div>
+  )
+}
+
 export default function TeamShowcase({ members }: TeamShowcaseProps) {
   const [hoveredId, setHoveredId] = useState<string | null>(null)
 
@@ -30,8 +52,16 @@ export default function TeamShowcase({ members }: TeamShowcaseProps) {
 
   return (
     <div className="flex flex-col md:flex-row items-start gap-8 md:gap-10 lg:gap-14 select-none w-full max-w-5xl mx-auto py-8 px-4 md:px-6 font-sans">
-      {/* ── Left: photo grid ── */}
-      <div className="flex gap-2 md:gap-3 flex-shrink-0 overflow-x-auto pb-1 md:pb-0">
+
+      {/* Mobile: uniform 2-col grid with name/role overlay */}
+      <div className="grid grid-cols-2 gap-2 w-full md:hidden">
+        {members.map((member) => (
+          <MobilePhotoCard key={member.id} member={member} />
+        ))}
+      </div>
+
+      {/* Desktop: staggered 3-col grid */}
+      <div className="hidden md:flex gap-3 shrink-0">
         {/* Column 1 */}
         <div className="flex flex-col gap-2 md:gap-3">
           {col1.map((member) => (
@@ -72,8 +102,8 @@ export default function TeamShowcase({ members }: TeamShowcaseProps) {
         </div>
       </div>
 
-      {/* ── Right: member name list ── */}
-      <div className="flex flex-col sm:grid sm:grid-cols-2 md:flex md:flex-col gap-4 md:gap-5 pt-0 md:pt-2 flex-1 w-full">
+      {/* Member name list */}
+      <div className="flex flex-col gap-4 md:gap-5 pt-0 md:pt-2 flex-1 w-full">
         {members.map((member) => (
           <MemberRow
             key={member.id}
@@ -108,7 +138,7 @@ function PhotoCard({
   return (
     <div
       className={cn(
-        'overflow-hidden rounded-xl cursor-pointer flex-shrink-0 transition-opacity duration-400',
+        'overflow-hidden rounded-xl cursor-pointer shrink-0 transition-opacity duration-400',
         className,
         isDimmed ? 'opacity-60' : 'opacity-100',
       )}
@@ -161,7 +191,7 @@ function MemberRow({
       <div className="flex items-center gap-2.5">
         <span
           className={cn(
-            'w-4 h-3 rounded-[5px] flex-shrink-0 transition-all duration-300',
+            'w-4 h-3 rounded-[5px] shrink-0 transition-all duration-300',
             isActive ? 'bg-foreground w-5' : 'bg-foreground/25',
           )}
         />

@@ -1,19 +1,24 @@
 "use client";
 
-import { motion } from "framer-motion";
+import dynamic from "next/dynamic";
+import { motion } from "motion/react";
 import { useRouter } from "next/navigation";
 import { AnimatedShinyText } from "@/components/ui/animated-shiny-text";
 import { BlurFade } from "@/components/ui/blur-fade";
-import { DottedSurface } from "@/components/ui/dotted-surface";
 import { LiquidButton } from "@/components/ui/liquid-glass-button";
 import MotionButton from "@/components/ui/motion-button";
+
+const DottedSurface = dynamic(
+  () => import("@/components/ui/dotted-surface").then(m => ({ default: m.DottedSurface })),
+  { ssr: false }
+);
 
 const TEXT_BADGE_DELAY  = 0.05     // seconds from mount
 const TEXT_TITLE_DELAY  = 0.1
 const TEXT_SUB_DELAY    = 0.25
 const TEXT_BTNS_DELAY   = 0.4
 
-const TITLE_WORDS = ["La", "finance,", "en", "vrai."];
+const TITLE_WORDS = ["La", "finance", "à", "CentraleSupélec"];
 const LIQUID_CTA_CLASS = "h-[46px] w-[13.5rem] rounded-full px-8 py-3 text-sm font-semibold text-white"
 const MOTION_CTA_CLASS = "h-[46px] w-[13.5rem]"
 

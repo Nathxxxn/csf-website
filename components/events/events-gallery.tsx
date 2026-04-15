@@ -42,7 +42,7 @@ function toGalleryItems(events: Event[]): GalleryItem[] {
       title: event.title,
       partner: event.partner,
       date: event.date,
-      image: event.image,
+      image: event.image as string,
     }))
 }
 

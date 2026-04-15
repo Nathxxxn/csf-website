@@ -1,5 +1,11 @@
-import { render, screen } from '@testing-library/react'
+import React from 'react'
+import { act, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
+
+// Make next/dynamic synchronous in tests (ssr: false otherwise suppresses rendering)
+vi.mock('next/dynamic', () => ({
+  default: (importer: () => Promise<any>, _opts?: any) => React.lazy(importer),
+}))
 
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: vi.fn() }),
@@ -33,7 +39,13 @@ describe('Hero', () => {
   it('uses the dotted surface background instead of the old path lines', async () => {
     const { Hero } = await import('@/components/landing/hero')
 
-    render(<Hero />)
+    await act(async () => {
+      render(
+        <React.Suspense fallback={null}>
+          <Hero />
+        </React.Suspense>
+      )
+    })
 
     expect(screen.getByTestId('dotted-surface')).toBeInTheDocument()
     expect(screen.queryByText('Background Paths')).not.toBeInTheDocument()

@@ -10,7 +10,7 @@ import {
   useSpring,
   useTransform,
   type Variants,
-} from "framer-motion"
+} from "motion/react"
 import { Mail, Sparkles } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"

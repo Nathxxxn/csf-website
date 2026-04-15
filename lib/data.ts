@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import type { PoleData, Event, Partner, AdminPole, AdminEvent, AdminPartner, SiteContent } from './types'
 import { getDb } from './db'
 
@@ -8,7 +9,7 @@ function requireString(value: unknown, field: string): string {
 
 // --- Fonctions publiques (utilisées par les pages du site) ---
 
-export async function getTeam(): Promise<PoleData[]> {
+async function _fetchTeam(): Promise<PoleData[]> {
   const db = getDb()
   const { rows: poles } = await db.execute('SELECT * FROM poles ORDER BY order_index')
   const { rows: members } = await db.execute('SELECT * FROM team_members ORDER BY order_index')
@@ -28,7 +29,7 @@ export async function getTeam(): Promise<PoleData[]> {
   }))
 }
 
-export async function getEvents(): Promise<Event[]> {
+async function _fetchEvents(): Promise<Event[]> {
   const db = getDb()
   const { rows: eventRows } = await db.execute('SELECT * FROM events ORDER BY order_index')
   const { rows: highlightRows } = await db.execute('SELECT * FROM event_highlights ORDER BY order_index')
@@ -68,6 +69,21 @@ export async function getEvents(): Promise<Event[]> {
   })
 }
 
+async function _fetchPartners(): Promise<Partner[]> {
+  const db = getDb()
+  const { rows } = await db.execute('SELECT * FROM partners ORDER BY order_index')
+  return rows.map(p => ({
+    name: requireString(p.name, 'partner.name'),
+    logo: requireString(p.logo_url, 'partner.logo_url'),
+  }))
+}
+
+// React.cache() déduplique les appels identiques dans la même requête (ex: getUpcomingEvents + getPastEvents
+// appellent tous les deux getEvents() — une seule requête DB grâce à ce cache intra-requête)
+export const getTeam = cache(_fetchTeam)
+export const getEvents = cache(_fetchEvents)
+export const getPartners = cache(_fetchPartners)
+
 export async function getUpcomingEvents(): Promise<Event[]> {
   const events = await getEvents()
   return events
@@ -80,15 +96,6 @@ export async function getPastEvents(): Promise<Event[]> {
   return events
     .filter(e => e.status === 'past')
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-}
-
-export async function getPartners(): Promise<Partner[]> {
-  const db = getDb()
-  const { rows } = await db.execute('SELECT * FROM partners ORDER BY order_index')
-  return rows.map(p => ({
-    name: requireString(p.name, 'partner.name'),
-    logo: requireString(p.logo_url, 'partner.logo_url'),
-  }))
 }
 
 export async function getEventById(id: string): Promise<Event | undefined> {

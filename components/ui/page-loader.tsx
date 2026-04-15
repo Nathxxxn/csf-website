@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import AnimatedGradient from "@/components/ui/animated-gradient";
 
 const DISPLAY_DURATION = 900; // ms avant que le loader se retire

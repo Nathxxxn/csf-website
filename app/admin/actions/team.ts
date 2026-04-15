@@ -16,6 +16,7 @@ export async function createPole(formData: FormData) {
     sql: 'INSERT INTO poles (id, name, badge, description, order_index) VALUES (?, ?, ?, ?, ?)',
     args: [randomUUID(), data.name, data.badge, data.description, maxOrder + 1],
   })
+  revalidatePath('/')
   revalidatePath('/equipe')
 }
 
@@ -27,6 +28,7 @@ export async function updatePole(id: string, formData: FormData) {
     sql: 'UPDATE poles SET name=?, badge=?, description=? WHERE id=?',
     args: [data.name, data.badge, data.description, id],
   })
+  revalidatePath('/')
   revalidatePath('/equipe')
 }
 
@@ -34,6 +36,7 @@ export async function deletePole(id: string) {
   await requireAdminSession()
   const db = getDb()
   await db.execute({ sql: 'DELETE FROM poles WHERE id=?', args: [id] })
+  revalidatePath('/')
   revalidatePath('/equipe')
 }
 
@@ -56,6 +59,7 @@ export async function createMember(formData: FormData) {
     sql: 'INSERT INTO team_members (id, name, role, photo_url, linkedin, pole_id, order_index) VALUES (?, ?, ?, ?, ?, ?, ?)',
     args: [randomUUID(), data.name, data.role, null, linkedin, data.pole_id, maxOrder + 1],
   })
+  revalidatePath('/')
   revalidatePath('/equipe')
 }
 
@@ -68,6 +72,7 @@ export async function updateMember(id: string, formData: FormData) {
     sql: 'UPDATE team_members SET name=?, role=?, linkedin=?, pole_id=? WHERE id=?',
     args: [data.name, data.role, linkedin, data.pole_id, id],
   })
+  revalidatePath('/')
   revalidatePath('/equipe')
 }
 
@@ -75,6 +80,7 @@ export async function updateMemberPhoto(id: string, photoUrl: string) {
   await requireAdminSession()
   const db = getDb()
   await db.execute({ sql: 'UPDATE team_members SET photo_url=? WHERE id=?', args: [photoUrl, id] })
+  revalidatePath('/')
   revalidatePath('/equipe')
 }
 
@@ -82,6 +88,7 @@ export async function deleteMember(id: string) {
   await requireAdminSession()
   const db = getDb()
   await db.execute({ sql: 'DELETE FROM team_members WHERE id=?', args: [id] })
+  revalidatePath('/')
   revalidatePath('/equipe')
 }
 

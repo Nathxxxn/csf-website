@@ -29,6 +29,7 @@ export async function createEvent(formData: FormData) {
       maxOrder + 1,
     ],
   })
+  revalidatePath('/')
   revalidatePath('/evenements')
   redirect(`/admin/dashboard/evenements/${id}`)
 }
@@ -50,6 +51,7 @@ export async function updateEvent(id: string, formData: FormData) {
       id,
     ],
   })
+  revalidatePath('/')
   revalidatePath('/evenements')
   revalidatePath(`/evenements/${id}`)
 }
@@ -65,6 +67,7 @@ export async function deleteEvent(id: string) {
   await requireAdminSession()
   const db = getDb()
   await db.execute({ sql: 'DELETE FROM events WHERE id=?', args: [id] })
+  revalidatePath('/')
   revalidatePath('/evenements')
   redirect('/admin/dashboard?tab=evenements')
 }

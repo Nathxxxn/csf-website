@@ -60,6 +60,7 @@ export function ScrollingPartnersIntro({ partners }: ScrollingPartnersIntroProps
   const rafRef = useRef<number | null>(null)
   const [localScroll, setLocalScroll] = useState(0)
   const [isMobile, setIsMobile] = useState(false)
+  const [mobileWidth, setMobileWidth] = useState(320)
 
   useEffect(() => {
     const update = () => {
@@ -82,6 +83,7 @@ export function ScrollingPartnersIntro({ partners }: ScrollingPartnersIntroProps
 
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768)
+      setMobileWidth(Math.min(320, window.innerWidth - 32))
       update()
     }
 
@@ -121,8 +123,8 @@ export function ScrollingPartnersIntro({ partners }: ScrollingPartnersIntroProps
               localScroll > (isMobile ? 220 : 300) ? 'border-2 border-white/10' : 'border-2 border-transparent',
             )}
             style={{
-              width: isMobile ? 320 : 600,
-              height: isMobile ? 320 : 600,
+              width: isMobile ? mobileWidth : 600,
+              height: isMobile ? mobileWidth : 600,
             }}
           >
             <div
@@ -131,15 +133,15 @@ export function ScrollingPartnersIntro({ partners }: ScrollingPartnersIntroProps
                 localScroll > (isMobile ? 90 : 100) ? 'border-2 border-white/16' : 'border-2 border-transparent',
               )}
               style={{
-                width: isMobile ? 250 : 500,
-                height: isMobile ? 250 : 500,
+                width: isMobile ? Math.round(mobileWidth * 0.78) : 500,
+                height: isMobile ? Math.round(mobileWidth * 0.78) : 500,
               }}
             >
               <div
                 className="relative flex items-center justify-center rounded-full bg-gradient-to-r from-white/18 via-white/8 to-white/18 p-px"
                 style={{
-                  width: isMobile ? 190 : 400,
-                  height: isMobile ? 190 : 400,
+                  width: isMobile ? Math.round(mobileWidth * 0.59) : 400,
+                  height: isMobile ? Math.round(mobileWidth * 0.59) : 400,
                 }}
               >
                 <div className="relative flex h-full w-full items-center justify-center rounded-full bg-background">

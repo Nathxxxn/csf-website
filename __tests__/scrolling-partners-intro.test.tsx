@@ -39,4 +39,31 @@ describe('ScrollingPartnersIntro', () => {
     expect(section).not.toBeNull()
     expect(section?.className).not.toContain('overflow-hidden')
   })
+
+  it('caps circle width to viewport width minus 32px on narrow screens', async () => {
+    Object.defineProperty(window, 'innerWidth', {
+      writable: true,
+      configurable: true,
+      value: 320,
+    })
+    const { ScrollingPartnersIntro } = await import(
+      '@/components/ui/scrolling-partners-intro'
+    )
+    const { container } = render(<ScrollingPartnersIntro partners={partners} />)
+
+    // Trigger resize to update mobileWidth state (320px viewport → mobileWidth = 288)
+    fireEvent(window, new Event('resize'))
+
+    // Outermost circle must not exceed 288px (320 - 32)
+    const sticky = container.querySelector('.sticky')
+    const styledDivs = Array.from(
+      sticky?.querySelectorAll('[style]') ?? [],
+    ) as HTMLElement[]
+    const widths = styledDivs
+      .map((el) => parseFloat(el.style.width))
+      .filter((w) => !isNaN(w) && w > 0)
+
+    expect(widths.length).toBeGreaterThan(0)
+    expect(Math.max(...widths)).toBeLessThanOrEqual(288)
+  })
 })

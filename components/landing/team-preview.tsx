@@ -54,6 +54,15 @@ export async function TeamPreview() {
       </BlurFade>
 
       <TeamShowcase members={displayed} />
+
+      <div className="px-6 max-w-6xl mx-auto">
+        <Link
+          href="/equipe"
+          className="block sm:hidden text-center text-sm text-muted-foreground mt-4 pb-8 hover:text-foreground transition-colors"
+        >
+          Voir toute l&apos;équipe →
+        </Link>
+      </div>
     </section>
   )
 }

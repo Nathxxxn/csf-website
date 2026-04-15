@@ -18,7 +18,7 @@ export default async function AboutPage() {
         <p className="text-xs tracking-widest uppercase text-muted-foreground mb-2">
           À propos
         </p>
-        <h1 className="text-5xl font-extrabold tracking-tighter mb-8 max-w-2xl">
+        <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tighter mb-8 max-w-2xl">
           CS Finance, c&apos;est une association pour apprendre la finance au contact du terrain.
         </h1>
         <p className="text-muted-foreground leading-relaxed max-w-2xl text-base mb-12">

@@ -5,6 +5,7 @@ import { EventsPreview } from '@/components/landing/events-preview'
 import { PartnersMarquee } from '@/components/landing/partners-marquee'
 import { PartnersCta } from '@/components/landing/partners-cta'
 import { getUpcomingEvents, getPastEvents } from '@/lib/data'
+import { MarketWaveBackground } from '@/components/ui/market-wave-background'
 
 export default async function HomePage() {
   const upcoming = (await getUpcomingEvents()).slice(0, 3)
@@ -12,6 +13,7 @@ export default async function HomePage() {
 
   return (
     <>
+      <MarketWaveBackground />
       <Hero />
       <Stats />
       <TeamPreview />

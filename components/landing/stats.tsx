@@ -4,7 +4,7 @@ import { STATS } from '@/lib/constants'
 
 export function Stats() {
   return (
-    <section className="border-y border-border">
+    <section className="border-y border-border bg-[#050505]/60 backdrop-blur-sm">
       <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-border">
         {STATS.map((stat, i) => (
           <BlurFade key={stat.label} delay={i * 0.1} inView>

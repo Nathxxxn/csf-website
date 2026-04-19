@@ -156,12 +156,15 @@ function MiniGraph({ data }: { data: GraphData }) {
 
 // ── EventsTimeline ────────────────────────────────────────────────────────────
 const MONTHS_FR = ['JAN','FÉV','MAR','AVR','MAI','JUN','JUL','AOÛ','SEP','OCT','NOV','DÉC'] as const;
-const EV_CARD_W = 280 + 18; // card width + gap-18
+const EV_CARD_WIDTH = 280;
+const EV_CARD_GAP = 18;
+const EV_CARD_W = EV_CARD_WIDTH + EV_CARD_GAP;
 const EV_TRACK_TOP = 40;
-const EV_CARD_HEIGHT = 210;
+const EV_CARD_HEIGHT = 260;
 const EV_AXIS_TOP = EV_TRACK_TOP + EV_CARD_HEIGHT + 18;
 const EV_CONNECTOR_GAP = EV_AXIS_TOP - EV_TRACK_TOP - EV_CARD_HEIGHT;
 const EV_DOT_SIZE = 6;
+const EV_EVENT_ANCHOR_X = 24.5;
 
 function EventsTimeline({ events }: { events: Event[] }) {
   const wrapRef  = useRef<HTMLDivElement>(null);
@@ -183,14 +186,25 @@ function EventsTimeline({ events }: { events: Event[] }) {
     const track = trackRef.current;
     if (!wrap || !track) return;
 
-    const maxLen = sorted.length;
-    const initial = -centerIdx * EV_CARD_W;
+    const maxIndex = Math.max(sorted.length - 1, 0);
+    const getAnchoredX = (index: number) => -(index * EV_CARD_W + EV_EVENT_ANCHOR_X);
+    const maxX = sorted.length > 0 ? getAnchoredX(0) : 0;
+    const minX = sorted.length > 0 ? getAnchoredX(maxIndex) : 0;
+    const initial = sorted.length > 0 ? getAnchoredX(centerIdx) : 0;
     txRef.current     = initial;
     targetRef.current = initial;
     track.style.transform = `translateX(${initial}px)`;
 
-    const clampX = (v: number) => Math.max(-(maxLen - 1) * EV_CARD_W, Math.min(0, v));
+    const clampX = (v: number) => Math.max(minX, Math.min(maxX, v));
     const lerp   = (a: number, b: number, t: number) => a + (b - a) * t;
+    const moveToCursor = (clientX: number) => {
+      if (sorted.length <= 1) return;
+      const rect = wrap.getBoundingClientRect();
+      if (rect.width <= 0) return;
+
+      const progress = cl((clientX - rect.left) / rect.width, 0, 1);
+      targetRef.current = clampX(maxX + (minX - maxX) * progress);
+    };
 
     function tick() {
       txRef.current = lerp(txRef.current, targetRef.current, 0.12);
@@ -203,7 +217,7 @@ function EventsTimeline({ events }: { events: Event[] }) {
       dragRef.current = { on: true, x0: e.clientX, txStart: txRef.current, last: e.clientX, velocity: 0, lastTime: performance.now() };
       wrap.style.cursor = 'grabbing';
     };
-    const mouseMove = (e: MouseEvent) => {
+    const dragMove = (e: MouseEvent) => {
       const d = dragRef.current;
       if (!d.on) return;
       const now = performance.now();
@@ -213,11 +227,15 @@ function EventsTimeline({ events }: { events: Event[] }) {
       d.lastTime = now;
       targetRef.current = d.txStart + (e.clientX - d.x0);
     };
+    const hoverMove = (e: MouseEvent) => {
+      if (dragRef.current.on) return;
+      moveToCursor(e.clientX);
+    };
     const mouseUp = () => {
       const d = dragRef.current;
       if (!d.on) return;
       d.on = false;
-      wrap.style.cursor = 'grab';
+      wrap.style.cursor = 'ew-resize';
       targetRef.current = clampX(targetRef.current + d.velocity * 180);
     };
     const touchStart = (e: TouchEvent) => {
@@ -249,7 +267,8 @@ function EventsTimeline({ events }: { events: Event[] }) {
     };
 
     wrap.addEventListener('mousedown',  mouseDown);
-    window.addEventListener('mousemove', mouseMove);
+    wrap.addEventListener('mousemove', hoverMove);
+    window.addEventListener('mousemove', dragMove);
     window.addEventListener('mouseup',   mouseUp);
     wrap.addEventListener('touchstart',  touchStart, { passive: true });
     window.addEventListener('touchmove', touchMove,  { passive: true });
@@ -259,7 +278,8 @@ function EventsTimeline({ events }: { events: Event[] }) {
     return () => {
       cancelAnimationFrame(rafRef.current);
       wrap.removeEventListener('mousedown',  mouseDown);
-      window.removeEventListener('mousemove', mouseMove);
+      wrap.removeEventListener('mousemove', hoverMove);
+      window.removeEventListener('mousemove', dragMove);
       window.removeEventListener('mouseup',   mouseUp);
       wrap.removeEventListener('touchstart',  touchStart);
       window.removeEventListener('touchmove', touchMove);
@@ -272,8 +292,9 @@ function EventsTimeline({ events }: { events: Event[] }) {
     /* timeline-wrap: padding 40px top, 80px bottom — matches reference */
     <div
       ref={wrapRef}
+      data-testid="events-timeline"
       className="relative overflow-hidden select-none h-full"
-      style={{ padding: `${EV_TRACK_TOP}px 0 80px`, cursor: 'grab' }}
+      style={{ padding: `${EV_TRACK_TOP}px 0 80px`, cursor: 'ew-resize' }}
     >
       {/* Axis line */}
       <div
@@ -294,6 +315,7 @@ function EventsTimeline({ events }: { events: Event[] }) {
       <div
         data-testid="today-marker"
         data-axis-top={String(EV_AXIS_TOP)}
+        data-anchor-x={String(EV_EVENT_ANCHOR_X)}
         className="absolute pointer-events-none"
         style={{ top: `${EV_AXIS_TOP - 36}px`, left: '50%', width: '1px', height: '72px', background: '#fff', zIndex: 10 }}
       >
@@ -323,8 +345,8 @@ function EventsTimeline({ events }: { events: Event[] }) {
         />
         {/* Date label below axis */}
         <div
-          className="absolute font-mono text-white whitespace-nowrap"
-          style={{ top: '80px', left: '50%', transform: 'translateX(-50%)', fontSize: '9px', letterSpacing: '0.22em' }}
+          className="absolute text-white whitespace-nowrap text-[9px] font-medium uppercase tracking-[0.18em]"
+          style={{ top: '80px', left: '50%', transform: 'translateX(-50%)' }}
         >
           {todayLabel}
         </div>
@@ -333,8 +355,9 @@ function EventsTimeline({ events }: { events: Event[] }) {
       {/* Draggable track — cards flow from the top, no vertical centering */}
       <div
         ref={trackRef}
+        data-testid="events-track"
         className="flex"
-        style={{ gap: '18px', paddingLeft: '50vw', paddingRight: '50vw', willChange: 'transform', alignItems: 'flex-start' }}
+        style={{ gap: `${EV_CARD_GAP}px`, paddingLeft: '50vw', paddingRight: '50vw', willChange: 'transform', alignItems: 'flex-start' }}
       >
         {sorted.map((event) => {
           const isPast  = new Date(event.date) < today;
@@ -344,31 +367,26 @@ function EventsTimeline({ events }: { events: Event[] }) {
           return (
             <div
               key={event.id}
-              className="relative flex flex-col"
+              className="relative flex flex-col overflow-hidden rounded-lg border border-white/8 bg-[#0d0d0d] transition-colors duration-300"
               style={{
                 flex: '0 0 auto',
-                width: '280px',
+                width: `${EV_CARD_WIDTH}px`,
                 height: `${EV_CARD_HEIGHT}px`,
-                padding: '22px',
-                gap: '16px',
-                border: '1px solid #161616',
-                borderRadius: '14px',
-                background: '#0d0d0d',
                 opacity: isPast ? 0.45 : 1,
-                transition: 'border-color 0.3s, transform 0.3s',
                 userSelect: 'none',
               }}
-              onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = '#222'; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = '#161616'; (e.currentTarget as HTMLDivElement).style.transform = 'translateY(0)'; }}
+              onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(255,255,255,0.22)'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(255,255,255,0.08)'; }}
             >
               {/* Connector — bridges card bottom to the axis line */}
               <div
                 data-testid={`event-connector-${event.id}`}
                 data-axis-top={String(EV_AXIS_TOP)}
+                data-anchor-x={String(EV_EVENT_ANCHOR_X)}
                 className="absolute pointer-events-none"
                 style={{
                   top: '100%',
-                  left: '24.5px',
+                  left: `${EV_EVENT_ANCHOR_X}px`,
                   width: '1px',
                   height: `${EV_CONNECTOR_GAP}px`,
                   background: isPast ? '#242424' : 'rgba(255,255,255,0.42)',
@@ -378,7 +396,7 @@ function EventsTimeline({ events }: { events: Event[] }) {
                 className="absolute rounded-full pointer-events-none"
                 style={{
                   top: `calc(100% + ${EV_CONNECTOR_GAP - EV_DOT_SIZE / 2}px)`,
-                  left: '22px',
+                  left: `${EV_EVENT_ANCHOR_X - EV_DOT_SIZE / 2}px`,
                   width: `${EV_DOT_SIZE}px`,
                   height: `${EV_DOT_SIZE}px`,
                   background: isPast ? '#333' : '#fff',
@@ -386,47 +404,55 @@ function EventsTimeline({ events }: { events: Event[] }) {
                 }}
               />
 
-              {/* ev-date */}
-              <div className="font-mono uppercase" style={{ fontSize: '10px', letterSpacing: '0.22em', color: '#8a8a8a' }}>
-                {dateStr}
+              <div className="relative h-24 shrink-0 overflow-hidden border-b border-white/8 bg-white/[0.03]">
+                {event.image ? (
+                  <img
+                    src={event.image}
+                    alt={event.title}
+                    className="h-full w-full object-cover opacity-80 transition-transform duration-300"
+                    draggable={false}
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center text-[11px] font-medium uppercase tracking-[0.16em] text-zinc-600">
+                    Photo événement
+                  </div>
+                )}
+                <div className="absolute inset-0 bg-linear-to-t from-[#0d0d0d] via-transparent to-transparent" />
               </div>
 
-              {/* ev-pole */}
-              {event.pole && (
-                <span
-                  className="font-mono uppercase self-start"
-                  style={{ fontSize: '9px', letterSpacing: '0.2em', color: '#555', padding: '3px 8px', border: '1px solid #222', borderRadius: '999px' }}
+              <div className="flex flex-1 flex-col gap-3 p-4">
+                <div
+                  data-testid={`event-date-${event.id}`}
+                  className="text-[10px] font-medium uppercase tracking-[0.16em] text-zinc-500"
                 >
-                  {event.pole}
-                </span>
-              )}
+                  {dateStr}
+                </div>
 
-              {/* ev-title */}
-              <div
-                className="text-white"
-                style={{
-                  fontFamily: 'var(--font-serif), Georgia, serif',
-                  fontSize: '22px',
-                  lineHeight: 1.15,
-                  letterSpacing: '-0.015em',
-                  display: '-webkit-box',
-                  WebkitBoxOrient: 'vertical',
-                  WebkitLineClamp: 2,
-                  overflow: 'hidden',
-                }}
-              >
-                {event.title}
-              </div>
+                {event.pole && (
+                  <span className="self-start rounded-full border border-white/10 px-2 py-1 text-[9px] font-medium uppercase tracking-[0.14em] text-zinc-500">
+                    {event.pole}
+                  </span>
+                )}
 
-              {/* ev-partner */}
-              <div
-                className="font-mono"
-                style={{ fontSize: '11px', color: '#bababa', letterSpacing: '0.02em', borderTop: '1px solid #161616', paddingTop: '12px', marginTop: 'auto' }}
-              >
-                <span className="block" style={{ color: '#555', fontSize: '9px', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '4px' }}>
-                  Partenaire
-                </span>
-                {event.partner}
+                <div
+                  data-testid={`event-card-title-${event.id}`}
+                  className="text-base font-semibold leading-tight tracking-tight text-white"
+                  style={{
+                    display: '-webkit-box',
+                    WebkitBoxOrient: 'vertical',
+                    WebkitLineClamp: 2,
+                    overflow: 'hidden',
+                  }}
+                >
+                  {event.title}
+                </div>
+
+                <div className="mt-auto border-t border-white/8 pt-3 text-xs font-medium text-zinc-300">
+                  <span className="mb-1 block text-[9px] font-medium uppercase tracking-[0.16em] text-zinc-600">
+                    Partenaire
+                  </span>
+                  {event.partner}
+                </div>
               </div>
             </div>
           );
@@ -717,25 +743,19 @@ export function CinematicHeroSection({ members, events }: { members: TeamMember[
             <div className="shrink-0 px-8 pt-8 pb-12 flex items-end justify-between gap-6 flex-wrap">
               <div>
                 {/* section-kicker */}
-                <div className="flex items-center gap-3 mb-3 font-mono uppercase" style={{ fontSize: '11px', letterSpacing: '0.22em', color: '#8a8a8a' }}>
-                  <span style={{ color: '#555' }}>01</span>
+                <div className="mb-3 flex items-center gap-3 text-[11px] font-medium uppercase tracking-[0.18em] text-zinc-500">
+                  <span className="text-zinc-700">01</span>
                   <span>Agenda 2025–2026</span>
                 </div>
                 {/* section-title */}
-                <h2
-                  className="text-white"
-                  style={{ fontFamily: 'var(--font-serif), Georgia, serif', fontSize: 'clamp(32px, 4vw, 56px)', lineHeight: 1.0, letterSpacing: '-0.025em' }}
-                >
-                  Événements <em style={{ color: '#8a8a8a' }}>récents &amp; à venir</em>
+                <h2 className="text-3xl font-bold leading-none tracking-tight text-white md:text-5xl">
+                  Événements <span className="text-zinc-400">récents &amp; à venir</span>
                 </h2>
               </div>
               {/* section-action */}
               <Link
                 href="/evenements"
-                className="hidden sm:block font-mono uppercase transition-colors"
-                style={{ fontSize: '12px', letterSpacing: '0.15em', color: '#8a8a8a', borderBottom: '1px solid #333', paddingBottom: '4px' }}
-                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = '#fff'; (e.currentTarget as HTMLAnchorElement).style.borderBottomColor = '#fff'; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = '#8a8a8a'; (e.currentTarget as HTMLAnchorElement).style.borderBottomColor = '#333'; }}
+                className="hidden border-b border-zinc-700 pb-1 text-xs font-medium uppercase tracking-[0.14em] text-zinc-500 transition-colors hover:border-white hover:text-white sm:block"
               >
                 Tous les événements →
               </Link>
@@ -748,10 +768,10 @@ export function CinematicHeroSection({ members, events }: { members: TeamMember[
 
             {/* timeline-hint */}
             <div className="shrink-0 flex items-center justify-between" style={{ padding: '0 32px 24px', marginTop: '16px' }}>
-              <span className="font-mono uppercase" style={{ fontSize: '10px', letterSpacing: '0.2em', color: '#555' }}>
-                ← drag · swipe · flèches ←→
+              <span className="text-[10px] font-medium uppercase tracking-[0.16em] text-zinc-600">
+                Bouge la souris · swipe · molette
               </span>
-              <span className="font-mono uppercase" style={{ fontSize: '10px', letterSpacing: '0.2em', color: '#555' }}>
+              <span className="text-[10px] font-medium uppercase tracking-[0.16em] text-zinc-600">
                 {events.length} événement{events.length !== 1 ? "s" : ""}
               </span>
             </div>

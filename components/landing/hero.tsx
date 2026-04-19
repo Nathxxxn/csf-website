@@ -25,7 +25,7 @@ export function Hero() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08),transparent_52%),linear-gradient(to_bottom,rgba(6,6,6,0.04),rgba(6,6,6,0.42))]" />
       </div>
 
-      <div className="relative z-10 flex flex-col items-center px-6 max-w-4xl mx-auto text-center">
+      <div id="hero-content" className="relative z-10 flex flex-col items-center px-6 max-w-4xl mx-auto text-center">
         <BlurFade delay={TEXT_BADGE_DELAY} inView>
           <div className="mb-8 rounded-full border border-border px-4 py-1.5">
             <AnimatedShinyText className="text-xs tracking-widest uppercase text-muted-foreground">

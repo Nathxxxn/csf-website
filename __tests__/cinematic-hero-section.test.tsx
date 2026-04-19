@@ -321,12 +321,14 @@ describe('CinematicHeroSection', () => {
     const eventConnector = screen.getByTestId('event-connector-event-1')
     const track = screen.getByTestId('events-track')
 
+    expect(track).toContainElement(todayMarker)
     expect(todayMarker).toHaveAttribute('data-anchor-x', '24.5')
+    expect(todayMarker).toHaveStyle({ left: 'calc(50vw + 24.5px)' })
     expect(eventConnector).toHaveAttribute('data-anchor-x', '24.5')
     expect(track).toHaveStyle({ transform: 'translateX(-24.5px)' })
   })
 
-  it('moves the event timeline when the mouse moves over it without dragging', async () => {
+  it('does not move the event timeline when the mouse is outside the timeline interaction zone', async () => {
     const animationFrame = mockAnimationFrame()
     const { CinematicHeroSection } = await import('@/components/landing/cinematic-hero-section')
 
@@ -366,10 +368,305 @@ describe('CinematicHeroSection', () => {
       animationFrame.runNextFrame()
     })
 
+    expect(track).toHaveStyle({ transform: 'translateX(-24.5px)' })
+    expect(animationFrame.requestAnimationFrameSpy).toHaveBeenCalled()
+  })
+
+  it('does not move the event timeline from mouse movement over event cards', async () => {
+    const animationFrame = mockAnimationFrame()
+    const { CinematicHeroSection } = await import('@/components/landing/cinematic-hero-section')
+
+    Object.defineProperty(SVGElement.prototype, 'getTotalLength', {
+      configurable: true,
+      value: () => 100,
+    })
+
+    render(
+      <React.StrictMode>
+        <CinematicHeroSection members={members} events={events} />
+      </React.StrictMode>,
+    )
+
+    const zone = screen.getByTestId('events-interaction-zone')
+    const track = screen.getByTestId('events-track')
+    const eventCard = screen.getByRole('link', { name: /conférence finance/i })
+
+    Object.defineProperty(zone, 'getBoundingClientRect', {
+      configurable: true,
+      value: () => ({
+        left: 0,
+        top: 0,
+        width: 1000,
+        height: 420,
+        right: 1000,
+        bottom: 420,
+        x: 0,
+        y: 0,
+        toJSON: () => {},
+      }),
+    })
+
+    expect(track).toHaveStyle({ transform: 'translateX(-24.5px)' })
+
+    fireEvent.mouseMove(eventCard, { clientX: 900 })
+
+    act(() => {
+      animationFrame.runNextFrame()
+    })
+
+    expect(track).toHaveStyle({ transform: 'translateX(-24.5px)' })
+    expect(animationFrame.requestAnimationFrameSpy).toHaveBeenCalled()
+  })
+
+  it('moves the event timeline with a trackpad wheel gesture over event cards', async () => {
+    const animationFrame = mockAnimationFrame()
+    const { CinematicHeroSection } = await import('@/components/landing/cinematic-hero-section')
+
+    Object.defineProperty(SVGElement.prototype, 'getTotalLength', {
+      configurable: true,
+      value: () => 100,
+    })
+
+    render(
+      <React.StrictMode>
+        <CinematicHeroSection members={members} events={events} />
+      </React.StrictMode>,
+    )
+
+    const track = screen.getByTestId('events-track')
+    const eventCard = screen.getByRole('link', { name: /conférence finance/i })
+
+    expect(track).toHaveStyle({ transform: 'translateX(-24.5px)' })
+
+    fireEvent.wheel(eventCard, { deltaY: 260, deltaX: 0 })
+
+    act(() => {
+      animationFrame.runNextFrame()
+    })
+
     const match = track.style.transform.match(/translateX\((-?\d+(?:\.\d+)?)px\)/)
     const translatedX = match ? Number(match[1]) : 0
 
     expect(translatedX).toBeLessThan(-25)
-    expect(animationFrame.requestAnimationFrameSpy).toHaveBeenCalled()
+    expect(translatedX).toBeGreaterThan(-45)
+  })
+
+  it('moves the event timeline with keyboard arrow keys when the timeline is focused', async () => {
+    const animationFrame = mockAnimationFrame()
+    const { CinematicHeroSection } = await import('@/components/landing/cinematic-hero-section')
+
+    Object.defineProperty(SVGElement.prototype, 'getTotalLength', {
+      configurable: true,
+      value: () => 100,
+    })
+
+    render(
+      <React.StrictMode>
+        <CinematicHeroSection members={members} events={events} />
+      </React.StrictMode>,
+    )
+
+    const zone = screen.getByTestId('events-interaction-zone')
+    const track = screen.getByTestId('events-track')
+
+    expect(zone).toHaveAttribute('tabindex', '0')
+    expect(track).toHaveStyle({ transform: 'translateX(-24.5px)' })
+
+    fireEvent.keyDown(zone, { key: 'ArrowRight' })
+
+    act(() => {
+      animationFrame.runNextFrame()
+    })
+
+    const match = track.style.transform.match(/translateX\((-?\d+(?:\.\d+)?)px\)/)
+    const translatedX = match ? Number(match[1]) : 0
+
+    expect(translatedX).toBeLessThan(-25)
+    expect(translatedX).toBeGreaterThan(-45)
+  })
+
+  it('does not move the event timeline when the mouse is on the axis outside event cards', async () => {
+    const animationFrame = mockAnimationFrame()
+    const { CinematicHeroSection } = await import('@/components/landing/cinematic-hero-section')
+
+    Object.defineProperty(SVGElement.prototype, 'getTotalLength', {
+      configurable: true,
+      value: () => 100,
+    })
+
+    render(
+      <React.StrictMode>
+        <CinematicHeroSection members={members} events={events} />
+      </React.StrictMode>,
+    )
+
+    const axis = screen.getByTestId('events-axis')
+    const track = screen.getByTestId('events-track')
+
+    expect(track).toHaveStyle({ transform: 'translateX(-24.5px)' })
+
+    fireEvent.mouseMove(axis, { clientX: 900 })
+
+    act(() => {
+      animationFrame.runNextFrame()
+    })
+
+    expect(track).toHaveStyle({ transform: 'translateX(-24.5px)' })
+  })
+
+  it('positions the Today marker proportionally between surrounding event dates', async () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-04-20T00:00:00.000Z'))
+
+    const { CinematicHeroSection } = await import('@/components/landing/cinematic-hero-section')
+    const datedEvents: Event[] = [
+      { ...events[0], id: 'before-today', date: '2026-04-10' },
+      { ...events[1], id: 'after-today', date: '2026-04-30' },
+    ]
+
+    Object.defineProperty(SVGElement.prototype, 'getTotalLength', {
+      configurable: true,
+      value: () => 100,
+    })
+
+    render(
+      <React.StrictMode>
+        <CinematicHeroSection members={members} events={datedEvents} />
+      </React.StrictMode>,
+    )
+
+    const todayMarker = screen.getByTestId('today-marker')
+    const track = screen.getByTestId('events-track')
+
+    expect(todayMarker).toHaveAttribute('data-date-position', '0.5')
+    expect(todayMarker).toHaveStyle({ left: 'calc(50vw + 173.5px)' })
+    expect(track).toHaveStyle({ transform: 'translateX(-173.5px)' })
+  })
+
+  it('keeps Today aligned to an event that happens on the same calendar day', async () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-04-20T18:00:00.000Z'))
+
+    const { CinematicHeroSection } = await import('@/components/landing/cinematic-hero-section')
+    const datedEvents: Event[] = [
+      { ...events[0], id: 'before-today', date: '2026-04-10' },
+      { ...events[1], id: 'same-day', date: '2026-04-20' },
+      { ...events[0], id: 'after-today', date: '2026-04-30' },
+    ]
+
+    Object.defineProperty(SVGElement.prototype, 'getTotalLength', {
+      configurable: true,
+      value: () => 100,
+    })
+
+    render(
+      <React.StrictMode>
+        <CinematicHeroSection members={members} events={datedEvents} />
+      </React.StrictMode>,
+    )
+
+    const todayMarker = screen.getByTestId('today-marker')
+    const track = screen.getByTestId('events-track')
+
+    expect(todayMarker).toHaveAttribute('data-date-position', '1')
+    expect(todayMarker).toHaveStyle({ left: 'calc(50vw + 322.5px)' })
+    expect(track).toHaveStyle({ transform: 'translateX(-322.5px)' })
+  })
+
+  it('places Today after the latest event when the current date is later than the timeline', async () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-04-19T12:00:00.000Z'))
+
+    const { CinematicHeroSection } = await import('@/components/landing/cinematic-hero-section')
+    const datedEvents: Event[] = [
+      { ...events[0], id: 'mar-19', date: '2026-03-19' },
+      { ...events[1], id: 'mar-30', date: '2026-03-30' },
+    ]
+
+    Object.defineProperty(SVGElement.prototype, 'getTotalLength', {
+      configurable: true,
+      value: () => 100,
+    })
+
+    render(
+      <React.StrictMode>
+        <CinematicHeroSection members={members} events={datedEvents} />
+      </React.StrictMode>,
+    )
+
+    const todayMarker = screen.getByTestId('today-marker')
+    const latestConnector = screen.getByTestId('event-connector-mar-30')
+    const track = screen.getByTestId('events-track')
+
+    expect(todayMarker).toHaveAttribute('data-date-position', '2.818')
+    expect(todayMarker).toHaveStyle({ left: 'calc(50vw + 864.3181818181819px)' })
+    expect(track).toHaveStyle({ transform: 'translateX(-864.3181818181819px)' })
+    expect(latestConnector).toHaveAttribute('data-anchor-x', '24.5')
+  })
+
+  it('renders clickable event cards and a more deliberate Today marker design', async () => {
+    const { CinematicHeroSection } = await import('@/components/landing/cinematic-hero-section')
+
+    Object.defineProperty(SVGElement.prototype, 'getTotalLength', {
+      configurable: true,
+      value: () => 100,
+    })
+
+    render(
+      <React.StrictMode>
+        <CinematicHeroSection members={members} events={events} />
+      </React.StrictMode>,
+    )
+
+    const eventLink = screen.getByRole('link', { name: /conférence finance/i })
+    const todayGlow = screen.getByTestId('today-marker-glow')
+    const todayRing = screen.getByTestId('today-marker-ring')
+    const todayDot = screen.getByTestId('today-axis-dot')
+    const todayLabel = screen.getByTestId('today-marker-label')
+
+    expect(eventLink).toHaveAttribute('href', '/evenements/event-1')
+    expect(eventLink).toHaveAttribute('data-event-card', 'true')
+    expect(todayGlow).toHaveStyle({ top: '50%', left: '50%', width: '22px', height: '22px', transform: 'translate(-50%, -50%)' })
+    expect(todayRing).toHaveClass('border-white/30')
+    expect(todayRing).not.toHaveStyle({ transform: 'translate(-50%, -50%)' })
+    expect(todayDot).toHaveClass('border', 'border-white')
+    expect(todayLabel).toHaveClass('rounded-full', 'border-white/15')
+  })
+
+  it('keeps long event text contained inside the card layout', async () => {
+    const { CinematicHeroSection } = await import('@/components/landing/cinematic-hero-section')
+    const longEvents: Event[] = [
+      {
+        ...events[0],
+        id: 'long-copy',
+        title: 'Session Structureurs Produits Dérivés avec présentation très longue',
+        partner: 'Société Générale Corporate and Investment Banking Europe',
+        pole: 'Finance de marché et structuration',
+      },
+      events[1],
+    ]
+
+    Object.defineProperty(SVGElement.prototype, 'getTotalLength', {
+      configurable: true,
+      value: () => 100,
+    })
+
+    render(
+      <React.StrictMode>
+        <CinematicHeroSection members={members} events={longEvents} />
+      </React.StrictMode>,
+    )
+
+    const card = screen.getByRole('link', {
+      name: /session structureurs produits dérivés/i,
+    })
+    const content = screen.getByTestId('event-card-content-long-copy')
+    const title = screen.getByTestId('event-card-title-long-copy')
+    const partner = screen.getByTestId('event-partner-long-copy')
+
+    expect(card).toHaveClass('overflow-hidden')
+    expect(content).toHaveClass('min-h-0')
+    expect(title).toHaveStyle({ WebkitLineClamp: '2' })
+    expect(partner).toHaveStyle({ WebkitLineClamp: '2' })
   })
 })

@@ -12,7 +12,7 @@ export function PartnersCta() {
   const router = useRouter()
 
   return (
-    <section className="relative py-32 px-6 overflow-hidden border-t border-border">
+    <section className="relative pt-32 pb-20 px-6 overflow-hidden border-t border-border">
       <DotPattern
         className={cn(
           'absolute inset-0 [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_60%,transparent_100%)]',

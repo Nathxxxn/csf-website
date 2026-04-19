@@ -3,6 +3,7 @@
 import { usePathname } from 'next/navigation'
 import type { ReactNode } from 'react'
 import { Footer } from '@/components/layout/footer'
+import { LoadingScreen } from '@/components/layout/loading-screen'
 import { Navbar } from '@/components/layout/navbar'
 
 type SiteChromeProps = {
@@ -15,6 +16,7 @@ export function SiteChrome({ children }: SiteChromeProps) {
 
   return (
     <>
+      {!isAdminRoute && <LoadingScreen />}
       {!isAdminRoute && <Navbar />}
       <main>{children}</main>
       {!isAdminRoute && <Footer />}

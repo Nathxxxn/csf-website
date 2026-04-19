@@ -29,14 +29,8 @@ vi.mock('@/components/ui/motion-button', () => ({
   ),
 }))
 
-vi.mock('@/components/ui/dotted-surface', () => ({
-  DottedSurface: ({ className }: { className?: string }) => (
-    <div data-testid="dotted-surface" className={className} />
-  ),
-}))
-
 describe('Hero', () => {
-  it('uses the dotted surface background instead of the old path lines', async () => {
+  it('renders without legacy background components (DottedSurface and BackgroundPaths replaced by fixed MarketWaveBackground)', async () => {
     const { Hero } = await import('@/components/landing/hero')
 
     await act(async () => {
@@ -47,7 +41,7 @@ describe('Hero', () => {
       )
     })
 
-    expect(screen.getByTestId('dotted-surface')).toBeInTheDocument()
+    expect(screen.queryByTestId('dotted-surface')).not.toBeInTheDocument()
     expect(screen.queryByText('Background Paths')).not.toBeInTheDocument()
   })
 })

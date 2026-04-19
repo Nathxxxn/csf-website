@@ -161,6 +161,31 @@ function ScrollTracker({ events }: ScrollTrackerProps) {
   )
 }
 
+function MobileEventsGrid({ events }: { events: Event[] }) {
+  const items = toGalleryItems(events)
+
+  if (items.length === 0) {
+    return (
+      <div className="py-16 text-center text-sm text-muted-foreground">
+        Aucune photo disponible pour l&apos;instant.
+      </div>
+    )
+  }
+
+  return (
+    <div className="grid grid-cols-2 gap-4 px-4 py-8">
+      {items.map((item, i) => (
+        <GalleryItemCard
+          key={`${item.eventId}-${item.image}`}
+          item={item}
+          isRevealed={true}
+          priority={i < 4}
+        />
+      ))}
+    </div>
+  )
+}
+
 interface EventsGalleryProps {
   events: Event[]
 }
@@ -188,20 +213,28 @@ export function EventsGallery({ events }: EventsGalleryProps) {
   return (
     <MotionConfig reducedMotion="user">
       <div className="relative">
-        <div
-          className="pointer-events-none absolute z-10 h-[60vh] w-full top-0"
-          style={{
-            background:
-              "radial-gradient(ellipse at center, rgba(255,255,255,0.03) 0%, transparent 70%)",
-            filter: "blur(40px)",
-            mixBlendMode: "screen",
-          }}
-        />
-        <ContainerScroll className="relative" style={{ height: `${containerVh}vh` }}>
-          <ContainerSticky className="h-svh">
-            <ScrollTracker events={events} />
-          </ContainerSticky>
-        </ContainerScroll>
+        {/* Mobile: static 2-column grid */}
+        <div className="md:hidden">
+          <MobileEventsGrid events={events} />
+        </div>
+
+        {/* Desktop: parallax scroll gallery */}
+        <div className="hidden md:block">
+          <div
+            className="pointer-events-none absolute z-10 h-[60vh] w-full top-0"
+            style={{
+              background:
+                "radial-gradient(ellipse at center, rgba(255,255,255,0.03) 0%, transparent 70%)",
+              filter: "blur(40px)",
+              mixBlendMode: "screen",
+            }}
+          />
+          <ContainerScroll className="relative" style={{ height: `${containerVh}vh` }}>
+            <ContainerSticky className="h-svh">
+              <ScrollTracker events={events} />
+            </ContainerSticky>
+          </ContainerScroll>
+        </div>
       </div>
     </MotionConfig>
   )

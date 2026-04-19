@@ -1,0 +1,1071 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>CSF — Suggestions motion & landing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg: #060606;
+    --bg-2: #0b0b0b;
+    --line: #1a1a1a;
+    --line-2: #262626;
+    --fg: #ffffff;
+    --muted: #8a8a8a;
+    --muted-2: #5a5a5a;
+    --accent: #c9f25c; /* subtle highlight, only for doc chrome */
+  }
+  *{ box-sizing: border-box; }
+  html,body{ margin:0; padding:0; background: var(--bg); color: var(--fg); font-family: Manrope, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  ::selection{ background: var(--fg); color: #000; }
+
+  /* Layout */
+  .wrap{ max-width: 1180px; margin: 0 auto; padding: 64px 32px 160px; }
+  .mono{ font-family: 'JetBrains Mono', ui-monospace, monospace; letter-spacing: -0.01em; }
+  .serif{ font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-style: italic; }
+
+  .kicker{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display:inline-flex; align-items:center; gap: 10px;
+  }
+  .kicker::before{
+    content:""; display:inline-block; width: 24px; height: 1px; background: var(--muted);
+  }
+
+  .eyebrow-row{ display:flex; justify-content: space-between; align-items:center; margin-bottom: 48px; }
+  .doc-meta{ font-family:'JetBrains Mono',monospace; font-size: 11px; color: var(--muted-2); letter-spacing: 0.08em; }
+
+  h1.title{
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    font-size: clamp(44px, 7vw, 96px);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    margin: 0 0 28px;
+  }
+  h1.title em{ font-style: italic; color: var(--muted); }
+
+  .lede{
+    font-size: 18px; line-height: 1.55; color: #d4d4d4; max-width: 62ch;
+  }
+  .lede b{ color: #fff; font-weight: 600; }
+
+  hr.rule{ border:0; border-top: 1px solid var(--line); margin: 80px 0; }
+
+  /* Section header */
+  .section-head{ display:flex; gap: 40px; align-items: baseline; margin-bottom: 36px; }
+  .section-num{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: var(--muted-2); letter-spacing: 0.15em;
+    min-width: 40px;
+  }
+  .section-title{
+    font-family:'Instrument Serif', serif;
+    font-size: clamp(28px, 4vw, 44px);
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    margin: 0;
+  }
+  .section-title em{ color: var(--muted); }
+
+  /* Audit list */
+  .audit{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .audit .cell{ background: var(--bg); padding: 24px 26px; }
+  .audit .cell .lab{ font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color: var(--muted-2); margin-bottom: 10px; display:flex; align-items:center; gap:8px;}
+  .audit .cell .lab .dot{ width:6px; height:6px; border-radius:50%; }
+  .good .dot{ background: #9cd678; }
+  .warn .dot{ background: #e2b55a; }
+  .bad  .dot{ background: #d46b6b; }
+  .audit .cell p{ margin:0; color: #d4d4d4; font-size: 14px; line-height: 1.55; }
+
+  /* Proposal card */
+  .prop{
+    display:grid;
+    grid-template-columns: 380px 1fr;
+    gap: 40px;
+    margin-bottom: 100px;
+  }
+  @media (max-width: 880px){
+    .prop{ grid-template-columns: 1fr; }
+  }
+  .prop .copy h3{
+    font-family:'Instrument Serif', serif;
+    font-size: 34px; line-height: 1.05; letter-spacing: -0.02em; margin: 0 0 14px; font-weight: 400;
+  }
+  .prop .copy h3 em{ color: var(--muted); }
+  .prop .copy p{ color: #c9c9c9; line-height: 1.6; font-size: 15px; margin: 0 0 14px; }
+  .tag-row{ display:flex; flex-wrap:wrap; gap:6px; margin-top: 16px; }
+  .tag{
+    font-family:'JetBrains Mono',monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em;
+    padding: 5px 9px; border: 1px solid var(--line-2); border-radius: 999px; color: var(--muted);
+  }
+  .tag.pri{ color: #fff; border-color: #3a3a3a; }
+
+  /* Demo stage */
+  .demo{
+    position: relative;
+    background: #040404;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    overflow: hidden;
+    aspect-ratio: 16/10;
+  }
+  .demo .stage{ position:absolute; inset:0; overflow:hidden; }
+  .demo .chrome{
+    position:absolute; top: 10px; left: 12px; right: 12px;
+    display:flex; justify-content:space-between; align-items:center; z-index: 20;
+    font-family:'JetBrains Mono',monospace; font-size: 10px; color: var(--muted-2); letter-spacing: 0.12em; text-transform: uppercase;
+    pointer-events:none;
+  }
+  .demo .controls{
+    position:absolute; left: 12px; right:12px; bottom: 10px; z-index: 30;
+    display:flex; align-items:center; gap:12px;
+    font-family:'JetBrains Mono',monospace; font-size: 10px; color: var(--muted);
+  }
+  .scrubber{
+    appearance:none; -webkit-appearance:none;
+    height: 2px; background: #2a2a2a; flex:1; border-radius: 2px; outline:none; cursor: pointer;
+  }
+  .scrubber::-webkit-slider-thumb{
+    appearance:none; -webkit-appearance:none;
+    width: 10px; height: 10px; border-radius: 50%; background: #fff; border:0; cursor:pointer;
+  }
+  .scrubber::-moz-range-thumb{ width:10px; height:10px; border-radius:50%; background:#fff; border:0; }
+  .ctrl-btn{
+    width: 24px; height: 24px; border-radius: 6px; background: #151515; border: 1px solid #252525; color:#fff;
+    display:inline-flex; align-items:center; justify-content:center; cursor:pointer; padding: 0;
+  }
+  .ctrl-btn:hover{ background:#1e1e1e; }
+  .ctrl-btn svg{ width:10px; height:10px; }
+  .time{ min-width: 40px; text-align:right; }
+
+  /* Common demo bits */
+  .d-title{ font-family:'Instrument Serif', serif; font-size: 44px; letter-spacing: -0.02em; line-height: 1; color: #fff; }
+  .d-sub{ font-family:'JetBrains Mono',monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+
+  /* Table of contents */
+  .toc{
+    display:grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+    background: var(--line); border: 1px solid var(--line); border-radius: 14px; overflow:hidden;
+    margin-bottom: 64px;
+  }
+  .toc a{
+    background: var(--bg); padding: 18px 20px; text-decoration: none; color: #fff;
+    display:flex; flex-direction:column; gap: 6px; transition: background .2s;
+  }
+  .toc a:hover{ background: #0e0e0e; }
+  .toc .num{ font-family:'JetBrains Mono',monospace; font-size: 10px; color: var(--muted-2); letter-spacing: 0.14em; }
+  .toc .lbl{ font-family:'Instrument Serif', serif; font-size: 20px; line-height: 1.1; }
+
+  /* Implementation note */
+  .note{
+    border-left: 2px solid var(--line-2);
+    padding: 4px 0 4px 18px;
+    color: var(--muted);
+    font-family:'JetBrains Mono',monospace; font-size: 11px; line-height: 1.6;
+    margin-top: 18px;
+  }
+  .note b{ color: #c9c9c9; font-weight: 500; }
+  .note code{ color: #e5c07b; }
+
+  /* Closing */
+  .final{
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 40px;
+    background: linear-gradient(180deg, #0a0a0a, #050505);
+  }
+  .final h2{ font-family:'Instrument Serif', serif; font-size: 40px; line-height: 1.05; margin: 0 0 12px; letter-spacing: -0.01em; }
+  .final p{ color: #c0c0c0; line-height: 1.6; margin: 0 0 14px; max-width: 65ch; }
+  .priority-grid{
+    display:grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 22px;
+  }
+  .priority-grid .card{
+    border:1px solid var(--line-2); border-radius: 12px; padding: 18px;
+  }
+  .priority-grid .card .k{ font-family:'JetBrains Mono',monospace; font-size: 10px; letter-spacing: 0.16em; color: var(--muted-2); text-transform: uppercase; }
+  .priority-grid .card .v{ font-family:'Instrument Serif', serif; font-size: 22px; margin-top: 6px; line-height:1.15;}
+
+  /* Mobile */
+  @media (max-width: 680px){
+    .wrap{ padding: 32px 18px 120px; }
+    .toc{ grid-template-columns: 1fr; }
+    .audit{ grid-template-columns: 1fr; }
+    .priority-grid{ grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="eyebrow-row">
+    <span class="kicker">Design review · Landing CS Finance</span>
+    <span class="doc-meta">v1 · 2026</span>
+  </div>
+
+  <h1 class="title">Aller du <em>cinematic</em><br/>au <em>mémorable</em>.</h1>
+
+  <p class="lede">
+    Ta landing a déjà une base solide — palette disciplinée, hero cinematic avec card qui monte, particules 3D en fond, Magic UI partout. Le problème n'est <b>pas</b> un manque de motion. C'est que le motion est <b>généraliste</b> : il pourrait être sur n'importe quel SaaS. Voici 6 axes pour qu'il devienne <b>spécifiquement CS Finance</b> — une asso étudiante qui parle finance, sérieux, signal sur bruit.
+  </p>
+
+  <hr class="rule" />
+
+  <!-- Audit -->
+  <div class="section-head">
+    <div class="section-num">00</div>
+    <h2 class="section-title">Diagnostic rapide <em>— ce qui marche, ce qui freine</em></h2>
+  </div>
+
+  <div class="audit">
+    <div class="cell">
+      <div class="lab good"><span class="dot"></span>Palette</div>
+      <p>Noir profond + blanc, 0 accent coloré. Direction claire et adulte. <b>Ne la casse pas</b> — ta valeur ajoutée sera dans la typographie et la texture, pas dans la couleur.</p>
+    </div>
+    <div class="cell">
+      <div class="lab good"><span class="dot"></span>Hero cinematic</div>
+      <p>La card qui monte + blur hero est un moment fort. Mais c'est <b>le seul</b> moment fort. Après, le rythme s'aplatit en sections classiques blur-fade.</p>
+    </div>
+    <div class="cell">
+      <div class="lab warn"><span class="dot"></span>Typographie</div>
+      <p>Manrope extrabold partout = uniformité pro mais pas d'identité. Un pairing serif italique en accent (pour mots-clés : <em>finance</em>, <em>marchés</em>, <em>promotion</em>) ajoute une signature éditoriale immédiate.</p>
+    </div>
+    <div class="cell">
+      <div class="lab warn"><span class="dot"></span>Motion generic</div>
+      <p>BlurFade sur chaque section, BorderBeam, marquee. Stack Magic UI par défaut. Rien ne dit <b>finance</b>. Remplace 2-3 effets par du motion qui <b>rappelle le métier</b> : tickers, courbes, carnets d'ordres.</p>
+    </div>
+    <div class="cell">
+      <div class="lab bad"><span class="dot"></span>Hiérarchie scroll</div>
+      <p>Après le hero : Events → Partners → Partners CTA. Enchaînement transactionnel sans climax. La page mérite un <b>point d'orgue</b> (manifesto, moment pédagogique) avant le CTA final.</p>
+    </div>
+    <div class="cell">
+      <div class="lab bad"><span class="dot"></span>Partners marquee</div>
+      <p>Deux lignes de noms en texte qui défilent = pattern générique agency. Les partenaires en finance <b>valent par leur signature visuelle</b>. Logos vrais + traitement éditorial = bien plus crédible.</p>
+    </div>
+  </div>
+
+  <hr class="rule" />
+
+  <div class="section-head">
+    <div class="section-num">01</div>
+    <h2 class="section-title">6 améliorations — <em>chacune scrubbable ci-dessous</em></h2>
+  </div>
+
+  <div class="toc">
+    <a href="#prop-1"><span class="num">01</span><span class="lbl">Hero : ticker type</span></a>
+    <a href="#prop-2"><span class="num">02</span><span class="lbl">Stats : compteur + mini-graph</span></a>
+    <a href="#prop-3"><span class="num">03</span><span class="lbl">Section manifesto scroll-pin</span></a>
+    <a href="#prop-4"><span class="num">04</span><span class="lbl">Events : timeline horizontale</span></a>
+    <a href="#prop-5"><span class="num">05</span><span class="lbl">Partners : carnet d'ordres</span></a>
+    <a href="#prop-6"><span class="num">06</span><span class="lbl">Curseur custom + cohésion</span></a>
+  </div>
+
+  <!-- ====================== PROP 1 ====================== -->
+  <div class="prop" id="prop-1">
+    <div class="copy">
+      <div class="kicker">01 — Hero</div>
+      <h3>Un titre qui <em>se construit</em>, pas qui apparaît.</h3>
+      <p>Aujourd'hui ton titre a un letter-by-letter spring + clip-path. C'est bien mais prévisible. À la place : le titre arrive en <b>ticker flip</b> — chaque mot scrolle depuis plusieurs candidats possibles (comme un tableau d'affichage gare ou un display Bloomberg) avant de se stabiliser sur "La finance à CentraleSupélec".</p>
+      <p>Ça pose le métier <b>visuellement</b> avant le premier mot lu.</p>
+      <div class="note">
+        <b>Implémentation</b> — GSAP timeline avec <code>SplitType</code> (mot par mot). Chaque mot = colonne verticale de 6-8 labels qui translate vers le haut puis s'arrête. Durée 1.2s, ease <code>power4.out</code>, stagger 0.08s.
+      </div>
+      <div class="tag-row">
+        <span class="tag pri">Hero</span>
+        <span class="tag">GSAP</span>
+        <span class="tag">SplitType</span>
+        <span class="tag">1.2s</span>
+      </div>
+    </div>
+    <div class="demo" data-demo="ticker">
+      <div class="chrome"><span>hero · word flip</span><span>loop 4.0s</span></div>
+      <div class="stage">
+        <div class="ticker-stage">
+          <div class="d-sub" style="margin-bottom: 22px;">Association · CentraleSupélec · 2026–2027</div>
+          <div class="ticker-title">
+            <span class="tk" data-words="Les,Des,Le,La"></span>
+            <span class="tk" data-words="marchés,actions,trading,finance"></span>
+            <span class="tk" data-words="en,avec,chez,à"></span>
+            <span class="tk" data-words="pratique,Paris,Centrale,CentraleSupélec"></span>
+          </div>
+          <div class="d-sub" style="margin-top: 20px; opacity:0.5;">Des rencontres qui aident vraiment à comprendre les métiers.</div>
+        </div>
+      </div>
+      <div class="controls">
+        <button class="ctrl-btn" data-play><svg viewBox="0 0 10 10"><path d="M2 1.5 L8 5 L2 8.5 Z" fill="currentColor"/></svg></button>
+        <input class="scrubber" type="range" min="0" max="1000" value="0" />
+        <span class="time" data-time>0.00s</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================== PROP 2 ====================== -->
+  <div class="prop" id="prop-2">
+    <div class="copy">
+      <div class="kicker">02 — Stats bar</div>
+      <h3>Les chiffres <em>se tracent</em>, ne s'incrémentent pas.</h3>
+      <p>Le <code>NumberTicker</code> actuel fait son job. Mais "4000+ étudiants" mérite plus qu'un compteur : chaque stat peut être accompagnée d'un <b>mini-graph</b> qui se dessine au scroll (stroke animé SVG, 0.8s) — growth, distribution, évolution. Zéro chiffre inventé : juste une texture visuelle qui rappelle l'univers financier.</p>
+      <p>Le mini-graph apparaît à 60% d'entrée en viewport, en <b>monochrome</b>, avec point pulsant sur la valeur finale.</p>
+      <div class="note">
+        <b>Implémentation</b> — SVG inline, <code>stroke-dasharray</code> + Intersection Observer. Chaque stat a son pattern (ligne ascendante, barres, courbe, bougie). Pas de librairie chart — juste des paths SVG dessinés à la main.
+      </div>
+      <div class="tag-row">
+        <span class="tag pri">Stats</span>
+        <span class="tag">SVG stroke</span>
+        <span class="tag">IntersectionObserver</span>
+      </div>
+    </div>
+    <div class="demo" data-demo="stats">
+      <div class="chrome"><span>stats · stroke-in</span><span>loop 3.5s</span></div>
+      <div class="stage">
+        <div class="stats-stage"></div>
+      </div>
+      <div class="controls">
+        <button class="ctrl-btn" data-play><svg viewBox="0 0 10 10"><path d="M2 1.5 L8 5 L2 8.5 Z" fill="currentColor"/></svg></button>
+        <input class="scrubber" type="range" min="0" max="1000" value="0" />
+        <span class="time" data-time>0.00s</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================== PROP 3 ====================== -->
+  <div class="prop" id="prop-3">
+    <div class="copy">
+      <div class="kicker">03 — Nouvelle section</div>
+      <h3>Un <em>manifesto</em> scroll-pin après le hero.</h3>
+      <p>Juste après l'animation cinematic, créer une section <b>pinnée</b> où une phrase longue se révèle mot par mot au scroll, avec mise en emphase progressive des mots-clés en italique serif. C'est le moment "éditorial" qui dit <b>ce que vous êtes</b> avant de montrer ce que vous faites.</p>
+      <p><em>Exemple de phrase : "Nous croyons qu'on comprend mieux la finance en rencontrant ceux qui la font qu'en lisant ceux qui la commentent."</em></p>
+      <p>Effet : chaque mot passe de gris à blanc quand il atteint le centre du viewport. Les mots-clés (<em>finance</em>, <em>rencontrant</em>) passent aussi en serif italique — touche éditoriale forte.</p>
+      <div class="note">
+        <b>Implémentation</b> — GSAP ScrollTrigger + <code>scrub: true</code>, section pinnée 150vh. Chaque <code>&lt;span&gt;</code> interpole <code>color</code> et optionnellement <code>fontFamily</code> via CSS variables. S'inspire de Apple et Linear mais en version plus lettrée.
+      </div>
+      <div class="tag-row">
+        <span class="tag pri">Nouvelle section</span>
+        <span class="tag">ScrollTrigger scrub</span>
+        <span class="tag">150vh pin</span>
+      </div>
+    </div>
+    <div class="demo" data-demo="manifesto">
+      <div class="chrome"><span>manifesto · scroll-scrub</span><span>scrub 0→1</span></div>
+      <div class="stage">
+        <div class="manifesto-stage">
+          <div class="d-sub" style="margin-bottom: 18px;">Ce qu'on croit</div>
+          <div class="manifesto-text"></div>
+        </div>
+      </div>
+      <div class="controls">
+        <button class="ctrl-btn" data-play><svg viewBox="0 0 10 10"><path d="M2 1.5 L8 5 L2 8.5 Z" fill="currentColor"/></svg></button>
+        <input class="scrubber" type="range" min="0" max="1000" value="0" />
+        <span class="time" data-time>scrub</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================== PROP 4 ====================== -->
+  <div class="prop" id="prop-4">
+    <div class="copy">
+      <div class="kicker">04 — Events</div>
+      <h3>Une <em>timeline horizontale</em> qui drag.</h3>
+      <p>Les Tabs "À venir / Passés" fonctionnent mais enterrent l'info. Transforme la section en <b>timeline horizontale scrollable</b> (drag mouse / swipe touch), où chaque événement = une carte verticale sur un axe temporel. Le curseur montre où tu es dans l'année académique.</p>
+      <p>Les events passés sont à gauche (grisés), ceux à venir à droite (pleine opacité), avec ligne verticale "today" pulsante.</p>
+      <div class="note">
+        <b>Implémentation</b> — Framer Motion <code>&lt;motion.div drag="x"&gt;</code> avec <code>dragConstraints</code>. Ou GSAP Draggable si tu veux de l'inertie propre. Snap sur les dates principales. Sur mobile, swipe natif.
+      </div>
+      <div class="tag-row">
+        <span class="tag pri">Events</span>
+        <span class="tag">drag-to-scroll</span>
+        <span class="tag">Framer Motion</span>
+      </div>
+    </div>
+    <div class="demo" data-demo="timeline">
+      <div class="chrome"><span>events · drag timeline</span><span>drag horizontal</span></div>
+      <div class="stage">
+        <div class="timeline-stage"></div>
+      </div>
+      <div class="controls">
+        <button class="ctrl-btn" data-play><svg viewBox="0 0 10 10"><path d="M2 1.5 L8 5 L2 8.5 Z" fill="currentColor"/></svg></button>
+        <input class="scrubber" type="range" min="0" max="1000" value="0" />
+        <span class="time" data-time>drag →</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================== PROP 5 ====================== -->
+  <div class="prop" id="prop-5">
+    <div class="copy">
+      <div class="kicker">05 — Partners</div>
+      <h3>Remplace le marquee par un <em>carnet d'ordres</em>.</h3>
+      <p>Le marquee deux lignes qui défile = agency-standard. En finance, il existe un visuel immédiatement reconnaissable : le <b>carnet d'ordres / feed de transactions</b>. Liste des partenaires en monospace, timestamp à côté, ligne qui s'ajoute en haut toutes les 2s avec léger fade, les anciennes descendent. Zéro sensationnalisme — juste un rappel métier.</p>
+      <p>Au hover, la ligne s'étend et révèle le logo + un mot sur la nature du partenariat (conférence, masterclass, stage).</p>
+      <div class="note">
+        <b>Implémentation</b> — Liste en <code>position: absolute</code>, chaque item translate avec Framer Motion <code>layout</code>. Nouvelle ligne ajoutée en <code>unshift</code>, supprimée après N items. Monospace obligatoire, tabular-nums pour les chiffres.
+      </div>
+      <div class="tag-row">
+        <span class="tag pri">Partners</span>
+        <span class="tag">tabular-nums</span>
+        <span class="tag">FLIP layout</span>
+      </div>
+    </div>
+    <div class="demo" data-demo="orderbook">
+      <div class="chrome"><span>partners · feed</span><span>tick 1.5s</span></div>
+      <div class="stage">
+        <div class="orderbook-stage"></div>
+      </div>
+      <div class="controls">
+        <button class="ctrl-btn" data-play><svg viewBox="0 0 10 10"><path d="M2 1.5 L8 5 L2 8.5 Z" fill="currentColor"/></svg></button>
+        <input class="scrubber" type="range" min="0" max="1000" value="0" />
+        <span class="time" data-time>0.00s</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================== PROP 6 ====================== -->
+  <div class="prop" id="prop-6">
+    <div class="copy">
+      <div class="kicker">06 — Fil rouge</div>
+      <h3>Un <em>curseur custom</em> qui relie tout.</h3>
+      <p>Détail qui fait 90% de la sensation "site abouti" : un curseur custom discret (petit dot 6px) qui <b>grossit sur les zones interactives</b>, <b>s'étire en balle de cash</b> sur les CTAs, et qui <b>trace une ligne</b> derrière lui sur les graphs. C'est le fil rouge qui signe la page.</p>
+      <p>Couplé avec : transitions de page crossfade (pas de flash blanc), ancres qui smoothscroll avec easing long, keyboard shortcuts (<code>G + H</code>, <code>G + E</code>) affichés en bas-gauche comme dans Linear.</p>
+      <div class="note">
+        <b>Implémentation</b> — <code>mousemove</code> avec lerp (facteur 0.15) pour le lag. États détectés via <code>[data-cursor]</code> sur les éléments cibles. <code>mix-blend-mode: difference</code> pour lisibilité sur tous les fonds. <b>Désactivé en touch/mobile.</b>
+      </div>
+      <div class="tag-row">
+        <span class="tag pri">Fil rouge</span>
+        <span class="tag">custom cursor</span>
+        <span class="tag">keyboard nav</span>
+      </div>
+    </div>
+    <div class="demo" data-demo="cursor">
+      <div class="chrome"><span>cursor · interactive</span><span>move inside →</span></div>
+      <div class="stage">
+        <div class="cursor-stage"></div>
+      </div>
+      <div class="controls">
+        <button class="ctrl-btn" data-play><svg viewBox="0 0 10 10"><path d="M2 1.5 L8 5 L2 8.5 Z" fill="currentColor"/></svg></button>
+        <input class="scrubber" type="range" min="0" max="1000" value="0" />
+        <span class="time" data-time>move →</span>
+      </div>
+    </div>
+  </div>
+
+  <hr class="rule" />
+
+  <!-- Priorisation -->
+  <div class="final">
+    <div class="kicker" style="margin-bottom: 18px;">Priorisation</div>
+    <h2>Par où commencer ?</h2>
+    <p>Si tu ne fais qu'une seule chose : <b>#3 (manifesto scroll-pin) + #5 (partners feed)</b>. Les deux changent radicalement la perception — l'une donne une identité éditoriale, l'autre remplace le pattern le plus générique de la page par du motion qui évoque le métier. ROI max pour ~1 journée de dev chacune.</p>
+
+    <div class="priority-grid">
+      <div class="card">
+        <div class="k">Quick wins · 1-2h</div>
+        <div class="v">#1 ticker type · #6 curseur</div>
+      </div>
+      <div class="card">
+        <div class="k">Impact fort · 1j</div>
+        <div class="v">#3 manifesto · #5 carnet</div>
+      </div>
+      <div class="card">
+        <div class="k">Refonte section · 2-3j</div>
+        <div class="v">#2 stats · #4 timeline</div>
+      </div>
+    </div>
+
+    <p style="margin-top: 28px;">
+      <span class="mono" style="color: var(--muted); font-size: 12px;">next →</span><br/>
+      Dis-moi laquelle tu veux voir développée en composant React intégré au repo, et je te livre le code drop-in (props typées, respect de <code>prefers-reduced-motion</code>, tests si la section en a).
+    </p>
+  </div>
+
+</div>
+
+<script>
+/* ============================================================
+   Tiny scrubber + autoplay engine for all demos.
+   Each demo exposes a `render(t)` where t ∈ [0,1].
+   ============================================================ */
+const demos = {};
+const DEMO_DURATIONS = { ticker: 4000, stats: 3500, manifesto: 3000, timeline: 3500, orderbook: 4500, cursor: 2500 };
+
+function registerDemo(name, opts){
+  demos[name] = opts;
+  const root = document.querySelector(`[data-demo="${name}"]`);
+  const scrubber = root.querySelector('.scrubber');
+  const btn = root.querySelector('[data-play]');
+  const timeLabel = root.querySelector('[data-time]');
+  const duration = DEMO_DURATIONS[name] || 3000;
+
+  let t = 0, playing = true, rafId = null, last = performance.now();
+
+  function tick(now){
+    const dt = now - last; last = now;
+    if (playing){
+      t += dt / duration;
+      if (t >= 1){ t = opts.loop === false ? 1 : 0; if (opts.loop === false) playing = false; }
+      scrubber.value = Math.round(t * 1000);
+      if (timeLabel && opts.showTime !== false) timeLabel.textContent = (t * duration / 1000).toFixed(2) + 's';
+    }
+    opts.render(t);
+    rafId = requestAnimationFrame(tick);
+  }
+  rafId = requestAnimationFrame(tick);
+
+  scrubber.addEventListener('input', () => {
+    t = scrubber.value / 1000;
+    playing = false;
+    updatePlayIcon();
+    if (timeLabel && opts.showTime !== false) timeLabel.textContent = (t * duration / 1000).toFixed(2) + 's';
+  });
+
+  btn.addEventListener('click', () => {
+    if (t >= 1) t = 0;
+    playing = !playing; last = performance.now();
+    updatePlayIcon();
+  });
+
+  function updatePlayIcon(){
+    btn.innerHTML = playing
+      ? '<svg viewBox="0 0 10 10"><rect x="2" y="1.5" width="2.2" height="7" fill="currentColor"/><rect x="5.8" y="1.5" width="2.2" height="7" fill="currentColor"/></svg>'
+      : '<svg viewBox="0 0 10 10"><path d="M2 1.5 L8 5 L2 8.5 Z" fill="currentColor"/></svg>';
+  }
+  updatePlayIcon();
+
+  // Pause when offscreen to save CPU
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting){ if (playing){ playing = false; updatePlayIcon(); } }
+    });
+  }, { threshold: 0.1 });
+  io.observe(root);
+}
+
+/* Easing */
+const ease = {
+  outCubic: t => 1 - Math.pow(1-t, 3),
+  outExpo: t => t === 1 ? 1 : 1 - Math.pow(2, -10 * t),
+  inOutCubic: t => t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3)/2,
+  outBack: (t, s=1.4) => 1 + (s+1) * Math.pow(t-1, 3) + s * Math.pow(t-1, 2),
+};
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+
+/* ============================================================
+   DEMO 1 — TICKER (word flip)
+   ============================================================ */
+(function(){
+  const stage = document.querySelector('[data-demo="ticker"] .ticker-stage');
+  const titleEl = stage.querySelector('.ticker-title');
+  // Style
+  const style = document.createElement('style');
+  style.textContent = `
+    .ticker-stage{ position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding: 40px; }
+    .ticker-title{ display:flex; flex-wrap:wrap; justify-content:center; gap: 0 14px; font-family:'Instrument Serif',serif; font-size: clamp(38px, 7vw, 72px); line-height: 1.0; letter-spacing: -0.02em; color: #fff; }
+    .tk{ display:inline-block; overflow:hidden; height: 1.0em; vertical-align: bottom; }
+    .tk-inner{ display:flex; flex-direction: column; will-change: transform; }
+    .tk-word{ line-height: 1.0; white-space: nowrap; }
+    .tk-word.accent{ font-style: italic; color: #c9c9c9; }
+  `;
+  document.head.appendChild(style);
+
+  // Build columns
+  document.querySelectorAll('.tk').forEach((tk, idx) => {
+    const words = tk.dataset.words.split(',');
+    const inner = document.createElement('div');
+    inner.className = 'tk-inner';
+    words.forEach((w, i) => {
+      const span = document.createElement('div');
+      span.className = 'tk-word' + (i === words.length - 1 ? ' final' : '');
+      span.textContent = w;
+      inner.appendChild(span);
+    });
+    // Final word placed last; we animate to it
+    tk.appendChild(inner);
+    tk.dataset.total = words.length;
+  });
+
+  registerDemo('ticker', {
+    render(t){
+      // Each column has its own stagger
+      const cols = titleEl.querySelectorAll('.tk');
+      cols.forEach((col, i) => {
+        const stagger = i * 0.08;
+        const p = clamp((t - stagger) / (1 - stagger - 0.1), 0, 1);
+        const eased = ease.outExpo(p);
+        const total = parseInt(col.dataset.total);
+        const inner = col.querySelector('.tk-inner');
+        // line-height ≈ 1em; height of each = 1em
+        const offset = -(total - 1) * eased;
+        inner.style.transform = `translateY(${offset}em)`;
+      });
+    }
+  });
+})();
+
+/* ============================================================
+   DEMO 2 — STATS (stroke-in mini-graphs)
+   ============================================================ */
+(function(){
+  const stage = document.querySelector('[data-demo="stats"] .stats-stage');
+  const style = document.createElement('style');
+  style.textContent = `
+    .stats-stage{ position:absolute; inset:0; display:grid; grid-template-columns: repeat(4, 1fr); padding: 40px 30px; align-items:center; gap: 12px; }
+    .stat-cell{ display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 10px; border-right: 1px solid #1a1a1a; }
+    .stat-cell:last-child{ border-right:0; }
+    .stat-val{ font-family:'Instrument Serif',serif; font-size: clamp(28px, 4vw, 44px); color:#fff; line-height: 1; letter-spacing: -0.02em; }
+    .stat-lbl{ font-family:'JetBrains Mono',monospace; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: #7a7a7a; margin-top: 10px; }
+    .stat-graph{ width: 80px; height: 28px; margin-top: 14px; }
+    .stat-graph path.line{ fill:none; stroke:#fff; stroke-width: 1.25; stroke-linecap: round; stroke-linejoin: round; }
+    .stat-graph path.fill{ fill:rgba(255,255,255,0.06); stroke:none; }
+    .stat-graph circle.dot{ fill:#fff; }
+    .stat-graph rect.bar{ fill:#fff; }
+  `;
+  document.head.appendChild(style);
+
+  const stats = [
+    { val: '6',     lbl: 'pôles',            kind: 'line' },
+    { val: '20+',   lbl: 'membres',          kind: 'bars' },
+    { val: '4000+', lbl: 'étudiants',        kind: 'area' },
+    { val: '20+',   lbl: 'événements / an',  kind: 'candle' },
+  ];
+
+  stats.forEach(s => {
+    const cell = document.createElement('div');
+    cell.className = 'stat-cell';
+    cell.innerHTML = `
+      <div class="stat-val">${s.val}</div>
+      <svg class="stat-graph" viewBox="0 0 80 28" preserveAspectRatio="none" data-kind="${s.kind}"></svg>
+      <div class="stat-lbl">${s.lbl}</div>
+    `;
+    stage.appendChild(cell);
+  });
+
+  // Generate paths once
+  const rng = (seed => { let s=seed; return ()=>{ s = (s*9301+49297) % 233280; return s/233280; }; })(42);
+  const graphs = stage.querySelectorAll('.stat-graph');
+  graphs.forEach(g => {
+    const kind = g.dataset.kind;
+    if (kind === 'line' || kind === 'area'){
+      const pts = []; const N = 14;
+      let y = 14 + (rng()-0.5)*8;
+      for (let i=0; i<N; i++){
+        const trend = (i/N) * (kind === 'area' ? -10 : -6);
+        y = y + (rng()-0.5)*3 + (trend/N);
+        y = clamp(y, 4, 24);
+        pts.push([i*(80/(N-1)), y]);
+      }
+      const d = pts.map((p,i)=> `${i===0?'M':'L'}${p[0].toFixed(1)} ${p[1].toFixed(1)}`).join(' ');
+      if (kind === 'area'){
+        const fill = d + ` L80 28 L0 28 Z`;
+        g.innerHTML = `<path class="fill" d="${fill}" /><path class="line" d="${d}" /><circle class="dot" cx="${pts[pts.length-1][0]}" cy="${pts[pts.length-1][1]}" r="1.8" />`;
+      } else {
+        g.innerHTML = `<path class="line" d="${d}" /><circle class="dot" cx="${pts[pts.length-1][0]}" cy="${pts[pts.length-1][1]}" r="1.8" />`;
+      }
+    } else if (kind === 'bars'){
+      let html = '';
+      const N = 10;
+      for (let i=0; i<N; i++){
+        const h = 6 + rng()*18;
+        const x = i*(80/N) + 1;
+        html += `<rect class="bar" x="${x}" y="${28-h}" width="${80/N - 2}" height="${h}" data-h="${h}" />`;
+      }
+      g.innerHTML = html;
+    } else if (kind === 'candle'){
+      let html = '';
+      const N = 9;
+      for (let i=0; i<N; i++){
+        const mid = 14 + (rng()-0.5)*6;
+        const halfW = 3; const wickH = 6 + rng()*4; const bodyH = 4 + rng()*6;
+        const x = i*(80/N) + (80/N/2) - halfW;
+        html += `<rect class="bar" x="${x+halfW-0.4}" y="${mid-wickH/2}" width="0.8" height="${wickH}" />`;
+        html += `<rect class="bar" x="${x}" y="${mid-bodyH/2}" width="${halfW*2}" height="${bodyH}" data-body="1" />`;
+      }
+      g.innerHTML = html;
+    }
+  });
+
+  registerDemo('stats', {
+    render(t){
+      graphs.forEach((g, idx) => {
+        const stagger = idx * 0.12;
+        const p = clamp((t - stagger) / (1 - stagger - 0.15), 0, 1);
+        const eased = ease.outCubic(p);
+        const kind = g.dataset.kind;
+        if (kind === 'line' || kind === 'area'){
+          const line = g.querySelector('.line');
+          const fill = g.querySelector('.fill');
+          const dot = g.querySelector('.dot');
+          if (line){
+            const L = line.getTotalLength();
+            line.style.strokeDasharray = L;
+            line.style.strokeDashoffset = L * (1 - eased);
+          }
+          if (fill){ fill.style.opacity = eased; }
+          if (dot){
+            dot.style.opacity = eased > 0.95 ? 1 : 0;
+            dot.style.transform = `scale(${eased > 0.95 ? 1 + Math.sin(t*20)*0.2 : 0})`;
+            dot.style.transformOrigin = `${dot.getAttribute('cx')}px ${dot.getAttribute('cy')}px`;
+          }
+        } else if (kind === 'bars' || kind === 'candle'){
+          g.querySelectorAll('rect').forEach((r, i) => {
+            const barStag = i * 0.04;
+            const bp = clamp((p - barStag) / (1 - barStag), 0, 1);
+            r.style.transformOrigin = `${parseFloat(r.getAttribute('x'))+parseFloat(r.getAttribute('width'))/2}px 28px`;
+            r.style.transform = `scaleY(${ease.outCubic(bp)})`;
+          });
+        }
+      });
+    }
+  });
+})();
+
+/* ============================================================
+   DEMO 3 — MANIFESTO (scroll-scrub word reveal)
+   ============================================================ */
+(function(){
+  const stage = document.querySelector('[data-demo="manifesto"] .manifesto-stage');
+  const textEl = stage.querySelector('.manifesto-text');
+  const style = document.createElement('style');
+  style.textContent = `
+    .manifesto-stage{ position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; padding: 40px 50px; }
+    .manifesto-text{ font-family: Manrope, sans-serif; font-size: clamp(22px, 3vw, 34px); line-height: 1.2; letter-spacing: -0.02em; font-weight: 500; max-width: 780px; }
+    .mw{ display:inline-block; transition: none; margin-right: 0.3em; color: #3a3a3a; }
+    .mw.accent-target{ font-family:'Instrument Serif',serif; font-style: italic; font-weight: 400; }
+  `;
+  document.head.appendChild(style);
+
+  const words = [
+    {w:"On"}, {w:"croit"}, {w:"qu'on"}, {w:"comprend"}, {w:"mieux"},
+    {w:"la"}, {w:"finance", accent:true},
+    {w:"en"}, {w:"rencontrant", accent:true}, {w:"ceux"}, {w:"qui"},
+    {w:"la"}, {w:"font"},
+    {w:"qu'en"}, {w:"lisant"}, {w:"ceux"}, {w:"qui"}, {w:"la"}, {w:"commentent."},
+  ];
+  textEl.innerHTML = words.map(o => `<span class="mw${o.accent?' accent-target':''}">${o.w}</span>`).join('');
+  const wordEls = textEl.querySelectorAll('.mw');
+
+  registerDemo('manifesto', {
+    render(t){
+      // Word 'fills' progressively left-to-right
+      const N = wordEls.length;
+      wordEls.forEach((el, i) => {
+        const start = i / N * 0.85;
+        const end = start + (1 / N) * 3;
+        const p = clamp((t - start) / (end - start), 0, 1);
+        const eased = ease.inOutCubic(p);
+        const grey = [58,58,58];
+        const white = [255,255,255];
+        const r = Math.round(lerp(grey[0], white[0], eased));
+        const g = Math.round(lerp(grey[1], white[1], eased));
+        const b = Math.round(lerp(grey[2], white[2], eased));
+        el.style.color = `rgb(${r},${g},${b})`;
+      });
+    }
+  });
+})();
+
+/* ============================================================
+   DEMO 4 — TIMELINE (horizontal drag events)
+   ============================================================ */
+(function(){
+  const stage = document.querySelector('[data-demo="timeline"] .timeline-stage');
+  const style = document.createElement('style');
+  style.textContent = `
+    .timeline-stage{ position:absolute; inset:0; display:flex; flex-direction:column; padding: 30px 0 40px; }
+    .tl-track{ flex:1; position:relative; overflow:hidden; }
+    .tl-inner{ position:absolute; top: 30px; left: 0; display:flex; gap: 14px; padding: 0 50px; will-change: transform; }
+    .tl-card{ width: 150px; height: 170px; border-radius: 10px; border: 1px solid #1a1a1a; background: #0b0b0b; padding: 12px; display:flex; flex-direction: column; justify-content: space-between; flex-shrink: 0; }
+    .tl-card.past{ opacity: 0.4; }
+    .tl-card .date{ font-family:'JetBrains Mono',monospace; font-size: 9px; letter-spacing: 0.15em; color: #7a7a7a; text-transform: uppercase; }
+    .tl-card .title{ font-family:'Instrument Serif',serif; font-size: 17px; line-height: 1.15; color: #fff; }
+    .tl-card .tag{ font-family:'JetBrains Mono',monospace; font-size: 8px; letter-spacing: 0.2em; color: #5a5a5a; text-transform: uppercase; }
+    .tl-axis{ position:absolute; left: 0; right: 0; top: 70%; height: 1px; background: linear-gradient(to right, transparent, #1a1a1a 10%, #1a1a1a 90%, transparent); }
+    .tl-today{ position:absolute; top: calc(70% - 30px); width: 1px; height: 60px; background: #fff; left: 50%; }
+    .tl-today::after{ content: 'TODAY'; position:absolute; top: 66px; left: 50%; transform: translateX(-50%); font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing: 0.2em; color:#fff; }
+    .tl-today .dot{ position:absolute; top: -4px; left: -4px; width: 9px; height: 9px; border-radius: 50%; background: #fff; }
+    .tl-today .pulse{ position:absolute; top: -4px; left: -4px; width: 9px; height: 9px; border-radius: 50%; background: rgba(255,255,255,0.35); transform-origin: center; }
+    .tl-label{ position:absolute; top: 72%; transform: translateX(-50%); font-family:'JetBrains Mono',monospace; font-size: 9px; letter-spacing: 0.14em; color: #4a4a4a; text-transform: uppercase; white-space: nowrap; margin-top: 8px; }
+  `;
+  document.head.appendChild(style);
+
+  const events = [
+    { date: 'SEP 26', title: "Rentrée & présentation", tag: "INTERNE", past: true },
+    { date: 'OCT 26', title: "Conférence BNP Paribas", tag: "CONFÉRENCE", past: true },
+    { date: 'NOV 26', title: "Masterclass M&A", tag: "FORMATION", past: true },
+    { date: 'DÉC 26', title: "Afterwork Lazard", tag: "NETWORKING", past: true },
+    { date: 'FÉV 26', title: "Forum Carrières Finance", tag: "MAJEUR", past: false },
+    { date: 'MAR 26', title: "Workshop Trading", tag: "FORMATION", past: false },
+    { date: 'AVR 26', title: "Conférence Goldman Sachs", tag: "CONFÉRENCE", past: false },
+    { date: 'MAI 26', title: "Competition M&A", tag: "COMPÉTITION", past: false },
+  ];
+
+  stage.innerHTML = `
+    <div style="padding: 0 40px 20px; display:flex; justify-content:space-between; align-items:end;">
+      <div>
+        <div class="d-sub" style="margin-bottom: 6px;">Agenda 2026–2027</div>
+        <div style="font-family:'Instrument Serif',serif; font-size: 26px; color:#fff; letter-spacing:-0.02em;">Événements</div>
+      </div>
+      <div class="d-sub" style="color:#4a4a4a;">← drag →</div>
+    </div>
+    <div class="tl-track">
+      <div class="tl-axis"></div>
+      <div class="tl-today"><div class="pulse"></div><div class="dot"></div></div>
+      <div class="tl-inner"></div>
+    </div>
+  `;
+
+  const inner = stage.querySelector('.tl-inner');
+  inner.innerHTML = events.map(e => `
+    <div class="tl-card ${e.past ? 'past' : ''}">
+      <div>
+        <div class="date">${e.date}</div>
+        <div class="title" style="margin-top: 8px;">${e.title}</div>
+      </div>
+      <div class="tag">${e.tag}</div>
+    </div>
+  `).join('');
+
+  // Drag
+  let drag = { active: false, x0: 0, tx: 0, txStart: 0 };
+  const track = stage.querySelector('.tl-track');
+  function onDown(e){
+    drag.active = true; drag.x0 = (e.touches?.[0]?.clientX ?? e.clientX); drag.txStart = drag.tx;
+    track.style.cursor = 'grabbing';
+  }
+  function onMove(e){
+    if (!drag.active) return;
+    const x = (e.touches?.[0]?.clientX ?? e.clientX);
+    drag.tx = clamp(drag.txStart + (x - drag.x0), -800, 0);
+  }
+  function onUp(){ drag.active = false; track.style.cursor = 'grab'; }
+  track.addEventListener('mousedown', onDown);
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('mouseup', onUp);
+  track.addEventListener('touchstart', onDown, {passive: true});
+  window.addEventListener('touchmove', onMove, {passive: true});
+  window.addEventListener('touchend', onUp);
+  track.style.cursor = 'grab';
+
+  registerDemo('timeline', {
+    render(t){
+      // Auto-drag: oscillate between 0 and -600
+      if (!drag.active){
+        const auto = Math.sin(t * Math.PI * 2) * -300 - 150;
+        drag.tx = lerp(drag.tx, auto, 0.08);
+      }
+      inner.style.transform = `translateX(${drag.tx}px)`;
+
+      // Pulse today
+      const pulse = stage.querySelector('.tl-today .pulse');
+      const scale = 1 + Math.sin(t * Math.PI * 4) * 1.2;
+      pulse.style.transform = `scale(${scale})`;
+      pulse.style.opacity = 1 - ((scale-1)/1.2);
+    }
+  });
+})();
+
+/* ============================================================
+   DEMO 5 — ORDERBOOK (partners feed)
+   ============================================================ */
+(function(){
+  const stage = document.querySelector('[data-demo="orderbook"] .orderbook-stage');
+  const style = document.createElement('style');
+  style.textContent = `
+    .orderbook-stage{ position:absolute; inset:0; padding: 30px 40px; display:flex; flex-direction: column; }
+    .ob-head{ display:flex; justify-content:space-between; margin-bottom: 12px; font-family:'JetBrains Mono',monospace; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: #5a5a5a; }
+    .ob-cols{ display:grid; grid-template-columns: 90px 1fr 140px 70px; gap: 14px; font-family:'JetBrains Mono',monospace; font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: #4a4a4a; padding: 0 8px 8px; border-bottom: 1px solid #1a1a1a; }
+    .ob-list{ position:relative; flex:1; overflow:hidden; }
+    .ob-row{ position:absolute; left: 0; right: 0; height: 28px; display:grid; grid-template-columns: 90px 1fr 140px 70px; gap: 14px; padding: 0 8px; align-items:center; font-family:'JetBrains Mono',monospace; font-size: 12px; font-variant-numeric: tabular-nums; border-bottom: 1px solid #111; transition: transform 0.6s cubic-bezier(.4,0,.2,1), opacity 0.4s; }
+    .ob-row .ts{ color: #5a5a5a; font-size: 10px; }
+    .ob-row .name{ color: #fff; font-weight: 500; letter-spacing: -0.01em; }
+    .ob-row .kind{ color: #7a7a7a; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; }
+    .ob-row .yr{ color: #c9c9c9; text-align: right; }
+    .ob-row.new{ background: rgba(255,255,255,0.05); }
+  `;
+  document.head.appendChild(style);
+
+  const partners = [
+    ['BNP Paribas',          'CONFÉRENCE'],
+    ['Goldman Sachs',        'MASTERCLASS'],
+    ['Lazard',               'AFTERWORK'],
+    ['Rothschild & Co',      'STAGE'],
+    ['J.P. Morgan',          'CONFÉRENCE'],
+    ['Morgan Stanley',       'WORKSHOP'],
+    ['Société Générale',     'PARTENARIAT'],
+    ['Bain & Company',       'MASTERCLASS'],
+    ['Natixis',              'CONFÉRENCE'],
+    ['Crédit Agricole CIB',  'STAGE'],
+    ['BCG',                  'WORKSHOP'],
+    ['Oddo BHF',             'AFTERWORK'],
+  ];
+
+  stage.innerHTML = `
+    <div class="ob-head">
+      <span>Partners feed · live</span>
+      <span style="color:#8a8a8a;">● updated now</span>
+    </div>
+    <div class="ob-cols">
+      <span>Time</span>
+      <span>Partner</span>
+      <span>Format</span>
+      <span style="text-align:right;">Year</span>
+    </div>
+    <div class="ob-list"></div>
+  `;
+
+  const list = stage.querySelector('.ob-list');
+  const ROW_H = 28;
+  const VISIBLE = 6;
+
+  // Seed rows
+  let rows = [];
+  for (let i=0; i<VISIBLE; i++){
+    const p = partners[i % partners.length];
+    rows.push({ id: 'r'+i, name: p[0], kind: p[1], ts: `14:${(22 - i).toString().padStart(2,'0')}`, yr: `'2${3 + (i%3)}` });
+  }
+
+  function render(){
+    // Only render elements that exist; recycle via key
+    list.innerHTML = '';
+    rows.slice(0, VISIBLE).forEach((r, i) => {
+      const el = document.createElement('div');
+      el.className = 'ob-row' + (i === 0 && r.isNew ? ' new' : '');
+      el.style.top = (i * ROW_H) + 'px';
+      el.innerHTML = `
+        <span class="ts">${r.ts}</span>
+        <span class="name">${r.name}</span>
+        <span class="kind">${r.kind}</span>
+        <span class="yr">${r.yr}</span>
+      `;
+      list.appendChild(el);
+    });
+  }
+
+  render();
+
+  let lastTick = -1;
+  let idx = VISIBLE;
+
+  registerDemo('orderbook', {
+    render(t){
+      // Tick every 0.25 of t
+      const tickStep = 0.2;
+      const tick = Math.floor(t / tickStep);
+      if (tick !== lastTick && tick > 0){
+        lastTick = tick;
+        const p = partners[idx % partners.length];
+        idx++;
+        const now = new Date();
+        const mm = Math.floor(30 - tick) % 60;
+        const hh = 14;
+        rows.unshift({
+          id: 'r' + (1000+idx),
+          name: p[0], kind: p[1],
+          ts: `${hh}:${mm.toString().padStart(2,'0')}`,
+          yr: `'2${3 + (idx%3)}`,
+          isNew: true
+        });
+        if (rows.length > VISIBLE + 2) rows = rows.slice(0, VISIBLE + 2);
+        render();
+        // Clear new-highlight after short
+        setTimeout(() => {
+          const first = list.querySelector('.ob-row.new');
+          if (first) first.classList.remove('new');
+        }, 400);
+      }
+      if (t < 0.01) lastTick = -1;
+    }
+  });
+})();
+
+/* ============================================================
+   DEMO 6 — CURSOR (follow + states)
+   ============================================================ */
+(function(){
+  const stage = document.querySelector('[data-demo="cursor"] .cursor-stage');
+  const style = document.createElement('style');
+  style.textContent = `
+    .cursor-stage{ position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; align-items:center; gap: 28px; cursor: none; }
+    .cursor-stage .hit{ pointer-events:auto; }
+    .c-title{ font-family:'Instrument Serif',serif; font-size: 32px; letter-spacing: -0.02em; color: #fff; }
+    .c-btn{ padding: 12px 22px; border: 1px solid #262626; border-radius: 999px; background: transparent; color: #fff; font-family:'JetBrains Mono',monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; }
+    .c-link{ font-family:'JetBrains Mono',monospace; font-size: 11px; letter-spacing: 0.14em; color: #8a8a8a; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 3px; }
+    .c-row{ display:flex; gap: 16px; align-items:center; }
+    .c-dot{ position:absolute; top:0; left:0; width: 6px; height: 6px; border-radius: 50%; background: #fff; pointer-events:none; transform: translate(-50%, -50%); mix-blend-mode: difference; transition: width 0.25s, height 0.25s, border-radius 0.25s, background 0.25s; }
+    .c-dot.over-btn{ width: 60px; height: 60px; background: #fff; border-radius: 999px; }
+    .c-dot.over-link{ width: 32px; height: 32px; background: transparent; border: 1px solid #fff; border-radius: 999px; }
+    .c-label{ position:absolute; font-family:'JetBrains Mono',monospace; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: #000; pointer-events:none; top:0; left:0; transform: translate(-50%, -50%); opacity: 0; transition: opacity 0.2s; }
+  `;
+  document.head.appendChild(style);
+
+  stage.innerHTML = `
+    <div class="c-title">Move in here —</div>
+    <div class="c-row">
+      <button class="c-btn hit" data-cur="btn" data-lab="Click">Devenir partenaire</button>
+      <a class="c-link hit" data-cur="link" data-lab="Go →">Voir les événements</a>
+    </div>
+    <div class="d-sub">cursor adapts to what you hover</div>
+    <div class="c-dot"></div>
+    <div class="c-label"></div>
+  `;
+
+  const dot = stage.querySelector('.c-dot');
+  const lab = stage.querySelector('.c-label');
+  const rect = () => stage.getBoundingClientRect();
+  let tx=0, ty=0, cx=0, cy=0;
+  let mode = ''; let labelText = '';
+
+  stage.addEventListener('mousemove', e => {
+    const r = rect();
+    tx = e.clientX - r.left;
+    ty = e.clientY - r.top;
+    const t = e.target.closest('[data-cur]');
+    if (t){ mode = t.dataset.cur; labelText = t.dataset.lab; }
+    else { mode = ''; labelText = ''; }
+  });
+  stage.addEventListener('mouseleave', () => { mode = ''; labelText = ''; });
+
+  registerDemo('cursor', {
+    render(t){
+      // Auto path when user not moving: orbit
+      if (tx === 0 && ty === 0){
+        const r = stage.getBoundingClientRect();
+        const cxA = r.width/2, cyA = r.height/2;
+        tx = cxA + Math.cos(t*Math.PI*2) * 120;
+        ty = cyA + Math.sin(t*Math.PI*2) * 40;
+
+        // Fake mode toggling
+        const phase = (t*4) % 4;
+        if (phase < 1) { mode = ''; labelText=''; }
+        else if (phase < 2) { mode = 'btn'; labelText = 'Click'; }
+        else if (phase < 3) { mode = ''; labelText=''; }
+        else { mode = 'link'; labelText = 'Go →'; }
+      }
+      cx = lerp(cx, tx, 0.2);
+      cy = lerp(cy, ty, 0.2);
+      dot.style.transform = `translate(${cx - 3}px, ${cy - 3}px)`;
+      dot.className = 'c-dot' + (mode === 'btn' ? ' over-btn' : mode === 'link' ? ' over-link' : '');
+      lab.textContent = labelText;
+      lab.style.transform = `translate(${cx - 20}px, ${cy - 6}px)`;
+      lab.style.opacity = mode === 'btn' && labelText ? 1 : 0;
+    }
+  });
+})();
+
+</script>
+</body>
+</html>

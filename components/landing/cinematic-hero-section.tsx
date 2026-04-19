@@ -157,6 +157,11 @@ function MiniGraph({ data }: { data: GraphData }) {
 // ── EventsTimeline ────────────────────────────────────────────────────────────
 const MONTHS_FR = ['JAN','FÉV','MAR','AVR','MAI','JUN','JUL','AOÛ','SEP','OCT','NOV','DÉC'] as const;
 const EV_CARD_W = 280 + 18; // card width + gap-18
+const EV_TRACK_TOP = 40;
+const EV_CARD_HEIGHT = 210;
+const EV_AXIS_TOP = EV_TRACK_TOP + EV_CARD_HEIGHT + 18;
+const EV_CONNECTOR_GAP = EV_AXIS_TOP - EV_TRACK_TOP - EV_CARD_HEIGHT;
+const EV_DOT_SIZE = 6;
 
 function EventsTimeline({ events }: { events: Event[] }) {
   const wrapRef  = useRef<HTMLDivElement>(null);
@@ -268,34 +273,53 @@ function EventsTimeline({ events }: { events: Event[] }) {
     <div
       ref={wrapRef}
       className="relative overflow-hidden select-none h-full"
-      style={{ padding: '40px 0 80px', cursor: 'grab' }}
+      style={{ padding: `${EV_TRACK_TOP}px 0 80px`, cursor: 'grab' }}
     >
-      {/* Axis line at 60% */}
+      {/* Axis line */}
       <div
+        data-testid="events-axis"
+        data-axis-top={String(EV_AXIS_TOP)}
         className="absolute pointer-events-none"
         style={{
-          top: '60%',
+          top: `${EV_AXIS_TOP}px`,
           left: 0,
           right: 0,
           height: '1px',
           background: 'linear-gradient(to right, transparent, #222 8%, #222 92%, transparent)',
+          zIndex: 2,
         }}
       />
 
       {/* Today marker — vertical line 36px above + 36px below axis */}
       <div
+        data-testid="today-marker"
+        data-axis-top={String(EV_AXIS_TOP)}
         className="absolute pointer-events-none"
-        style={{ top: 'calc(60% - 36px)', left: '50%', width: '1px', height: '72px', background: '#fff', zIndex: 10 }}
+        style={{ top: `${EV_AXIS_TOP - 36}px`, left: '50%', width: '1px', height: '72px', background: '#fff', zIndex: 10 }}
       >
-        {/* Pulsing ring */}
         <div
           className="absolute rounded-full"
-          style={{ top: '-5px', left: '-5px', width: '11px', height: '11px', background: 'rgba(255,255,255,0.3)', animation: 'tpulse 2s ease-out infinite' }}
+          style={{
+            top: '50%',
+            left: '50%',
+            width: '11px',
+            height: '11px',
+            transform: 'translate(-50%, -50%)',
+            background: 'rgba(255,255,255,0.3)',
+            animation: 'tpulse 2s ease-out infinite',
+          }}
         />
-        {/* Solid dot */}
         <div
+          data-testid="today-axis-dot"
+          data-axis-top={String(EV_AXIS_TOP)}
           className="absolute rounded-full bg-white"
-          style={{ top: '-5px', left: '-5px', width: '11px', height: '11px' }}
+          style={{
+            top: '50%',
+            left: '50%',
+            width: '11px',
+            height: '11px',
+            transform: 'translate(-50%, -50%)',
+          }}
         />
         {/* Date label below axis */}
         <div
@@ -310,7 +334,7 @@ function EventsTimeline({ events }: { events: Event[] }) {
       <div
         ref={trackRef}
         className="flex"
-        style={{ gap: '18px', paddingLeft: '50vw', paddingRight: '50vw', willChange: 'transform' }}
+        style={{ gap: '18px', paddingLeft: '50vw', paddingRight: '50vw', willChange: 'transform', alignItems: 'flex-start' }}
       >
         {sorted.map((event) => {
           const isPast  = new Date(event.date) < today;
@@ -324,6 +348,7 @@ function EventsTimeline({ events }: { events: Event[] }) {
               style={{
                 flex: '0 0 auto',
                 width: '280px',
+                height: `${EV_CARD_HEIGHT}px`,
                 padding: '22px',
                 gap: '16px',
                 border: '1px solid #161616',
@@ -333,17 +358,29 @@ function EventsTimeline({ events }: { events: Event[] }) {
                 transition: 'border-color 0.3s, transform 0.3s',
                 userSelect: 'none',
               }}
-              onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = '#222'; (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-4px)'; }}
+              onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = '#222'; }}
               onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = '#161616'; (e.currentTarget as HTMLDivElement).style.transform = 'translateY(0)'; }}
             >
-              {/* Connector dot — bridges card bottom to the axis line */}
+              {/* Connector — bridges card bottom to the axis line */}
               <div
-                className="absolute rounded-full"
+                data-testid={`event-connector-${event.id}`}
+                data-axis-top={String(EV_AXIS_TOP)}
+                className="absolute pointer-events-none"
                 style={{
-                  bottom: '-8px',
+                  top: '100%',
+                  left: '24.5px',
+                  width: '1px',
+                  height: `${EV_CONNECTOR_GAP}px`,
+                  background: isPast ? '#242424' : 'rgba(255,255,255,0.42)',
+                }}
+              />
+              <div
+                className="absolute rounded-full pointer-events-none"
+                style={{
+                  top: `calc(100% + ${EV_CONNECTOR_GAP - EV_DOT_SIZE / 2}px)`,
                   left: '22px',
-                  width: '6px',
-                  height: '6px',
+                  width: `${EV_DOT_SIZE}px`,
+                  height: `${EV_DOT_SIZE}px`,
                   background: isPast ? '#333' : '#fff',
                   boxShadow: isPast ? 'none' : '0 0 0 3px rgba(255,255,255,0.12)',
                 }}
@@ -367,7 +404,16 @@ function EventsTimeline({ events }: { events: Event[] }) {
               {/* ev-title */}
               <div
                 className="text-white"
-                style={{ fontFamily: 'var(--font-serif), Georgia, serif', fontSize: '22px', lineHeight: 1.15, letterSpacing: '-0.015em' }}
+                style={{
+                  fontFamily: 'var(--font-serif), Georgia, serif',
+                  fontSize: '22px',
+                  lineHeight: 1.15,
+                  letterSpacing: '-0.015em',
+                  display: '-webkit-box',
+                  WebkitBoxOrient: 'vertical',
+                  WebkitLineClamp: 2,
+                  overflow: 'hidden',
+                }}
               >
                 {event.title}
               </div>
@@ -391,7 +437,7 @@ function EventsTimeline({ events }: { events: Event[] }) {
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
-const SCROLL_DISTANCE = 2400;
+const SCROLL_DISTANCE = 3000;
 
 export function CinematicHeroSection({ members, events }: { members: TeamMember[]; events: Event[] }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -501,8 +547,17 @@ export function CinematicHeroSection({ members, events }: { members: TeamMember[
         // Phase 5.5 (8→9): card2 content fades in
         tl.to(content2, { autoAlpha: 1, y: 0, ease: "power2.out", duration: 1 }, 8);
 
-        // Dwell on card2 (9→12)
-        tl.to({}, { duration: 3 }, 9);
+        // Dwell on card2 (9→9.1)
+        tl.to({}, { duration: 0.1 }, 9);
+
+        // Phase 6 (9.1→10.2): card2 content exits
+        tl.to(content2, { autoAlpha: 0, y: -30, ease: "power2.in", duration: 1.1 }, 9.1);
+
+        // Phase 7 (9→11.3): card2 leaves, revealing the particle background
+        tl.to(card2, { yPercent: -90, scale: 0.78, autoAlpha: 0, borderRadius: "2.5rem", ease: "power2.inOut", duration: 2.3 }, 9);
+
+        // Keep the final scroll mapped to the footer reveal instead of a blank sticky screen.
+        tl.to({}, { duration: 2.2 }, 11.3);
 
       }, containerRef);
     }, 50);
@@ -519,7 +574,7 @@ export function CinematicHeroSection({ members, events }: { members: TeamMember[
       className="relative w-full"
       style={{
         height: `calc(100vh + ${SCROLL_DISTANCE}px)`,
-        marginBottom: "-100vh",
+        marginBottom: "calc(-100vh + 220px)",
         perspective: "1500px",
         zIndex: 10,
       }}

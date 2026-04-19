@@ -9,11 +9,11 @@ export async function PartnersMarquee() {
   const row2 = partners.slice(half)
 
   return (
-    <section id="partenaires" className="relative py-20 border-t border-border overflow-hidden">
+    <section id="partenaires" className="relative pt-4 pb-20 border-t border-border overflow-hidden">
       <div className="absolute inset-0 bg-[#050505]/55" />
       <div className="relative z-10">
         <BlurFade delay={0} inView>
-          <p className="text-center text-xs tracking-widest uppercase text-muted-foreground mb-10">
+          <p className="text-center text-xs tracking-widest uppercase text-muted-foreground mb-4">
             Des entreprises avec qui nous avons déjà travaillé
           </p>
         </BlurFade>

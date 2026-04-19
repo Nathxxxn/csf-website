@@ -95,6 +95,7 @@ const events: Event[] = [
 describe('CinematicHeroSection', () => {
   afterEach(() => {
     vi.useRealTimers()
+    vi.clearAllMocks()
   })
 
   it('unmounts without a ScrollTrigger pin reparenting a React-managed node', async () => {
@@ -117,5 +118,103 @@ describe('CinematicHeroSection', () => {
     })
 
     expect(() => unmount()).not.toThrow()
+  })
+
+  it('animates the events card out before the normal landing footer takes over', async () => {
+    vi.useFakeTimers()
+    const { CinematicHeroSection } = await import('@/components/landing/cinematic-hero-section')
+
+    Object.defineProperty(SVGElement.prototype, 'getTotalLength', {
+      configurable: true,
+      value: () => 100,
+    })
+
+    render(
+      <React.StrictMode>
+        <CinematicHeroSection members={members} events={events} />
+      </React.StrictMode>,
+    )
+
+    await act(async () => {
+      vi.advanceTimersByTime(60)
+    })
+
+    const calls = gsapMocks.timeline.to.mock.calls
+    const card2EnterCall = calls.find(([, vars, position]) => {
+      const animation = vars as { yPercent?: number; duration?: number }
+      return animation.yPercent === 0 && animation.duration === 1.5 && position === 7
+    })
+    const content2EnterCall = calls.find(([, vars, position]) => {
+      const animation = vars as { autoAlpha?: number; y?: number; duration?: number }
+      return animation.autoAlpha === 1 && animation.y === 0 && animation.duration === 1 && position === 8
+    })
+
+    expect(card2EnterCall).toBeDefined()
+    expect(content2EnterCall).toBeDefined()
+
+    const card2 = card2EnterCall?.[0]
+    const content2 = content2EnterCall?.[0]
+    const section = document.querySelector('section')
+    const handoffMask = document.querySelector('[data-testid="handoff-mask"]')
+    const footerRevealBridgeCall = calls.find(([, vars, position]) => {
+      const animation = vars as { duration?: number }
+      return animation.duration !== undefined && position === 11.3
+    })
+
+    expect(handoffMask).toBeNull()
+    expect(calls).toEqual(
+      expect.arrayContaining([
+        [
+          content2,
+          expect.objectContaining({ autoAlpha: 0, y: -30, duration: 1.1 }),
+          9.1,
+        ],
+        [
+          card2,
+          expect.objectContaining({
+            yPercent: -90,
+            scale: 0.78,
+            autoAlpha: 0,
+            borderRadius: '2.5rem',
+            duration: 2.3,
+          }),
+          9,
+        ],
+      ]),
+    )
+    expect((footerRevealBridgeCall?.[1] as { duration?: number })?.duration).toBe(2.2)
+    expect(section).toHaveStyle({ marginBottom: 'calc(-100vh + 220px)' })
+  })
+
+  it('anchors the Today indicator dot and event connectors to the same timeline axis', async () => {
+    const { CinematicHeroSection } = await import('@/components/landing/cinematic-hero-section')
+
+    Object.defineProperty(SVGElement.prototype, 'getTotalLength', {
+      configurable: true,
+      value: () => 100,
+    })
+
+    render(
+      <React.StrictMode>
+        <CinematicHeroSection members={members} events={events} />
+      </React.StrictMode>,
+    )
+
+    const axis = document.querySelector('[data-testid="events-axis"]')
+    const todayMarker = document.querySelector('[data-testid="today-marker"]')
+    const todayDot = document.querySelector('[data-testid="today-axis-dot"]')
+    const eventConnector = document.querySelector('[data-testid="event-connector-event-1"]')
+
+    expect(axis).not.toBeNull()
+    expect(todayMarker).not.toBeNull()
+    expect(todayDot).not.toBeNull()
+    expect(eventConnector).not.toBeNull()
+
+    const axisTop = axis?.getAttribute('data-axis-top')
+
+    expect(todayMarker).toHaveAttribute('data-axis-top', axisTop)
+    expect(todayDot).toHaveAttribute('data-axis-top', axisTop)
+    expect(todayDot).toHaveStyle({ top: '50%' })
+    expect(eventConnector).toHaveAttribute('data-axis-top', axisTop)
   })
 })

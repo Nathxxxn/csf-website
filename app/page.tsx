@@ -1,4 +1,3 @@
-import { EventsPreview } from '@/components/landing/events-preview'
 import { PartnersMarquee } from '@/components/landing/partners-marquee'
 import { PartnersCta } from '@/components/landing/partners-cta'
 import { getUpcomingEvents, getPastEvents, getTeam } from '@/lib/data'
@@ -36,7 +35,6 @@ export default async function HomePage() {
     <>
       <MarketWaveBackground />
       <CinematicHeroSection members={teamMembers} events={allEvents} />
-      <EventsPreview upcoming={upcoming.slice(0, 3)} past={past.slice(0, 3)} />
       <PartnersMarquee />
       <PartnersCta />
     </>

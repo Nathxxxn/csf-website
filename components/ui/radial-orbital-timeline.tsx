@@ -10,13 +10,14 @@ import {
   LayoutGrid,
   ExternalLink,
   Link as LinkedinIcon,
+  type LucideIcon,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { PoleData, Member } from "@/lib/types";
 
 // Icon map per pole name
-const POLE_ICONS: Record<string, React.ElementType> = {
+const POLE_ICONS: Record<string, LucideIcon> = {
   Bureau: LayoutGrid,
   "Finance de Marché": TrendingUp,
   "Finance d'Entreprise": Building2,

@@ -3,7 +3,6 @@
 import { revalidatePath } from 'next/cache'
 import { requireAdminSession } from '@/lib/session'
 import { getDb } from '@/lib/db'
-import { handleUpload, type HandleUploadBody } from '@vercel/blob/client'
 
 export async function upsertContent(formData: FormData) {
   await requireAdminSession()
@@ -21,14 +20,4 @@ export async function upsertContent(formData: FormData) {
   revalidatePath('/')
   revalidatePath('/a-propos')
   revalidatePath('/admin/dashboard')
-}
-
-export async function handleBlobUpload(body: HandleUploadBody) {
-  await requireAdminSession()
-  return handleUpload({
-    body,
-    request: { headers: new Headers() } as Request,
-    onBeforeGenerateToken: async () => ({ allowedContentTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'] }),
-    onUploadCompleted: async () => {},
-  })
 }

@@ -1,6 +1,5 @@
 'use client'
 
-import { upload } from '@vercel/blob/client'
 import { useRef, useState } from 'react'
 
 interface ImageUploadProps {
@@ -12,19 +11,25 @@ interface ImageUploadProps {
 export function ImageUpload({ currentUrl, onUpload, label = 'Image' }: ImageUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [uploading, setUploading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   async function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
+    setError(null)
     setUploading(true)
     try {
-      const blob = await upload(file.name, file, {
-        access: 'public',
-        handleUploadUrl: '/api/blob',
-      })
-      await onUpload(blob.url)
+      const formData = new FormData()
+      formData.append('file', file)
+      const res = await fetch('/api/blob', { method: 'POST', body: formData })
+      if (!res.ok) throw new Error(`Erreur serveur (${res.status})`)
+      const { url } = await res.json() as { url: string }
+      await onUpload(url)
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Upload échoué')
     } finally {
       setUploading(false)
+      if (inputRef.current) inputRef.current.value = ''
     }
   }
 
@@ -42,6 +47,7 @@ export function ImageUpload({ currentUrl, onUpload, label = 'Image' }: ImageUplo
       >
         {uploading ? 'Upload en cours...' : 'Choisir une image'}
       </button>
+      {error && <p className="text-xs text-red-400">{error}</p>}
       <input ref={inputRef} type="file" accept="image/*" className="hidden" onChange={handleChange} />
     </div>
   )

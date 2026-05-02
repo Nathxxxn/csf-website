@@ -1,4 +1,4 @@
-import { handleUpload, type HandleUploadBody } from '@vercel/blob/client'
+import { put } from '@vercel/blob'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { cookies } from 'next/headers'
@@ -10,12 +10,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const session = verifyCookie(token)
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const body = (await request.json()) as HandleUploadBody
-  const jsonResponse = await handleUpload({
-    body,
-    request,
-    onBeforeGenerateToken: async () => ({ allowedContentTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'] }),
-    onUploadCompleted: async () => {},
-  })
-  return NextResponse.json(jsonResponse)
+  const formData = await request.formData()
+  const file = formData.get('file') as File | null
+  if (!file) return NextResponse.json({ error: 'No file provided' }, { status: 400 })
+
+  const blob = await put(file.name, file, { access: 'public' })
+  return NextResponse.json({ url: blob.url })
 }

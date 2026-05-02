@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fr" suppressHydrationWarning>
-      <body className={`${inter.variable} ${instrumentSerif.variable} antialiased`}>
+      <body className={`${inter.variable} ${instrumentSerif.variable} antialiased`} suppressHydrationWarning>
         <ThemeProvider>
           <SiteChrome>{children}</SiteChrome>
           <Toaster />

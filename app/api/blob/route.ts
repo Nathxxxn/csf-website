@@ -14,6 +14,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const file = formData.get('file') as File | null
   if (!file) return NextResponse.json({ error: 'No file provided' }, { status: 400 })
 
-  const blob = await put(file.name, file, { access: 'public' })
-  return NextResponse.json({ url: blob.url })
+  try {
+    const blob = await put(file.name, file, { access: 'public', token: process.env.CSF_READ_WRITE_TOKEN })
+    return NextResponse.json({ url: blob.url })
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e)
+    console.error('[blob upload]', msg)
+    return NextResponse.json({ error: msg }, { status: 500 })
+  }
 }

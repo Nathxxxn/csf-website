@@ -12,6 +12,9 @@ export function ImageUpload({ currentUrl, onUpload, label = 'Image' }: ImageUplo
   const inputRef = useRef<HTMLInputElement>(null)
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+
+  const displayUrl = previewUrl ?? currentUrl
 
   async function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
@@ -22,8 +25,10 @@ export function ImageUpload({ currentUrl, onUpload, label = 'Image' }: ImageUplo
       const formData = new FormData()
       formData.append('file', file)
       const res = await fetch('/api/blob', { method: 'POST', body: formData })
-      if (!res.ok) throw new Error(`Erreur serveur (${res.status})`)
-      const { url } = await res.json() as { url: string }
+      const json = await res.json() as { url?: string; error?: string }
+      if (!res.ok) throw new Error(json.error ?? `Erreur serveur (${res.status})`)
+      const { url } = json as { url: string }
+      setPreviewUrl(url)
       await onUpload(url)
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Upload échoué')
@@ -36,8 +41,8 @@ export function ImageUpload({ currentUrl, onUpload, label = 'Image' }: ImageUplo
   return (
     <div className="flex flex-col gap-2">
       <label className="text-xs text-white/60">{label}</label>
-      {currentUrl && (
-        <img src={currentUrl} alt="" className="h-20 w-auto rounded object-cover" />
+      {displayUrl && (
+        <img src={displayUrl} alt="" className="h-20 w-auto rounded object-cover" />
       )}
       <button
         type="button"

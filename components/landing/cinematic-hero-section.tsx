@@ -12,7 +12,7 @@ import TeamShowcase, { type TeamMember } from "@/components/ui/team-showcase";
 import { LOADING_DONE_EVENT } from "@/components/layout/loading-screen";
 import { STATS } from "@/lib/constants";
 import { EventsMagazine } from "@/components/landing/events-magazine";
-import type { Event } from "@/lib/types";
+import type { Event, SiteContent } from "@/lib/types";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -159,7 +159,15 @@ function MiniGraph({ data }: { data: GraphData }) {
 // ── Component ─────────────────────────────────────────────────────────────────
 const SCROLL_DISTANCE = 3000;
 
-export function CinematicHeroSection({ members, events }: { members: TeamMember[]; events: Event[] }) {
+export function CinematicHeroSection({ members, events, siteContent }: { members: TeamMember[]; events: Event[]; siteContent?: SiteContent }) {
+  const heroTitle   = siteContent?.hero_title   || ''
+  const heroSubtitle = siteContent?.hero_subtitle || "Des rencontres avec des professionnels, des formats pour progresser et un réseau qui aide vraiment à comprendre les métiers de la finance."
+  const titleLines  = heroTitle ? heroTitle.split('\n').filter(Boolean) : ['La finance', 'à CentraleSupélec']
+  const stats = STATS.map((stat, i) => {
+    const raw = [siteContent?.stats_poles, siteContent?.stats_membres, undefined, siteContent?.stats_evenements][i]
+    const n = raw ? Number(raw) : NaN
+    return Number.isFinite(n) && n > 0 ? { ...stat, value: n } : stat
+  })
   const containerRef = useRef<HTMLDivElement>(null);
   const cardRef      = useRef<HTMLDivElement>(null);
   const card2Ref     = useRef<HTMLDivElement>(null);
@@ -366,19 +374,21 @@ export function CinematicHeroSection({ members, events }: { members: TeamMember[
             <div style={{ perspective: "1500px" }}>
               <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold tracking-tighter leading-none mb-6">
                 <span className="ch-line1 invisible block text-transparent bg-clip-text bg-linear-to-r from-white to-white/80">
-                  La finance
+                  {titleLines[0]}
                 </span>
-                <span
-                  className="ch-line2 block text-transparent bg-clip-text bg-linear-to-r from-white to-white/80"
-                  style={{ clipPath: "inset(0 100% 0 0)" }}
-                >
-                  à CentraleSupélec
-                </span>
+                {titleLines[1] && (
+                  <span
+                    className="ch-line2 block text-transparent bg-clip-text bg-linear-to-r from-white to-white/80"
+                    style={{ clipPath: "inset(0 100% 0 0)" }}
+                  >
+                    {titleLines[1]}
+                  </span>
+                )}
               </h1>
             </div>
 
             <p className="ch-sub invisible text-base sm:text-lg text-muted-foreground max-w-xl leading-relaxed mb-10">
-              Des rencontres avec des professionnels, des formats pour progresser et un réseau qui aide vraiment à comprendre les métiers de la finance.
+              {heroSubtitle}
             </p>
 
             <div className="ch-buttons invisible flex flex-col sm:flex-row gap-3 items-center">
@@ -416,7 +426,7 @@ export function CinematicHeroSection({ members, events }: { members: TeamMember[
             {/* Stats bar */}
             <div className="shrink-0 border-b border-white/8">
               <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-white/8">
-                {STATS.map((stat, i) => (
+                {stats.map((stat, i) => (
                   <div
                     key={stat.label}
                     className="flex flex-col items-center justify-center py-6 px-6 text-center"

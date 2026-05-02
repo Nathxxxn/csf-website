@@ -1,6 +1,6 @@
 import { PartnersMarquee } from '@/components/landing/partners-marquee'
 import { PartnersCta } from '@/components/landing/partners-cta'
-import { getUpcomingEvents, getPastEvents, getTeam } from '@/lib/data'
+import { getUpcomingEvents, getPastEvents, getTeam, getSiteContent } from '@/lib/data'
 import { MarketWaveBackground } from '@/components/ui/market-wave-background'
 import { CinematicHeroSection } from '@/components/landing/cinematic-hero-section'
 import { type TeamMember } from '@/components/ui/team-showcase'
@@ -10,10 +10,11 @@ function pickRandom<T>(arr: T[], n: number): T[] {
 }
 
 export default async function HomePage() {
-  const [upcoming, past, poles] = await Promise.all([
+  const [upcoming, past, poles, siteContent] = await Promise.all([
     getUpcomingEvents(),
     getPastEvents(),
     getTeam(),
+    getSiteContent(),
   ])
 
   const allMembers: TeamMember[] = poles
@@ -34,7 +35,7 @@ export default async function HomePage() {
   return (
     <>
       <MarketWaveBackground />
-      <CinematicHeroSection members={teamMembers} events={allEvents} />
+      <CinematicHeroSection members={teamMembers} events={allEvents} siteContent={siteContent} />
       <PartnersMarquee />
       <PartnersCta />
     </>

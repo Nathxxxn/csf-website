@@ -1,7 +1,7 @@
 import { BlurFade } from '@/components/ui/blur-fade'
 import { NumberTicker } from '@/components/ui/number-ticker'
 import { Separator } from '@/components/ui/separator'
-import { getTeam } from '@/lib/data'
+import { getTeam, getSiteContent } from '@/lib/data'
 import { STATS } from '@/lib/constants'
 
 export const metadata = {
@@ -10,7 +10,7 @@ export const metadata = {
 }
 
 export default async function AboutPage() {
-  const team = await getTeam()
+  const [team, content] = await Promise.all([getTeam(), getSiteContent()])
 
   return (
     <div className="mx-auto px-6 pt-24 pb-24 lg:px-10">
@@ -19,10 +19,10 @@ export default async function AboutPage() {
           À propos
         </p>
         <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tighter mb-8 max-w-2xl">
-          CS Finance, c&apos;est une association pour apprendre la finance au contact du terrain.
+          {content.apropos_mission_title || "CS Finance, c’est une association pour apprendre la finance au contact du terrain."}
         </h1>
         <p className="text-muted-foreground leading-relaxed max-w-2xl text-base mb-12">
-          On organise des rencontres avec des professionnels, des formats de travail entre membres et des échanges avec les alumni. L&apos;idée est simple : mieux comprendre les métiers, progresser techniquement et créer des liens qui restent utiles après l&apos;école.
+          {content.apropos_mission_text || "On organise des rencontres avec des professionnels, des formats de travail entre membres et des \xe9changes avec les alumni. L’id\xe9e est simple : mieux comprendre les m\xe9tiers, progresser techniquement et cr\xe9er des liens qui restent utiles apr\xe8s l’\xe9cole."}
         </p>
       </BlurFade>
 

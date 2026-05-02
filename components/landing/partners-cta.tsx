@@ -1,27 +1,16 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { DotPattern } from '@/components/ui/dot-pattern'
 import { TextAnimate } from '@/components/ui/text-animate'
 import { FlowButton } from '@/components/ui/flow-button'
 import { LiquidButton } from '@/components/ui/liquid-glass-button'
 import { BlurFade } from '@/components/ui/blur-fade'
-import { cn } from '@/lib/utils'
-
 export function PartnersCta() {
   const router = useRouter()
 
   return (
-    <section className="relative pt-32 pb-20 px-6 overflow-hidden border-t border-border">
-      <DotPattern
-        className={cn(
-          'absolute inset-0 [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_60%,transparent_100%)]',
-        )}
-        cr={1}
-        cx={1}
-        cy={1}
-      />
-      <div className="relative z-10 max-w-2xl mx-auto text-center">
+    <section className="relative z-20 pt-32 pb-20 px-6 border-t border-border bg-[#050505]">
+      <div className="max-w-2xl mx-auto text-center">
         <BlurFade delay={0} inView>
           <p className="text-xs tracking-widest uppercase text-muted-foreground mb-6">
             Partenariat

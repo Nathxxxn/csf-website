@@ -10,9 +10,14 @@ function pickRandom<T>(arr: T[], n: number): T[] {
 export async function TeamPreview() {
   const poles = await getTeam()
 
+  const seen = new Set<string>()
   const allMembers: TeamMember[] = poles
     .flatMap((pole) => pole.members)
-    .filter((member) => member.photo !== null)
+    .filter((member) => {
+      if (member.photo === null || seen.has(member.name)) return false
+      seen.add(member.name)
+      return true
+    })
     .map((member, index) => ({
       id: String(index),
       name: member.name,

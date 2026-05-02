@@ -1,0 +1,787 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>CS Finance — TeamSpotlight (component preview)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   TeamSpotlight — STANDALONE COMPONENT
+   ------------------------------------------------------------
+   Tout est préfixé `.ts-*` pour éviter tout conflit de styles
+   avec le reste du site lors de l'intégration.
+
+   Polices utilisées : Inter (--font-sans) et Instrument Serif
+   (--font-serif) — définies globalement dans layout.tsx.
+   ============================================================ */
+:root{
+  --ts-bg: #060606;
+  --ts-bg-2: #0b0b0b;
+  --ts-bg-3: #0d0d0d;
+  --ts-line: #1a1a1a;
+  --ts-line-2: #222;
+  --ts-line-3: #2a2a2a;
+  --ts-fg: #ffffff;
+  --ts-muted: #aaaaaa;
+  --ts-muted-2: #666;
+}
+
+/* host body only — remove when integrating */
+body{
+  margin: 0;
+  background: var(--ts-bg);
+  color: var(--ts-fg);
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================================
+   COMPONENT SCOPE
+   ============================================================ */
+.ts-root{
+  width: 100%;
+  font-family: 'Inter', system-ui, sans-serif;
+  color: var(--ts-fg);
+}
+.ts-root *{ box-sizing: border-box; }
+.ts-root button{
+  font: inherit; color: inherit; background: transparent;
+  border: 0; padding: 0; cursor: pointer;
+}
+.ts-root a{ color: inherit; text-decoration: none; }
+
+.ts-inner{
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 80px 48px;
+}
+@media(max-width: 900px){
+  .ts-inner{ padding: 60px 20px; }
+}
+
+/* ---------- POLE TABS ---------- */
+.ts-tabs{
+  display: flex; gap: 4px; flex-wrap: wrap;
+  padding: 6px; border: 1px solid var(--ts-line-2); border-radius: 999px;
+  width: max-content; max-width: 100%;
+  margin-bottom: 32px;
+}
+.ts-tabs button{
+  padding: 10px 18px; border-radius: 999px;
+  font-size: 12px; font-weight: 500;
+  color: var(--ts-muted);
+  transition: color 0.25s, background 0.25s;
+  white-space: nowrap;
+}
+.ts-tabs button:hover{ color: #fff; }
+.ts-tabs button.on{ background: #fff; color: #000; }
+.ts-tabs button .ts-cnt{
+  display: inline-block; margin-left: 6px;
+  font-size: 10px; color: var(--ts-muted-2);
+}
+.ts-tabs button.on .ts-cnt{ color: #555; }
+
+/* ---------- SPOTLIGHT ---------- */
+.ts-spotlight{
+  position: relative;
+  border: 1px solid var(--ts-line-2);
+  border-radius: 6px;
+  background: linear-gradient(to bottom right, var(--ts-bg-3), var(--ts-bg-2) 60%, var(--ts-bg-3));
+  overflow: hidden;
+  min-height: 640px;
+}
+.ts-spotlight::before{
+  content: ''; position: absolute; inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 60% 50% at 30% 50%, black 0%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 60% 50% at 30% 50%, black 0%, transparent 80%);
+  pointer-events: none;
+}
+.ts-grid{
+  display: grid; grid-template-columns: 1.1fr 1.2fr;
+  min-height: 640px;
+  position: relative; z-index: 1;
+}
+
+/* portrait */
+.ts-portrait{
+  position: relative;
+  padding: 40px;
+  display: flex; align-items: stretch;
+  overflow: hidden;
+}
+.ts-portrait-frame{
+  position: relative; flex: 1;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #0a0a0a;
+}
+.ts-portrait-img{
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+  transition: opacity 0.5s;
+}
+.ts-portrait-img.ts-enter{
+  animation: tsPortraitEnter 0.7s cubic-bezier(0.2,0.9,0.3,1) both;
+}
+@keyframes tsPortraitEnter{
+  from{ opacity: 0; transform: scale(1.08); }
+  to{ opacity: 1; transform: scale(1); }
+}
+.ts-portrait-placeholder{
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Instrument Serif', Georgia, serif;
+  color: rgba(255,255,255,0.25);
+  font-size: clamp(80px, 14vw, 180px);
+  pointer-events: none;
+}
+.ts-portrait-stripes{
+  position: absolute; inset: 0;
+  background-image: repeating-linear-gradient(
+    135deg, rgba(255,255,255,0.04) 0 2px, transparent 2px 14px);
+  pointer-events: none;
+}
+.ts-portrait-gradient{
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 40%, transparent 60%, rgba(0,0,0,0.25) 100%);
+  pointer-events: none;
+}
+.ts-portrait-index{
+  position: absolute; top: 16px; left: 16px; z-index: 2;
+  font-size: 11px; font-weight: 500; letter-spacing: 0.2em;
+  color: rgba(255,255,255,0.7);
+  padding: 6px 10px;
+  background: rgba(0,0,0,0.55); backdrop-filter: blur(8px);
+  border-radius: 3px;
+}
+.ts-portrait-pole{
+  position: absolute; bottom: 16px; left: 16px; z-index: 2;
+  font-size: 10px; font-weight: 500; letter-spacing: 0.2em;
+  text-transform: uppercase; color: #fff;
+  padding: 6px 10px;
+  background: rgba(0,0,0,0.55); backdrop-filter: blur(8px);
+  border-radius: 3px;
+}
+
+/* info */
+.ts-info{
+  padding: 56px 56px 40px;
+  display: flex; flex-direction: column;
+  min-height: 640px;
+}
+.ts-info-top{
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 11px; font-weight: 500; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--ts-muted);
+  margin-bottom: 40px;
+}
+.ts-info-top .ts-right{ display: flex; align-items: center; gap: 12px; }
+.ts-info-top .ts-dash{ width: 24px; height: 1px; background: var(--ts-line-3); }
+
+.ts-role{
+  font-size: 12px; font-weight: 500; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--ts-muted);
+  margin-bottom: 20px;
+  display: flex; align-items: center; gap: 10px;
+}
+.ts-role-bullet{ width: 6px; height: 6px; border-radius: 50%; background: #fff; }
+
+.ts-name{
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: clamp(60px, 7.5vw, 108px);
+  line-height: 0.92; letter-spacing: -0.025em;
+  margin: 0 0 16px 0;
+  font-weight: 400;
+}
+.ts-name .ts-word{
+  display: inline-block; overflow: hidden; padding-bottom: 0.08em;
+}
+.ts-name .ts-word span{ display: inline-block; }
+.ts-name.ts-animate .ts-word span{
+  animation: tsNameUp 0.7s cubic-bezier(0.2, 0.9, 0.25, 1) both;
+}
+.ts-name.ts-animate .ts-word:nth-child(2) span{ animation-delay: 0.08s; }
+.ts-name.ts-animate .ts-word:nth-child(3) span{ animation-delay: 0.16s; }
+.ts-name.ts-animate .ts-word:nth-child(4) span{ animation-delay: 0.24s; }
+@keyframes tsNameUp{
+  from{ transform: translateY(100%); }
+  to{ transform: translateY(0); }
+}
+
+.ts-tagline{
+  font-family: 'Instrument Serif', Georgia, serif; font-style: italic;
+  font-size: 24px; color: var(--ts-muted);
+  margin: 0 0 28px 0;
+  font-weight: 400;
+  opacity: 0;
+}
+.ts-tagline.ts-animate{ animation: tsFadeUp 0.6s 0.3s both; }
+
+.ts-bio{
+  font-size: 15px; line-height: 1.7; color: rgba(255,255,255,0.85);
+  max-width: 52ch; margin: 0 0 36px 0;
+  opacity: 0;
+}
+.ts-bio.ts-animate{ animation: tsFadeUp 0.6s 0.4s both; }
+@keyframes tsFadeUp{
+  from{ opacity: 0; transform: translateY(12px); }
+  to{ opacity: 1; transform: translateY(0); }
+}
+
+.ts-stats{
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  margin: 0 0 32px 0;
+  border-top: 1px solid var(--ts-line);
+  border-bottom: 1px solid var(--ts-line);
+  opacity: 0;
+}
+.ts-stats.ts-animate{ animation: tsFadeUp 0.6s 0.5s both; }
+.ts-stats .ts-st{
+  padding: 20px 0;
+  border-right: 1px solid var(--ts-line);
+}
+.ts-stats .ts-st:last-child{ border-right: 0; padding-left: 20px; }
+.ts-stats .ts-st:not(:first-child){ padding-left: 20px; }
+.ts-stats .ts-st .ts-k{
+  font-size: 10px; font-weight: 500; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--ts-muted);
+  margin-bottom: 8px;
+}
+.ts-stats .ts-st .ts-v{
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: 28px; line-height: 1;
+  font-weight: 400;
+}
+.ts-stats .ts-st .ts-unit{
+  font-family: 'Inter', sans-serif; font-size: 12px;
+  color: var(--ts-muted); margin-left: 4px;
+  vertical-align: middle;
+}
+
+.ts-skills{
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin: 0 0 36px 0;
+  opacity: 0;
+}
+.ts-skills.ts-animate{ animation: tsFadeUp 0.6s 0.55s both; }
+.ts-skills .ts-chip{
+  font-size: 11px; font-weight: 500;
+  padding: 6px 10px;
+  border: 1px solid var(--ts-line-2); border-radius: 999px;
+  color: var(--ts-muted);
+}
+
+.ts-footer{
+  margin-top: auto;
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 16px; flex-wrap: wrap;
+}
+.ts-links{ display: flex; gap: 8px; }
+.ts-links a{
+  width: 40px; height: 40px; border-radius: 999px;
+  border: 1px solid var(--ts-line-2);
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--ts-muted);
+  transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.2s;
+}
+.ts-links a:hover{
+  background: #fff; color: #000; border-color: #fff;
+  transform: translateY(-2px);
+}
+.ts-links svg{ width: 15px; height: 15px; }
+
+.ts-nav{ display: flex; align-items: center; gap: 12px; }
+.ts-arrow{
+  width: 44px; height: 44px; border-radius: 999px;
+  border: 1px solid var(--ts-line-2);
+  display: inline-flex; align-items: center; justify-content: center;
+  color: #fff;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.ts-arrow:hover{ background: #fff; color: #000; border-color: #fff; }
+.ts-arrow svg{ width: 16px; height: 16px; }
+
+@media(max-width: 980px){
+  .ts-grid{ grid-template-columns: 1fr; }
+  .ts-info{ padding: 40px 28px 28px; min-height: auto; }
+  .ts-portrait{ padding: 24px 24px 0; min-height: 440px; }
+}
+
+/* ---------- PROGRESS ---------- */
+.ts-progress{
+  margin-top: 24px;
+  display: flex; align-items: center; gap: 16px;
+}
+.ts-progress .ts-count{
+  font-size: 12px; font-weight: 500; letter-spacing: 0.18em;
+  color: var(--ts-muted);
+  min-width: 70px;
+}
+.ts-progress .ts-count strong{
+  color: #fff;
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-weight: 400;
+  font-size: 18px;
+  margin-right: 2px;
+}
+.ts-progress .ts-track{
+  flex: 1; height: 1px; background: var(--ts-line-2);
+  position: relative; overflow: hidden;
+}
+.ts-progress .ts-track .ts-fill{
+  position: absolute; left: 0; top: 0; bottom: 0;
+  background: #fff;
+  transition: width 0.5s cubic-bezier(0.2,0.9,0.3,1);
+}
+.ts-progress .ts-pole-label{
+  font-size: 11px; font-weight: 500; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--ts-muted);
+}
+
+/* ---------- ROSTER ---------- */
+.ts-roster-header{
+  margin-top: 32px;
+  display: flex; justify-content: space-between; align-items: flex-end;
+  margin-bottom: 14px;
+}
+.ts-roster-header .ts-label{
+  font-size: 11px; font-weight: 500; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--ts-muted);
+}
+.ts-roster-header .ts-hint{
+  font-size: 11px; color: var(--ts-muted);
+  display: flex; align-items: center; gap: 8px;
+}
+.ts-roster-header .ts-hint kbd{
+  display: inline-block; padding: 2px 6px;
+  border: 1px solid var(--ts-line-3); border-radius: 3px;
+  background: var(--ts-bg-3);
+  font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 500;
+  color: #fff;
+  min-width: 20px; text-align: center;
+}
+
+.ts-roster-track{
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 82px;
+  gap: 8px;
+  padding: 4px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
+}
+.ts-roster-track::-webkit-scrollbar{ height: 6px; }
+.ts-roster-track::-webkit-scrollbar-thumb{ background: #2a2a2a; border-radius: 3px; }
+
+.ts-thumb{
+  position: relative;
+  aspect-ratio: 3 / 4;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+  background: #0a0a0a;
+  border: 1px solid transparent;
+  transition: border-color 0.25s, transform 0.25s;
+  scroll-snap-align: start;
+}
+.ts-thumb:hover{ border-color: var(--ts-line-3); transform: translateY(-2px); }
+.ts-thumb.ts-active{ border-color: #fff; transform: translateY(-2px); }
+.ts-thumb .ts-thumb-img{
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+  filter: grayscale(1) brightness(0.6);
+  transition: filter 0.3s, transform 0.4s;
+}
+.ts-thumb:hover .ts-thumb-img{ filter: grayscale(0.4) brightness(0.85); transform: scale(1.05); }
+.ts-thumb.ts-active .ts-thumb-img{ filter: grayscale(0) brightness(1); }
+.ts-thumb .ts-thumb-init{
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Instrument Serif', Georgia, serif; font-size: 28px;
+  color: rgba(255,255,255,0.35);
+  pointer-events: none;
+}
+.ts-thumb .ts-thumb-stripe{
+  position: absolute; inset: 0;
+  background-image: repeating-linear-gradient(135deg, rgba(255,255,255,0.04) 0 2px, transparent 2px 10px);
+  pointer-events: none;
+}
+.ts-thumb .ts-thumb-num{
+  position: absolute; top: 6px; left: 6px;
+  font-size: 9px; font-weight: 500; letter-spacing: 0.15em;
+  color: rgba(255,255,255,0.7);
+  padding: 2px 5px; background: rgba(0,0,0,0.55); border-radius: 2px;
+}
+.ts-thumb .ts-thumb-label{
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 6px 8px;
+  background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+  font-size: 10px; font-weight: 500; color: #fff;
+  text-overflow: ellipsis; overflow: hidden; white-space: nowrap;
+  opacity: 0; transition: opacity 0.25s;
+}
+.ts-thumb:hover .ts-thumb-label,
+.ts-thumb.ts-active .ts-thumb-label{ opacity: 1; }
+
+@media (prefers-reduced-motion: reduce){
+  .ts-root *, .ts-root *::before, .ts-root *::after{
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     DEMO WRAPPER (body bg only).
+     For integration, copy everything inside <div class="ts-root">
+     and wire it up via React — see the JSX handoff below.
+     ============================================================ -->
+<div class="ts-root">
+  <div class="ts-inner">
+
+    <!-- POLE TABS -->
+    <div class="ts-tabs" id="ts-tabs"></div>
+
+    <!-- SPOTLIGHT CARD -->
+    <article class="ts-spotlight" id="ts-spotlight">
+      <div class="ts-grid">
+        <!-- LEFT: PORTRAIT -->
+        <div class="ts-portrait">
+          <div class="ts-portrait-frame">
+            <div class="ts-portrait-img" id="ts-img"></div>
+            <div class="ts-portrait-placeholder" id="ts-placeholder"></div>
+            <div class="ts-portrait-stripes"></div>
+            <div class="ts-portrait-gradient"></div>
+            <div class="ts-portrait-index" id="ts-index">N° 01 / 23</div>
+            <div class="ts-portrait-pole" id="ts-pole">Markets</div>
+          </div>
+        </div>
+
+        <!-- RIGHT: INFO -->
+        <div class="ts-info">
+          <div class="ts-info-top">
+            <span>CS Finance · Équipe 2026</span>
+            <span class="ts-right"><span class="ts-dash"></span><span id="ts-counter">01 / 23</span></span>
+          </div>
+
+          <div class="ts-role">
+            <span class="ts-role-bullet"></span>
+            <span id="ts-role-text">Head of Markets</span>
+          </div>
+
+          <h2 class="ts-name" id="ts-name"></h2>
+          <p class="ts-tagline" id="ts-tagline"></p>
+          <p class="ts-bio" id="ts-bio"></p>
+
+          <div class="ts-stats" id="ts-stats">
+            <div class="ts-st"><div class="ts-k">Promo</div><div class="ts-v" id="ts-st-year">3A</div></div>
+            <div class="ts-st"><div class="ts-k">Au bureau</div><div class="ts-v" id="ts-st-since">2023</div></div>
+            <div class="ts-st"><div class="ts-k">Contributions</div><div class="ts-v" id="ts-st-deals">12</div></div>
+          </div>
+
+          <div class="ts-skills" id="ts-skills"></div>
+
+          <div class="ts-footer">
+            <div class="ts-links" id="ts-links"></div>
+            <div class="ts-nav">
+              <button class="ts-arrow" id="ts-prev" aria-label="Précédent">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="15 18 9 12 15 6"/></svg>
+              </button>
+              <button class="ts-arrow" id="ts-next" aria-label="Suivant">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- PROGRESS -->
+    <div class="ts-progress">
+      <div class="ts-count"><strong id="ts-pb-now">01</strong>/ <span id="ts-pb-total">23</span></div>
+      <div class="ts-track"><div class="ts-fill" id="ts-pb-fill"></div></div>
+      <div class="ts-pole-label" id="ts-pb-pole">Markets · Head of Markets</div>
+    </div>
+
+    <!-- ROSTER -->
+    <div class="ts-roster-header">
+      <div class="ts-label">Toute l'équipe</div>
+      <div class="ts-hint">
+        <kbd>←</kbd><kbd>→</kbd>
+        <span>pour naviguer</span>
+      </div>
+    </div>
+    <div class="ts-roster-track" id="ts-roster"></div>
+
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   DEMO DATA — REMPLACER par les props lors de l'intégration.
+   ============================================================ */
+const POLES = [
+  { id: 'all',     label: 'Tous' },
+  { id: 'bureau',  label: 'Présidence' },
+  { id: 'markets', label: 'Markets' },
+  { id: 'ma',      label: 'M&A · IB' },
+  { id: 'vc',      label: 'Private · VC' },
+  { id: 'tech',    label: 'Quant · Tech' },
+  { id: 'events',  label: 'Events' },
+  { id: 'brand',   label: 'Brand · Com' },
+];
+
+const MEMBERS = [
+  { id: 1,  name: "Antoine Marchetti", role: "Président",            pole: "bureau",  poleLabel: "Présidence", year: "3A", deals: 8,  since: "2023", tagline: "Stratège, connecteur, chef d'orchestre.", bio: "Ancien stagiaire M&A chez Lincoln International. Pilote la stratégie, les partenariats et la relation alumni. Double diplôme HEC en cours.", skills: ["M&A","Strategy","Alumni"], photo: null, linkedin: "#", mail: "antoine@csfinance.fr" },
+  { id: 2,  name: "Clara Levain",      role: "Vice-Présidente",      pole: "bureau",  poleLabel: "Présidence", year: "3A", deals: 5,  since: "2023", tagline: "Exécution propre, sans bullshit.", bio: "Coordonne l'exécution opérationnelle entre pôles. Stage summer en ECM chez Rothschild & Co.", skills: ["ECM","Ops","Editorial"], photo: null, linkedin: "#", mail: "clara@csfinance.fr" },
+  { id: 3,  name: "Félix Ouattara",    role: "Secrétaire Général",   pole: "bureau",  poleLabel: "Présidence", year: "2A", deals: 3,  since: "2024", tagline: "Trésorerie, juridique, détails qui comptent.", bio: "S'occupe de la trésorerie, du juridique associatif et du suivi des partenariats.", skills: ["Finance","Legal","Partners"], photo: null, linkedin: "#" },
+  { id: 4,  name: "Sofia Benali",      role: "Head of Markets",      pole: "markets", poleLabel: "Markets",    year: "3A", deals: 12, since: "2023", tagline: "Lit les flows comme d'autres lisent le métro.", bio: "Pilote la Morning Note. Stage equity research chez Exane BNP Paribas.", skills: ["Equity","Morning note","Flow"], photo: null, linkedin: "#", mail: "sofia@csfinance.fr" },
+  { id: 5,  name: "Maxime Rouvier",    role: "Research Associate",   pole: "markets", poleLabel: "Markets",    year: "2A", deals: 7,  since: "2024", tagline: "Commodities, macro, et climat de négoce.", bio: "Spécialiste énergie et matières premières. Publie des notes hebdo sur les flux commodities.", skills: ["Commodities","Macro"], photo: null, linkedin: "#" },
+  { id: 6,  name: "Inès Lacroix",      role: "Fixed Income",         pole: "markets", poleLabel: "Markets",    year: "2A", deals: 4,  since: "2024", tagline: "La courbe, le spread, et après ?", bio: "Taux et crédit. Intéressée par les marchés émergents et le structured credit.", skills: ["Rates","Credit","EM"], photo: null, linkedin: "#" },
+  { id: 7,  name: "Léo Vasseur",       role: "Equity Analyst",       pole: "markets", poleLabel: "Markets",    year: "1A", deals: 2,  since: "2025", tagline: "Small caps, thèses longues, conviction.", bio: "Travaille le stock picking et la valorisation DCF sur small caps européennes.", skills: ["Equity","DCF"], photo: null, linkedin: "#" },
+  { id: 8,  name: "Raphaël Esteban",   role: "Head of M&A",          pole: "ma",      poleLabel: "M&A · IB",   year: "3A", deals: 14, since: "2023", tagline: "Return offer Lazard en poche.", bio: "Summer chez Lazard. Pilote le programme M&A interne : modeling, case prep, mentoring.", skills: ["M&A","LBO","Modeling"], photo: null, linkedin: "#", mail: "raph@csfinance.fr" },
+  { id: 9,  name: "Chloé Duret",       role: "M&A Associate",        pole: "ma",      poleLabel: "M&A · IB",   year: "2A", deals: 6,  since: "2024", tagline: "LBO model, papier crayon, vite.", bio: "Prépare les entretiens recrutement banque d'affaires. Spécialité : LBO modeling et sponsor coverage.", skills: ["LBO","Sponsors"], photo: null, linkedin: "#" },
+  { id: 10, name: "Thomas Ziegler",    role: "Restructuring",        pole: "ma",      poleLabel: "M&A · IB",   year: "2A", deals: 4,  since: "2024", tagline: "Situations spéciales, patience de moine.", bio: "Passionné de situations spéciales et de distressed debt.", skills: ["Restructuring","Distressed"], photo: null, linkedin: "#" },
+  { id: 11, name: "Amina Cissé",       role: "Industrials Coverage", pole: "ma",      poleLabel: "M&A · IB",   year: "1A", deals: 2,  since: "2025", tagline: "Industrial, défense, grand jeu.", bio: "Intérêt marqué pour les deals industrials et défense.", skills: ["Industrials","Defense"], photo: null, linkedin: "#" },
+  { id: 12, name: "Hugo Berthier",     role: "Head of VC",           pole: "vc",      poleLabel: "Private · VC", year: "3A", deals: 9, since: "2023", tagline: "Sourcing, dealflow, Pitch Day.", bio: "Stage chez Eurazeo PME. Pilote le CS Finance Pitch Day.", skills: ["VC","Pitch","Dealflow"], photo: null, linkedin: "#", mail: "hugo@csfinance.fr" },
+  { id: 13, name: "Jeanne Malik",      role: "Analyst VC",           pole: "vc",      poleLabel: "Private · VC", year: "2A", deals: 5, since: "2024", tagline: "Deeptech et B2B SaaS, radar aiguisé.", bio: "Sourcing deeptech et B2B SaaS. Anime les due-diligence fictives.", skills: ["Deeptech","SaaS","DD"], photo: null, linkedin: "#" },
+  { id: 14, name: "Nathan Prévost",    role: "PE Analyst",           pole: "vc",      poleLabel: "Private · VC", year: "2A", deals: 3, since: "2024", tagline: "Mid-market buyouts, stage Ardian.", bio: "Spécialité mid-market buyout. Stage Ardian prévu cet été.", skills: ["PE","Buyout"], photo: null, linkedin: "#" },
+  { id: 15, name: "Yasmine Haddad",    role: "Head of Quant",        pole: "tech",    poleLabel: "Quant · Tech", year: "3A", deals: 11, since: "2023", tagline: "Backtester maison, weekends sur Kaggle.", bio: "Double diplôme avec l'X. Construit notre backtester maison.", skills: ["Python","Backtest","ML"], photo: null, linkedin: "#", mail: "yas@csfinance.fr" },
+  { id: 16, name: "Julien Wang",       role: "Systematic Trading",   pole: "tech",    poleLabel: "Quant · Tech", year: "2A", deals: 6, since: "2024", tagline: "Signaux momentum, Python, Rust.", bio: "Développe nos signaux momentum et mean-reversion.", skills: ["Python","Rust","Signals"], photo: null, linkedin: "#" },
+  { id: 17, name: "Paul Arsenault",    role: "Data Engineer",        pole: "tech",    poleLabel: "Quant · Tech", year: "2A", deals: 3, since: "2024", tagline: "Pipelines et infra, sans drame.", bio: "Pipelines de données et infra. Opère sous AWS.", skills: ["AWS","Data","Infra"], photo: null, linkedin: "#" },
+  { id: 18, name: "Camille Forest",    role: "Head of Events",       pole: "events",  poleLabel: "Events",     year: "3A", deals: 10, since: "2023", tagline: "Gala 2025, 280 invités, aucune panne.", bio: "A monté le gala 2025 avec 280 invités. Stage cet été chez JPMorgan (event marketing).", skills: ["Events","Ops","Sponsoring"], photo: null, linkedin: "#", mail: "camille@csfinance.fr" },
+  { id: 19, name: "Aurélien Sève",     role: "Partnerships",         pole: "events",  poleLabel: "Events",     year: "2A", deals: 5,  since: "2024", tagline: "Ceinture noire de tableur.", bio: "Relation sponsors, logistique événementielle.", skills: ["Sponsoring","Excel"], photo: null, linkedin: "#" },
+  { id: 20, name: "Lila Narayan",      role: "Trading Game",         pole: "events",  poleLabel: "Events",     year: "1A", deals: 2,  since: "2025", tagline: "60 traders, une soirée, un classement.", bio: "Pilote le Trading Game annuel, 60+ participants.", skills: ["Trading game","Ops"], photo: null, linkedin: "#" },
+  { id: 21, name: "Nicolas Teller",    role: "Head of Brand",        pole: "brand",   poleLabel: "Brand · Com", year: "3A", deals: 8,  since: "2023", tagline: "La ligne, la police, la page blanche.", bio: "Direction artistique et éditoriale. Refonte du site et de la Morning Note en 2024.", skills: ["Design","Editorial","Brand"], photo: null, linkedin: "#", mail: "nico@csfinance.fr" },
+  { id: 22, name: "Élisa Morvan",      role: "Editor",               pole: "brand",   poleLabel: "Brand · Com", year: "2A", deals: 6,  since: "2024", tagline: "Concis, sourcé, un peu cassant.", bio: "Plume de la Morning Note et de la newsletter.", skills: ["Editorial","Newsletter"], photo: null, linkedin: "#" },
+  { id: 23, name: "Samuel Lefèvre",    role: "Designer",             pole: "brand",   poleLabel: "Brand · Com", year: "1A", deals: 2,  since: "2025", tagline: "Figma + After Effects, déjà indispensable.", bio: "Supports visuels et templates. Figma + After Effects.", skills: ["Figma","After Effects"], photo: null, linkedin: "#" },
+];
+
+/* ============================================================
+   COMPONENT LOGIC — tout est scoped au conteneur #ts-spotlight
+   ============================================================ */
+function placeholderBg(seed){
+  const tones = [
+    ['#1a1a1a','#0a0a0a'], ['#1e1612','#0a0706'],
+    ['#121a1e','#060a0d'], ['#181218','#0a060a'], ['#1a1814','#0a0806'],
+  ];
+  const t = tones[seed % tones.length];
+  return `linear-gradient(${135 + (seed*17)%70}deg, ${t[0]}, ${t[1]})`;
+}
+function initialsOf(name){ return name.split(' ').map(w => w[0]).slice(0,2).join(''); }
+
+let currentFilter = 'all';
+let currentIdx = 0;
+let filtered = [...MEMBERS];
+
+/* Tabs */
+function renderTabs(){
+  const root = document.getElementById('ts-tabs');
+  root.innerHTML = POLES.map(p => {
+    const count = p.id === 'all' ? MEMBERS.length : MEMBERS.filter(m => m.pole === p.id).length;
+    return `<button data-pole="${p.id}" class="${p.id===currentFilter?'on':''}">${p.label}<span class="ts-cnt">${count}</span></button>`;
+  }).join('');
+  root.querySelectorAll('button').forEach(b => {
+    b.addEventListener('click', () => setFilter(b.dataset.pole));
+  });
+}
+function setFilter(id){
+  currentFilter = id;
+  filtered = id === 'all' ? [...MEMBERS] : MEMBERS.filter(m => m.pole === id);
+  if (filtered.length === 0){ filtered = [...MEMBERS]; currentFilter = 'all'; }
+  currentIdx = 0;
+  document.querySelectorAll('#ts-tabs button').forEach(b => b.classList.toggle('on', b.dataset.pole === currentFilter));
+  renderRoster();
+  renderSpotlight();
+}
+
+/* Spotlight */
+function renderSpotlight(){
+  const m = filtered[currentIdx]; if (!m) return;
+  const total = filtered.length;
+  const idx = currentIdx + 1;
+
+  const img = document.getElementById('ts-img');
+  if (m.photo){
+    img.style.background = `url("${m.photo}") center/cover`;
+  } else {
+    img.style.background = placeholderBg(m.id*7);
+  }
+  img.classList.remove('ts-enter'); void img.offsetWidth; img.classList.add('ts-enter');
+
+  document.getElementById('ts-placeholder').textContent = m.photo ? '' : initialsOf(m.name);
+  document.getElementById('ts-index').textContent = `N° ${String(idx).padStart(2,'0')} / ${String(total).padStart(2,'0')}`;
+  document.getElementById('ts-pole').textContent = m.poleLabel;
+  document.getElementById('ts-counter').textContent = `${String(idx).padStart(2,'0')} / ${String(total).padStart(2,'0')}`;
+  document.getElementById('ts-role-text').textContent = m.role;
+
+  const nameEl = document.getElementById('ts-name');
+  nameEl.innerHTML = m.name.split(' ').map(w => `<span class="ts-word"><span>${w}</span></span>`).join(' ');
+  nameEl.classList.remove('ts-animate'); void nameEl.offsetWidth; nameEl.classList.add('ts-animate');
+
+  const tag = document.getElementById('ts-tagline');
+  tag.textContent = m.tagline ? `"${m.tagline}"` : '';
+  tag.classList.remove('ts-animate'); void tag.offsetWidth; tag.classList.add('ts-animate');
+
+  const bio = document.getElementById('ts-bio');
+  bio.textContent = m.bio || '';
+  bio.classList.remove('ts-animate'); void bio.offsetWidth; bio.classList.add('ts-animate');
+
+  document.getElementById('ts-st-year').textContent = m.year || '—';
+  document.getElementById('ts-st-since').textContent = m.since || '—';
+  document.getElementById('ts-st-deals').textContent = m.deals ?? '—';
+  const stats = document.getElementById('ts-stats');
+  stats.classList.remove('ts-animate'); void stats.offsetWidth; stats.classList.add('ts-animate');
+
+  const sk = document.getElementById('ts-skills');
+  sk.innerHTML = (m.skills || []).map(s => `<span class="ts-chip">${s}</span>`).join('');
+  sk.classList.remove('ts-animate'); void sk.offsetWidth; sk.classList.add('ts-animate');
+
+  document.getElementById('ts-links').innerHTML = `
+    ${m.linkedin ? `<a href="${m.linkedin}" aria-label="LinkedIn" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452z"/></svg></a>`:''}
+    ${m.mail ? `<a href="mailto:${m.mail}" aria-label="Email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3 7 12 13 21 7"/></svg></a>`:''}
+  `;
+
+  document.getElementById('ts-pb-now').textContent = String(idx).padStart(2,'0');
+  document.getElementById('ts-pb-total').textContent = String(total).padStart(2,'0');
+  document.getElementById('ts-pb-fill').style.width = `${(idx/total)*100}%`;
+  document.getElementById('ts-pb-pole').textContent = `${m.poleLabel} · ${m.role}`;
+
+  document.querySelectorAll('.ts-thumb').forEach((el, i) => el.classList.toggle('ts-active', i === currentIdx));
+  const active = document.querySelector('.ts-thumb.ts-active');
+  if (active) active.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
+}
+
+/* Roster */
+function renderRoster(){
+  const track = document.getElementById('ts-roster');
+  track.innerHTML = filtered.map((m, i) => `
+    <div class="ts-thumb" data-idx="${i}">
+      <div class="ts-thumb-img" style="background: ${m.photo ? `url('${m.photo}') center/cover` : placeholderBg(m.id*7)};"></div>
+      ${m.photo ? '' : `<div class="ts-thumb-init">${initialsOf(m.name)}</div>`}
+      <div class="ts-thumb-stripe"></div>
+      <div class="ts-thumb-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="ts-thumb-label">${m.name.split(' ')[0]}</div>
+    </div>
+  `).join('');
+  track.querySelectorAll('.ts-thumb').forEach(el => {
+    el.addEventListener('click', () => { currentIdx = +el.dataset.idx; renderSpotlight(); });
+  });
+}
+
+/* Navigation */
+function step(delta){
+  currentIdx = (currentIdx + delta + filtered.length) % filtered.length;
+  renderSpotlight();
+}
+document.getElementById('ts-prev').addEventListener('click', () => step(-1));
+document.getElementById('ts-next').addEventListener('click', () => step(1));
+
+document.addEventListener('keydown', e => {
+  if (e.target.closest('input, textarea')) return;
+  if (e.key === 'ArrowLeft') step(-1);
+  if (e.key === 'ArrowRight') step(1);
+});
+
+/* Swipe */
+(() => {
+  const sp = document.getElementById('ts-spotlight');
+  let sx = 0, sy = 0;
+  sp.addEventListener('touchstart', e => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+  sp.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - sx;
+    const dy = e.changedTouches[0].clientY - sy;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) step(dx > 0 ? -1 : 1);
+  });
+})();
+
+renderTabs();
+renderRoster();
+renderSpotlight();
+</script>
+
+<!-- ============================================================
+     HANDOFF NOTES FOR CLAUDE CODE
+     ------------------------------------------------------------
+     Fichier : components/ui/team-spotlight.tsx
+     Page    : app/equipe/page.tsx remplace <TeamPolesSection/>
+               par <TeamSpotlight poles={team} />.
+
+     Props :
+       poles: PoleData[]           // cf. lib/types.ts
+         → chaque pole a { pole, badge, description, members }
+         → members: { name, role, photo, linkedin, bio?, skills?, email? }
+
+     Contrat visuel :
+       - Scope CSS préfixé `.ts-*` (aucun conflit attendu avec Tailwind).
+         Au choix : copier le <style> dans globals.css, OU le convertir
+         en Tailwind (classes équivalentes faciles à dériver).
+       - Respecte les polices globales : var(--font-sans) / var(--font-serif).
+         Inter → sans, Instrument Serif → serif. Déjà référencées en dur
+         pour le prototype, à remplacer par `font-sans` / `font-serif`
+         Tailwind à l'intégration.
+       - Couleurs : alignées sur globals.css (#060606 bg, #1a1a1a borders…).
+
+     Logique :
+       - Normaliser : côté TSX, flatten poles[*].members avec un champ
+         `poleId` (slugify(pole)) et `poleLabel` (pole). Les pôles
+         deviennent des onglets ('all' + un par pole).
+       - State :
+           const [filter, setFilter] = useState<string>('all')
+           const [idx, setIdx] = useState<number>(0)
+         Dériver `filtered = filter === 'all' ? allMembers : allMembers.filter(m => m.poleId === filter)`.
+         Reset idx à 0 quand filter change.
+       - Navigation : ←/→ clavier, boutons ts-arrow, swipe, click thumb.
+       - Animations : retirer/re-ajouter la classe `ts-animate` à chaque
+         changement d'index (void offsetWidth pour forcer reflow).
+         Wrapper ça dans un useEffect([idx,filter]).
+       - Respecte prefers-reduced-motion (déjà dans le CSS).
+
+     À adapter (placeholders dans la demo, à enlever en prod) :
+       - tagline, skills, year, since, deals → pas présents dans ton
+         type Member actuel. Soit les ajouter à lib/types.ts + DB, soit
+         les rendre optionnels et masquer les blocs vides (les stats
+         et skills ont déjà un fallback `—` / tableau vide).
+       - photo : utiliser <Image src={...} fill /> de next/image plutôt
+         qu'un background-image, pour l'optimisation. Garder le
+         placeholder initials en fallback si photo===null.
+
+     Accessibilité :
+       - Les flèches ont aria-label.
+       - Le conteneur .ts-spotlight peut gagner role="region"
+         aria-labelledby pointant sur un h2 visuellement caché
+         ("Trombinoscope de l'équipe").
+       - Les tabs peuvent passer en role="tablist" + tabs role="tab"
+         + region role="tabpanel" si tu veux être rigoureux.
+
+     Intégration (app/equipe/page.tsx) :
+
+       import { getTeam } from '@/lib/data'
+       import { TeamSpotlight } from '@/components/ui/team-spotlight'
+
+       export const metadata = {
+         title: 'Équipe — CentraleSupélec Finance',
+       }
+
+       export default async function TeamPage() {
+         const team = await getTeam()
+         return (
+           <div className="pt-16">
+             <TeamSpotlight poles={team} />
+           </div>
+         )
+       }
+     ============================================================ -->
+</body>
+</html>

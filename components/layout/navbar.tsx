@@ -10,7 +10,6 @@ import { cn } from '@/lib/utils'
 const NAV_LINKS = [
   { href: '/evenements', label: 'Événements' },
   { href: '/equipe', label: 'Équipe' },
-  { href: '/a-propos', label: 'À propos' },
 ] as const
 
 const MOBILE_SHELL_CLOSE_DELAY_MS = 300

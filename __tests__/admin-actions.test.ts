@@ -3,11 +3,12 @@ import { createElement, type ComponentProps } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { SESSION_COOKIE_NAME, signCookie, verifyCookie } from '@/lib/session'
 
-const redirectMock = vi.fn((location: string) => {
-  throw new Error(`NEXT_REDIRECT:${location}`)
-})
-
-const cookiesMock = vi.fn()
+const { redirectMock, cookiesMock } = vi.hoisted(() => ({
+  redirectMock: vi.fn((location: string) => {
+    throw new Error(`NEXT_REDIRECT:${location}`)
+  }),
+  cookiesMock: vi.fn(),
+}))
 
 vi.mock('next/navigation', () => ({
   redirect: redirectMock,

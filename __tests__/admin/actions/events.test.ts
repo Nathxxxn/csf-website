@@ -1,9 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { signCookie } from '@/lib/session'
 
-const executeMock = vi.fn()
-const redirectMock = vi.fn((url: string) => { throw new Error(`NEXT_REDIRECT:${url}`) })
-const cookiesMock = vi.fn()
+const { executeMock, redirectMock, cookiesMock } = vi.hoisted(() => ({
+  executeMock: vi.fn(),
+  redirectMock: vi.fn((url: string) => { throw new Error(`NEXT_REDIRECT:${url}`) }),
+  cookiesMock: vi.fn(),
+}))
 
 vi.mock('@/lib/db', () => ({ getDb: () => ({ execute: executeMock }) }))
 vi.mock('next/navigation', () => ({ redirect: redirectMock }))

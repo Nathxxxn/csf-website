@@ -55,7 +55,7 @@ export function EventsPreview({ upcoming, past }: EventsPreviewProps) {
           <TabsContent value="past">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-stretch">
               {past.map((event, i) => (
-                <BlurFade key={event.id} delay={i * 0.08} inView>
+                <BlurFade key={event.id} delay={i * 0.08} inView className="h-full">
                   <EventCard event={event} />
                 </BlurFade>
               ))}

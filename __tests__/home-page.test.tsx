@@ -21,6 +21,13 @@ const eventBase: Event = {
 vi.mock('@/lib/data', () => ({
   getUpcomingEvents: vi.fn(async () => [eventBase]),
   getPastEvents: vi.fn(async () => [{ ...eventBase, id: 'event-2', status: 'past' }]),
+  getSiteContent: vi.fn(async () => ({
+    hero_title: '',
+    hero_subtitle: '',
+    stats_poles: '',
+    stats_membres: '',
+    stats_evenements: '',
+  })),
   getTeam: vi.fn(async () => [
     {
       members: [

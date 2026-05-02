@@ -3,7 +3,11 @@ export interface Member {
   role: string
   photo: string | null
   linkedin: string | null
+  tagline?: string
   bio?: string
+  promo?: string
+  joinedYear?: string
+  contributions?: number
   skills?: string[]
   email?: string
 }
@@ -53,6 +57,13 @@ export interface AdminMember {
   role: string
   photo_url: string | null
   linkedin: string | null
+  tagline: string | null
+  bio: string | null
+  promo: string | null
+  joined_year: string | null
+  contributions: number | null
+  skills: string[]
+  email: string | null
   pole_id: string
   order_index: number
 }
@@ -110,6 +121,4 @@ export interface SiteContent {
   stats_poles: string
   stats_membres: string
   stats_evenements: string
-  apropos_mission_title: string
-  apropos_mission_text: string
 }

@@ -6,11 +6,10 @@ import { AccueilTab } from '@/components/admin/tabs/accueil-tab'
 import { EvenementsTab } from '@/components/admin/tabs/evenements-tab'
 import { EquipeTab } from '@/components/admin/tabs/equipe-tab'
 import { PartenairesTab } from '@/components/admin/tabs/partenaires-tab'
-import { AProposTab } from '@/components/admin/tabs/apropos-tab'
 import { getSiteContent, getAdminEvents, getAdminTeam, getAdminPartners } from '@/lib/data'
 import Link from 'next/link'
 
-const TABS = ['accueil', 'evenements', 'equipe', 'partenaires', 'apropos'] as const
+const TABS = ['accueil', 'evenements', 'equipe', 'partenaires'] as const
 type Tab = typeof TABS[number]
 
 const TAB_LABELS: Record<Tab, string> = {
@@ -18,7 +17,6 @@ const TAB_LABELS: Record<Tab, string> = {
   evenements: 'Événements',
   equipe: 'Équipe',
   partenaires: 'Partenaires',
-  apropos: 'À propos',
 }
 
 interface Props {
@@ -76,7 +74,6 @@ export default async function AdminDashboardPage({ searchParams }: Props) {
         {activeTab === 'evenements' && <EvenementsTab events={events} />}
         {activeTab === 'equipe' && <EquipeTab team={team} />}
         {activeTab === 'partenaires' && <PartenairesTab partners={partners} />}
-        {activeTab === 'apropos' && <AProposTab content={content} team={team} />}
       </main>
     </div>
   )

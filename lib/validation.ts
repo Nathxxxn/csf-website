@@ -26,6 +26,16 @@ export const memberSchema = z.object({
   role: z.string().min(1, 'Le rôle est requis').max(100),
   pole_id: z.string().min(1, 'Le pôle est requis'),
   linkedin: z.string().url('URL LinkedIn invalide').optional().or(z.literal('')).nullable(),
+  tagline: z.string().max(180).optional().nullable(),
+  bio: z.string().max(1200).optional().nullable(),
+  promo: z.string().max(20).optional().nullable(),
+  joined_year: z.string().regex(/^\d{4}$/, 'Année invalide').optional().or(z.literal('')).nullable(),
+  contributions: z.preprocess(
+    (value) => value === '' || value === null || value === undefined ? null : Number(value),
+    z.number().int().min(0).max(9999).nullable(),
+  ).optional(),
+  skills: z.string().max(500).optional().nullable(),
+  email: z.string().email('Email invalide').optional().or(z.literal('')).nullable(),
 })
 
 export const partnerSchema = z.object({

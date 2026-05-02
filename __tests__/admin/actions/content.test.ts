@@ -1,13 +1,22 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { signCookie } from '@/lib/session'
 
-const executeMock = vi.fn()
-const redirectMock = vi.fn((url: string) => { throw new Error(`NEXT_REDIRECT:${url}`) })
-const cookiesMock = vi.fn()
+const {
+  executeMock,
+  redirectMock,
+  cookiesMock,
+  revalidatePathMock,
+} = vi.hoisted(() => ({
+  executeMock: vi.fn(),
+  redirectMock: vi.fn((url: string) => { throw new Error(`NEXT_REDIRECT:${url}`) }),
+  cookiesMock: vi.fn(),
+  revalidatePathMock: vi.fn(),
+}))
 
 vi.mock('@/lib/db', () => ({ getDb: () => ({ execute: executeMock }) }))
 vi.mock('next/navigation', () => ({ redirect: redirectMock }))
 vi.mock('next/headers', () => ({ cookies: cookiesMock }))
+vi.mock('next/cache', () => ({ revalidatePath: revalidatePathMock }))
 
 function mockValidSession() {
   const token = signCookie({ username: 'admin', iat: Math.floor(Date.now() / 1000) })
@@ -18,6 +27,7 @@ describe('upsertContent', () => {
   beforeEach(() => {
     vi.resetModules()
     executeMock.mockReset()
+    revalidatePathMock.mockReset()
     process.env.SESSION_SECRET = 'a'.repeat(32)
     mockValidSession()
   })
@@ -32,6 +42,19 @@ describe('upsertContent', () => {
     expect(executeMock).toHaveBeenCalledWith(
       expect.objectContaining({ sql: expect.stringContaining('INSERT OR REPLACE') }),
     )
+  })
+
+  it('ignores legacy À propos content fields and does not revalidate /a-propos', async () => {
+    executeMock.mockResolvedValue({ rows: [] })
+    const { upsertContent } = await import('@/app/admin/actions/content')
+    const fd = new FormData()
+    fd.set('apropos_mission_title', 'Ancien titre')
+    fd.set('apropos_mission_text', 'Ancien texte')
+
+    await upsertContent(fd)
+
+    expect(executeMock).not.toHaveBeenCalled()
+    expect(revalidatePathMock).not.toHaveBeenCalledWith('/a-propos')
   })
 
   it('redirects to /admin when session is invalid', async () => {

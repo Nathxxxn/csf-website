@@ -6,6 +6,11 @@ vi.mock('@/lib/db', () => ({
   getDb: () => ({ execute: executeMock }),
 }))
 
+beforeEach(() => {
+  vi.resetModules()
+  executeMock.mockReset()
+})
+
 describe('getTeam', () => {
   afterEach(() => { vi.resetAllMocks() })
 
@@ -18,7 +23,22 @@ describe('getTeam', () => {
       })
       .mockResolvedValueOnce({
         rows: [
-          { id: 'm1', name: 'Alice', role: 'Présidente', photo_url: null, linkedin: null, pole_id: 'p1', order_index: 0 },
+          {
+            id: 'm1',
+            name: 'Alice',
+            role: 'Présidente',
+            photo_url: null,
+            linkedin: null,
+            tagline: 'Phrase courte',
+            bio: 'Bio publique',
+            promo: '3A',
+            joined_year: '2024',
+            contributions: 7,
+            skills: '["M&A","Strategy"]',
+            email: 'alice@example.com',
+            pole_id: 'p1',
+            order_index: 0,
+          },
         ],
       })
 
@@ -29,32 +49,59 @@ describe('getTeam', () => {
     expect(result[0].pole).toBe('Bureau')
     expect(result[0].members).toHaveLength(1)
     expect(result[0].members[0].name).toBe('Alice')
+    expect(result[0].members[0]).toMatchObject({
+      tagline: 'Phrase courte',
+      bio: 'Bio publique',
+      promo: '3A',
+      joinedYear: '2024',
+      contributions: 7,
+      skills: ['M&A', 'Strategy'],
+      email: 'alice@example.com',
+    })
   })
 })
 
 describe('getEvents', () => {
   afterEach(() => { vi.resetAllMocks() })
 
-  it('returns events with highlights and photos from JSON', async () => {
+  it('returns events with highlights and photos from the db', async () => {
+    executeMock
+      .mockResolvedValueOnce({
+        rows: [{
+          id: 'event-1',
+          title: 'Conférence',
+          date: '2026-05-20',
+          partner: 'BNP',
+          partner_description: 'Banque partenaire',
+          pole: 'Markets',
+          description: 'Description',
+          image_url: '/event.jpg',
+          status: 'upcoming',
+          order_index: 0,
+        }],
+      })
+      .mockResolvedValueOnce({ rows: [{ event_id: 'event-1', title: 'Point clé', description: 'Détail', order_index: 0 }] })
+      .mockResolvedValueOnce({ rows: [{ event_id: 'event-1', url: '/photo.jpg', caption: 'Photo', order_index: 0 }] })
+
     const { getEvents } = await import('@/lib/data')
     const result = await getEvents()
 
-    expect(result.length).toBeGreaterThan(0)
-    for (const event of result) {
-      expect(Array.isArray(event.highlights)).toBe(true)
-      expect(Array.isArray(event.photos)).toBe(true)
-    }
+    expect(result).toHaveLength(1)
+    expect(result[0].highlights).toEqual([{ title: 'Point clé', description: 'Détail' }])
+    expect(result[0].photos).toEqual([{ src: '/photo.jpg', caption: 'Photo' }])
   })
 })
 
 describe('getPartners', () => {
   afterEach(() => { vi.resetAllMocks() })
 
-  it('returns partners from JSON', async () => {
+  it('returns partners from the db', async () => {
+    executeMock.mockResolvedValueOnce({ rows: [{ name: 'Goldman Sachs', logo_url: '/images/partners/goldman.png', order_index: 0 }] })
+
     const { getPartners } = await import('@/lib/data')
     const result = await getPartners()
 
-    expect(result.length).toBeGreaterThan(0)
+    expect(result).toHaveLength(1)
     expect(result[0].name).toBe('Goldman Sachs')
     expect(result[0].logo).toBe('/images/partners/goldman.png')
   })
@@ -64,13 +111,23 @@ describe('getEventById', () => {
   afterEach(() => { vi.resetAllMocks() })
 
   it('returns the event when found', async () => {
+    executeMock
+      .mockResolvedValueOnce({ rows: [{ id: 'event-1', title: 'Conférence', date: '2026-05-20', partner: 'BNP', partner_description: null, pole: null, description: 'Description', image_url: null, status: 'upcoming', order_index: 0 }] })
+      .mockResolvedValueOnce({ rows: [] })
+      .mockResolvedValueOnce({ rows: [] })
+
     const { getEventById } = await import('@/lib/data')
-    const result = await getEventById('mock-trading-bnp-2025-04')
+    const result = await getEventById('event-1')
     expect(result).toBeDefined()
-    expect(result?.id).toBe('mock-trading-bnp-2025-04')
+    expect(result?.id).toBe('event-1')
   })
 
   it('returns undefined when not found', async () => {
+    executeMock
+      .mockResolvedValueOnce({ rows: [{ id: 'event-1', title: 'Conférence', date: '2026-05-20', partner: 'BNP', partner_description: null, pole: null, description: 'Description', image_url: null, status: 'upcoming', order_index: 0 }] })
+      .mockResolvedValueOnce({ rows: [] })
+      .mockResolvedValueOnce({ rows: [] })
+
     const { getEventById } = await import('@/lib/data')
     const result = await getEventById('nonexistent')
     expect(result).toBeUndefined()
@@ -83,13 +140,39 @@ describe('getAdminTeam', () => {
   it('returns admin poles with members including IDs', async () => {
     executeMock
       .mockResolvedValueOnce({ rows: [{ id: 'p1', name: 'Bureau', badge: 'BUR', description: 'Desc', order_index: 0 }] })
-      .mockResolvedValueOnce({ rows: [{ id: 'm1', name: 'Alice', role: 'Présidente', photo_url: null, linkedin: null, pole_id: 'p1', order_index: 0 }] })
+      .mockResolvedValueOnce({
+        rows: [{
+          id: 'm1',
+          name: 'Alice',
+          role: 'Présidente',
+          photo_url: null,
+          linkedin: null,
+          tagline: 'Phrase courte',
+          bio: 'Bio publique',
+          promo: '3A',
+          joined_year: '2024',
+          contributions: 7,
+          skills: '["M&A","Strategy"]',
+          email: 'alice@example.com',
+          pole_id: 'p1',
+          order_index: 0,
+        }],
+      })
     const { getAdminTeam } = await import('@/lib/data')
     const result = await getAdminTeam()
     expect(result).toHaveLength(1)
     expect(result[0].id).toBe('p1')
     expect(result[0].members[0].id).toBe('m1')
     expect(result[0].members[0].pole_id).toBe('p1')
+    expect(result[0].members[0]).toMatchObject({
+      tagline: 'Phrase courte',
+      bio: 'Bio publique',
+      promo: '3A',
+      joined_year: '2024',
+      contributions: 7,
+      skills: ['M&A', 'Strategy'],
+      email: 'alice@example.com',
+    })
   })
 })
 
@@ -160,15 +243,13 @@ describe('getSiteContent', () => {
         { key: 'stats_poles', value: '6' },
         { key: 'stats_membres', value: '200+' },
         { key: 'stats_evenements', value: '20+' },
-        { key: 'apropos_mission_title', value: 'Mission' },
-        { key: 'apropos_mission_text', value: 'Texte' },
       ],
     })
     const { getSiteContent } = await import('@/lib/data')
     const result = await getSiteContent()
     expect(result.hero_title).toBe('Bonjour')
     expect(result.stats_poles).toBe('6')
-    expect(result.apropos_mission_text).toBe('Texte')
+    expect(result).not.toHaveProperty('apropos_mission_text')
   })
 
   it('falls back to empty string for missing keys', async () => {

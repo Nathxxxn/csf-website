@@ -1,9 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { signCookie } from '@/lib/session'
 
-const executeMock = vi.fn()
-const redirectMock = vi.fn((url: string) => { throw new Error(`NEXT_REDIRECT:${url}`) })
-const cookiesMock = vi.fn()
+const { executeMock, redirectMock, cookiesMock } = vi.hoisted(() => ({
+  executeMock: vi.fn(),
+  redirectMock: vi.fn((url: string) => { throw new Error(`NEXT_REDIRECT:${url}`) }),
+  cookiesMock: vi.fn(),
+}))
 
 vi.mock('@/lib/db', () => ({ getDb: () => ({ execute: executeMock }) }))
 vi.mock('next/navigation', () => ({ redirect: redirectMock }))
@@ -22,7 +24,7 @@ describe('createPartner', () => {
   it('inserts a partner', async () => {
     executeMock.mockResolvedValue({ rows: [{ m: 2 }] })
     const { createPartner } = await import('@/app/admin/actions/partners')
-    const fd = new FormData(); fd.set('name', 'HSBC'); fd.set('logo_url', '/hsbc.png')
+    const fd = new FormData(); fd.set('name', 'HSBC'); fd.set('logo_url', 'https://example.com/hsbc.png')
     await createPartner(fd)
     expect(executeMock).toHaveBeenCalledWith(expect.objectContaining({ sql: expect.stringContaining('INSERT INTO partners') }))
   })

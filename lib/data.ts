@@ -7,6 +7,30 @@ function requireString(value: unknown, field: string): string {
   return value
 }
 
+function optionalString(value: unknown): string | undefined {
+  if (typeof value !== 'string') return undefined
+  const trimmed = value.trim()
+  return trimmed.length > 0 ? trimmed : undefined
+}
+
+function optionalNumber(value: unknown): number | undefined {
+  if (typeof value !== 'number') return undefined
+  return Number.isFinite(value) ? value : undefined
+}
+
+function parseSkills(value: unknown): string[] {
+  if (Array.isArray(value)) return value.filter((skill): skill is string => typeof skill === 'string' && skill.trim().length > 0)
+  if (typeof value !== 'string' || value.trim().length === 0) return []
+
+  try {
+    const parsed = JSON.parse(value)
+    if (!Array.isArray(parsed)) return []
+    return parsed.filter((skill): skill is string => typeof skill === 'string' && skill.trim().length > 0)
+  } catch {
+    return []
+  }
+}
+
 // --- Fonctions publiques (utilisées par les pages du site) ---
 
 async function _fetchTeam(): Promise<PoleData[]> {
@@ -25,6 +49,13 @@ async function _fetchTeam(): Promise<PoleData[]> {
         role: requireString(m.role, 'member.role'),
         photo: (m.photo_url as string | null) ?? null,
         linkedin: (m.linkedin as string | null) ?? null,
+        tagline: optionalString(m.tagline),
+        bio: optionalString(m.bio),
+        promo: optionalString(m.promo),
+        joinedYear: optionalString(m.joined_year),
+        contributions: optionalNumber(m.contributions),
+        skills: parseSkills(m.skills),
+        email: optionalString(m.email),
       })),
   }))
 }
@@ -124,6 +155,13 @@ export async function getAdminTeam(): Promise<AdminPole[]> {
         role: requireString(m.role, 'member.role'),
         photo_url: (m.photo_url as string | null) ?? null,
         linkedin: (m.linkedin as string | null) ?? null,
+        tagline: optionalString(m.tagline) ?? null,
+        bio: optionalString(m.bio) ?? null,
+        promo: optionalString(m.promo) ?? null,
+        joined_year: optionalString(m.joined_year) ?? null,
+        contributions: optionalNumber(m.contributions) ?? null,
+        skills: parseSkills(m.skills),
+        email: optionalString(m.email) ?? null,
         pole_id: requireString(m.pole_id, 'member.pole_id'),
         order_index: m.order_index as number,
       })),
@@ -198,7 +236,5 @@ export async function getSiteContent(): Promise<SiteContent> {
     stats_poles: map['stats_poles'] ?? '',
     stats_membres: map['stats_membres'] ?? '',
     stats_evenements: map['stats_evenements'] ?? '',
-    apropos_mission_title: map['apropos_mission_title'] ?? '',
-    apropos_mission_text: map['apropos_mission_text'] ?? '',
   }
 }

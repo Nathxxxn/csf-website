@@ -1,13 +1,17 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { signCookie } from '@/lib/session'
 
-const executeMock = vi.fn()
-const redirectMock = vi.fn((url: string) => { throw new Error(`NEXT_REDIRECT:${url}`) })
-const cookiesMock = vi.fn()
+const mocks = vi.hoisted(() => ({
+  executeMock: vi.fn(),
+  redirectMock: vi.fn((url: string) => { throw new Error(`NEXT_REDIRECT:${url}`) }),
+  cookiesMock: vi.fn(),
+}))
 
-vi.mock('@/lib/db', () => ({ getDb: () => ({ execute: executeMock }) }))
-vi.mock('next/navigation', () => ({ redirect: redirectMock }))
-vi.mock('next/headers', () => ({ cookies: cookiesMock }))
+const { executeMock, redirectMock, cookiesMock } = mocks
+
+vi.mock('@/lib/db', () => ({ getDb: () => ({ execute: mocks.executeMock }) }))
+vi.mock('next/navigation', () => ({ redirect: mocks.redirectMock }))
+vi.mock('next/headers', () => ({ cookies: mocks.cookiesMock }))
 vi.mock('next/cache', () => ({ revalidatePath: vi.fn() }))
 
 function mockValidSession() {
@@ -20,12 +24,75 @@ describe('createMember', () => {
   afterEach(() => { vi.unstubAllEnvs() })
 
   it('inserts a member into the db', async () => {
-    executeMock.mockResolvedValue({ rows: [{ max_order: 0 }] })
+    executeMock.mockResolvedValue({ rows: [{ m: 0 }] })
     const { createMember } = await import('@/app/admin/actions/team')
     const fd = new FormData()
-    fd.set('name', 'Alice Martin'); fd.set('role', 'Analyste'); fd.set('pole_id', 'pole-123')
+    fd.set('name', 'Alice Martin')
+    fd.set('role', 'Analyste')
+    fd.set('pole_id', 'pole-123')
+    fd.set('tagline', 'Phrase courte')
+    fd.set('bio', 'Bio publique')
+    fd.set('promo', '3A')
+    fd.set('joined_year', '2024')
+    fd.set('contributions', '12')
+    fd.set('skills', 'M&A, Strategy')
+    fd.set('email', 'alice@example.com')
     await createMember(fd)
-    expect(executeMock).toHaveBeenCalledWith(expect.objectContaining({ sql: expect.stringContaining('INSERT INTO team_members') }))
+    expect(executeMock).toHaveBeenCalledWith(expect.objectContaining({
+      sql: expect.stringContaining('INSERT INTO team_members'),
+      args: expect.arrayContaining([
+        'Alice Martin',
+        'Analyste',
+        null,
+        null,
+        'Phrase courte',
+        'Bio publique',
+        '3A',
+        '2024',
+        12,
+        '["M&A","Strategy"]',
+        'alice@example.com',
+        'pole-123',
+        1,
+      ]),
+    }))
+  })
+
+  it('updates member profile fields and normalizes empty optional values', async () => {
+    executeMock.mockResolvedValue({ rows: [] })
+    const { updateMember } = await import('@/app/admin/actions/team')
+    const fd = new FormData()
+    fd.set('name', 'Alice Martin')
+    fd.set('role', 'Analyste')
+    fd.set('pole_id', 'pole-123')
+    fd.set('linkedin', '')
+    fd.set('tagline', '')
+    fd.set('bio', '')
+    fd.set('promo', '')
+    fd.set('joined_year', '')
+    fd.set('contributions', '')
+    fd.set('skills', '')
+    fd.set('email', '')
+
+    await updateMember('member-123', fd)
+
+    expect(executeMock).toHaveBeenCalledWith(expect.objectContaining({
+      sql: expect.stringContaining('UPDATE team_members SET'),
+      args: [
+        'Alice Martin',
+        'Analyste',
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        '[]',
+        null,
+        'pole-123',
+        'member-123',
+      ],
+    }))
   })
 })
 

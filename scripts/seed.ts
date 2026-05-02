@@ -32,8 +32,23 @@ async function seed() {
     for (let memberIndex = 0; memberIndex < poleData.members.length; memberIndex++) {
       const m = poleData.members[memberIndex]
       await db.execute({
-        sql: 'INSERT OR IGNORE INTO team_members (id, name, role, photo_url, linkedin, pole_id, order_index) VALUES (?, ?, ?, ?, ?, ?, ?)',
-        args: [randomUUID(), m.name, m.role, m.photo ?? null, m.linkedin ?? null, poleId, memberIndex],
+        sql: 'INSERT OR IGNORE INTO team_members (id, name, role, photo_url, linkedin, tagline, bio, promo, joined_year, contributions, skills, email, pole_id, order_index) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        args: [
+          randomUUID(),
+          m.name,
+          m.role,
+          m.photo ?? null,
+          m.linkedin ?? null,
+          m.tagline ?? null,
+          m.bio ?? null,
+          m.promo ?? null,
+          m.joinedYear ?? null,
+          m.contributions ?? null,
+          JSON.stringify(m.skills ?? []),
+          m.email ?? null,
+          poleId,
+          memberIndex,
+        ],
       })
     }
   }
@@ -81,8 +96,6 @@ async function seed() {
     ['stats_poles', '6'],
     ['stats_membres', '200+'],
     ['stats_evenements', '20+'],
-    ['apropos_mission_title', 'Notre mission'],
-    ['apropos_mission_text', 'La CSF a pour vocation de préparer les étudiants aux métiers de la finance.'],
   ]
   for (const [key, value] of defaults) {
     await db.execute({

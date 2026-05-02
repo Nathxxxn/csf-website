@@ -12,6 +12,13 @@ CREATE TABLE IF NOT EXISTS team_members (
   role TEXT NOT NULL,
   photo_url TEXT,
   linkedin TEXT,
+  tagline TEXT,
+  bio TEXT,
+  promo TEXT,
+  joined_year TEXT,
+  contributions INTEGER,
+  skills TEXT NOT NULL DEFAULT '[]',
+  email TEXT,
   pole_id TEXT NOT NULL REFERENCES poles(id),
   order_index INTEGER NOT NULL DEFAULT 0
 );

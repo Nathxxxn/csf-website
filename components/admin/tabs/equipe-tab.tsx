@@ -42,7 +42,7 @@ export function EquipeTab({ team }: { team: AdminPole[] }) {
 
       {/* Panneau latéral */}
       {(editingMember || addingMemberToPole || editingPole) && (
-        <aside className="w-64 rounded-lg border border-white/10 bg-white/5 p-4 flex flex-col gap-4 h-fit">
+        <aside className="w-80 rounded-lg border border-white/10 bg-white/5 p-4 flex flex-col gap-4 h-fit">
           {editingMember && (
             <MemberForm member={editingMember} poles={team} onClose={() => setEditingMember(null)} />
           )}
@@ -140,6 +140,20 @@ function MemberForm({ member, poles, onClose }: { member: AdminMember; poles: Ad
       <form action={handleSubmit} className="flex flex-col gap-3">
         <Field name="name" label="Nom complet" defaultValue={member.name} />
         <Field name="role" label="Rôle" defaultValue={member.role} />
+        <Field name="tagline" label="Phrase éditoriale (optionnel)" defaultValue={member.tagline ?? ''} />
+        <TextareaField name="bio" label="Bio (optionnel)" defaultValue={member.bio ?? ''} rows={5} />
+        <div className="grid grid-cols-3 gap-2">
+          <Field name="promo" label="Promo" defaultValue={member.promo ?? ''} />
+          <Field name="joined_year" label="Année" defaultValue={member.joined_year ?? ''} />
+          <Field name="contributions" label="Contrib." type="number" defaultValue={member.contributions?.toString() ?? ''} />
+        </div>
+        <Field
+          name="skills"
+          label="Compétences (optionnel)"
+          defaultValue={member.skills.join(', ')}
+          help="Ex: M&A, Strategy, Alumni"
+        />
+        <Field name="email" label="Email (optionnel)" type="email" defaultValue={member.email ?? ''} />
         <div className="flex flex-col gap-1">
           <label className="text-xs text-white/50">Pôle</label>
           <select name="pole_id" defaultValue={member.pole_id} className="rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none">
@@ -182,6 +196,19 @@ function NewMemberForm({ poleId, poles, onClose }: { poleId: string; poles: Admi
         <input type="hidden" name="pole_id" value={poleId} />
         <Field name="name" label="Nom complet" />
         <Field name="role" label="Rôle" />
+        <Field name="tagline" label="Phrase éditoriale (optionnel)" />
+        <TextareaField name="bio" label="Bio (optionnel)" rows={5} />
+        <div className="grid grid-cols-3 gap-2">
+          <Field name="promo" label="Promo" />
+          <Field name="joined_year" label="Année" />
+          <Field name="contributions" label="Contrib." type="number" />
+        </div>
+        <Field
+          name="skills"
+          label="Compétences (optionnel)"
+          help="Ex: M&A, Strategy, Alumni"
+        />
+        <Field name="email" label="Email (optionnel)" type="email" />
         <div className="flex flex-col gap-1">
           <label className="text-xs text-white/50">Pôle</label>
           <select name="pole_id" defaultValue={poleId} className="rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none">
@@ -243,20 +270,33 @@ function PoleForm({ pole, onClose }: { pole: AdminPole; onClose: () => void }) {
   )
 }
 
-function Field({ name, label, defaultValue }: { name: string; label: string; defaultValue?: string }) {
+function Field({
+  name,
+  label,
+  defaultValue,
+  type = 'text',
+  help,
+}: {
+  name: string
+  label: string
+  defaultValue?: string
+  type?: string
+  help?: string
+}) {
   return (
     <div className="flex flex-col gap-1">
       <label className="text-xs text-white/50">{label}</label>
-      <input name={name} defaultValue={defaultValue} className="rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" />
+      <input type={type} name={name} defaultValue={defaultValue} className="rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" />
+      {help && <p className="text-[11px] leading-snug text-white/35">{help}</p>}
     </div>
   )
 }
 
-function TextareaField({ name, label, defaultValue }: { name: string; label: string; defaultValue?: string }) {
+function TextareaField({ name, label, defaultValue, rows = 3 }: { name: string; label: string; defaultValue?: string; rows?: number }) {
   return (
     <div className="flex flex-col gap-1">
       <label className="text-xs text-white/50">{label}</label>
-      <textarea name={name} defaultValue={defaultValue} rows={3} className="rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white resize-none focus:border-blue-500 focus:outline-none" />
+      <textarea name={name} defaultValue={defaultValue} rows={rows} className="rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white resize-none focus:border-blue-500 focus:outline-none" />
     </div>
   )
 }

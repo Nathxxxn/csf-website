@@ -31,7 +31,7 @@ export function TeamScrollCard({ members }: { members: TeamMember[] }) {
         <div className="px-6 pb-6 sm:hidden">
           <Link
             href="/equipe"
-            className="block text-center text-sm text-zinc-400 hover:text-white transition-colors"
+            className="block sm:hidden text-center text-sm text-zinc-400 hover:text-white transition-colors"
           >
             Voir toute l&apos;équipe →
           </Link>

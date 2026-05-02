@@ -1,5 +1,5 @@
 import { getTeam } from '@/lib/data'
-import { TeamPolesSection } from '@/components/ui/team-pole-section'
+import { TeamSpotlight } from '@/components/ui/team-spotlight'
 
 export const metadata = {
   title: 'Équipe — CentraleSupélec Finance',
@@ -11,7 +11,7 @@ export default async function TeamPage() {
 
   return (
     <div className="pt-16">
-      <TeamPolesSection poles={team} />
+      <TeamSpotlight poles={team} />
     </div>
   )
 }

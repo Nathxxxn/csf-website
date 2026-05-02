@@ -1,5 +1,6 @@
 'use server'
 
+import { revalidatePath } from 'next/cache'
 import { requireAdminSession } from '@/lib/session'
 import { getDb } from '@/lib/db'
 import { handleUpload, type HandleUploadBody } from '@vercel/blob/client'
@@ -17,6 +18,9 @@ export async function upsertContent(formData: FormData) {
       })
     }
   }
+  revalidatePath('/')
+  revalidatePath('/a-propos')
+  revalidatePath('/admin/dashboard')
 }
 
 export async function handleBlobUpload(body: HandleUploadBody) {

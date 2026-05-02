@@ -6,6 +6,11 @@ import { requireAdminSession } from '@/lib/session'
 import { getDb } from '@/lib/db'
 import { partnerSchema, parseFormData } from '@/lib/validation'
 
+function revalidateAll() {
+  revalidatePath('/')
+  revalidatePath('/admin/dashboard')
+}
+
 export async function createPartner(formData: FormData) {
   await requireAdminSession()
   const data = parseFormData(partnerSchema, formData)
@@ -16,7 +21,7 @@ export async function createPartner(formData: FormData) {
     sql: 'INSERT INTO partners (id, name, logo_url, order_index) VALUES (?, ?, ?, ?)',
     args: [randomUUID(), data.name, data.logo_url, maxOrder + 1],
   })
-  revalidatePath('/')
+  revalidateAll()
 }
 
 export async function updatePartner(id: string, formData: FormData) {
@@ -27,14 +32,14 @@ export async function updatePartner(id: string, formData: FormData) {
     sql: 'UPDATE partners SET name=?, logo_url=? WHERE id=?',
     args: [data.name, data.logo_url, id],
   })
-  revalidatePath('/')
+  revalidateAll()
 }
 
 export async function deletePartner(id: string) {
   await requireAdminSession()
   const db = getDb()
   await db.execute({ sql: 'DELETE FROM partners WHERE id=?', args: [id] })
-  revalidatePath('/')
+  revalidateAll()
 }
 
 export async function reorderPartners(ids: string[]) {
@@ -43,13 +48,14 @@ export async function reorderPartners(ids: string[]) {
   for (let i = 0; i < ids.length; i++) {
     await db.execute({ sql: 'UPDATE partners SET order_index=? WHERE id=?', args: [i, ids[i]] })
   }
+  revalidateAll()
 }
 
 export async function updatePartnerLogo(id: string, logoUrl: string) {
   await requireAdminSession()
   const db = getDb()
   await db.execute({ sql: 'UPDATE partners SET logo_url=? WHERE id=?', args: [logoUrl, id] })
-  revalidatePath('/')
+  revalidateAll()
 }
 
 export async function createPartnerWithLogoUrl(name: string, logoUrl: string) {
@@ -61,5 +67,5 @@ export async function createPartnerWithLogoUrl(name: string, logoUrl: string) {
     sql: 'INSERT INTO partners (id, name, logo_url, order_index) VALUES (?, ?, ?, ?)',
     args: [randomUUID(), name, logoUrl, maxOrder + 1],
   })
-  revalidatePath('/')
+  revalidateAll()
 }

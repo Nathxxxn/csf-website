@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useTransition } from 'react'
 import { updatePartner, deletePartner, reorderPartners, updatePartnerLogo, createPartnerWithLogoUrl } from '@/app/admin/actions/partners'
 import { SortableList } from '@/components/admin/sortable-list'
 import { ImageUpload } from '@/components/admin/image-upload'
@@ -10,6 +10,8 @@ export function PartenairesTab({ partners }: { partners: AdminPartner[] }) {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [newLogoUrl, setNewLogoUrl] = useState('')
   const [newName, setNewName] = useState('')
+  const [isPending, startTransition] = useTransition()
+  const [addError, setAddError] = useState<string | null>(null)
 
   return (
     <div className="flex flex-col gap-6 max-w-2xl">
@@ -79,17 +81,25 @@ export function PartenairesTab({ partners }: { partners: AdminPartner[] }) {
             />
           </div>
           <ImageUpload label="Logo" onUpload={url => setNewLogoUrl(url)} />
+          {addError && <p className="text-xs text-red-400">{addError}</p>}
           <button
             type="button"
-            disabled={!newLogoUrl || !newName}
-            onClick={async () => {
-              await createPartnerWithLogoUrl(newName, newLogoUrl)
-              setNewName('')
-              setNewLogoUrl('')
+            disabled={!newLogoUrl || !newName || isPending}
+            onClick={() => {
+              setAddError(null)
+              startTransition(async () => {
+                try {
+                  await createPartnerWithLogoUrl(newName, newLogoUrl)
+                  setNewName('')
+                  setNewLogoUrl('')
+                } catch (e) {
+                  setAddError(e instanceof Error ? e.message : 'Une erreur est survenue')
+                }
+              })
             }}
             className="self-start rounded bg-blue-600 px-4 py-1.5 text-sm font-medium hover:bg-blue-700 disabled:opacity-50"
           >
-            Ajouter le partenaire
+            {isPending ? 'Ajout…' : 'Ajouter le partenaire'}
           </button>
         </div>
       </div>

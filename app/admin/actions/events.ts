@@ -7,6 +7,12 @@ import { requireAdminSession } from '@/lib/session'
 import { getDb } from '@/lib/db'
 import { eventSchema, highlightSchema, parseFormData } from '@/lib/validation'
 
+function revalidateAll() {
+  revalidatePath('/')
+  revalidatePath('/evenements')
+  revalidatePath('/admin/dashboard')
+}
+
 export async function createEvent(formData: FormData) {
   await requireAdminSession()
   const data = parseFormData(eventSchema, formData)
@@ -29,8 +35,7 @@ export async function createEvent(formData: FormData) {
       maxOrder + 1,
     ],
   })
-  revalidatePath('/')
-  revalidatePath('/evenements')
+  revalidateAll()
   redirect(`/admin/dashboard/evenements/${id}`)
 }
 
@@ -51,8 +56,7 @@ export async function updateEvent(id: string, formData: FormData) {
       id,
     ],
   })
-  revalidatePath('/')
-  revalidatePath('/evenements')
+  revalidateAll()
   revalidatePath(`/evenements/${id}`)
 }
 
@@ -67,8 +71,7 @@ export async function deleteEvent(id: string) {
   await requireAdminSession()
   const db = getDb()
   await db.execute({ sql: 'DELETE FROM events WHERE id=?', args: [id] })
-  revalidatePath('/')
-  revalidatePath('/evenements')
+  revalidateAll()
   redirect('/admin/dashboard?tab=evenements')
 }
 

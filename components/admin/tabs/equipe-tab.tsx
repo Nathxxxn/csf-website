@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useTransition } from 'react'
 import {
   createPole, updatePole, deletePole, reorderPoles,
   createMember, updateMember, deleteMember, reorderMembers, updateMemberPhoto,
@@ -114,7 +114,22 @@ function MemberRow({ member, dragHandleProps, onEdit }: { member: AdminMember; d
 }
 
 function MemberForm({ member, poles, onClose }: { member: AdminMember; poles: AdminPole[]; onClose: () => void }) {
+  const [isPending, startTransition] = useTransition()
+  const [error, setError] = useState<string | null>(null)
   const updateMemberWithId = updateMember.bind(null, member.id)
+
+  function handleSubmit(formData: FormData) {
+    setError(null)
+    startTransition(async () => {
+      try {
+        await updateMemberWithId(formData)
+        onClose()
+      } catch (e) {
+        setError(e instanceof Error ? e.message : 'Une erreur est survenue')
+      }
+    })
+  }
+
   return (
     <>
       <div className="flex items-center justify-between">
@@ -122,7 +137,7 @@ function MemberForm({ member, poles, onClose }: { member: AdminMember; poles: Ad
         <button onClick={onClose} className="text-xs text-white/40 hover:text-white">✕</button>
       </div>
       <ImageUpload currentUrl={member.photo_url} label="Photo" onUpload={url => updateMemberPhoto(member.id, url)} />
-      <form action={updateMemberWithId} className="flex flex-col gap-3">
+      <form action={handleSubmit} className="flex flex-col gap-3">
         <Field name="name" label="Nom complet" defaultValue={member.name} />
         <Field name="role" label="Rôle" defaultValue={member.role} />
         <div className="flex flex-col gap-1">
@@ -132,20 +147,38 @@ function MemberForm({ member, poles, onClose }: { member: AdminMember; poles: Ad
           </select>
         </div>
         <Field name="linkedin" label="LinkedIn (optionnel)" defaultValue={member.linkedin ?? ''} />
-        <button type="submit" className="rounded bg-blue-600 px-4 py-1.5 text-sm font-medium hover:bg-blue-700">Enregistrer</button>
+        {error && <p className="text-xs text-red-400">{error}</p>}
+        <button type="submit" disabled={isPending} className="rounded bg-blue-600 px-4 py-1.5 text-sm font-medium hover:bg-blue-700 disabled:opacity-50">
+          {isPending ? 'Enregistrement…' : 'Enregistrer'}
+        </button>
       </form>
     </>
   )
 }
 
 function NewMemberForm({ poleId, poles, onClose }: { poleId: string; poles: AdminPole[]; onClose: () => void }) {
+  const [isPending, startTransition] = useTransition()
+  const [error, setError] = useState<string | null>(null)
+
+  function handleSubmit(formData: FormData) {
+    setError(null)
+    startTransition(async () => {
+      try {
+        await createMember(formData)
+        onClose()
+      } catch (e) {
+        setError(e instanceof Error ? e.message : 'Une erreur est survenue')
+      }
+    })
+  }
+
   return (
     <>
       <div className="flex items-center justify-between">
         <p className="text-sm font-semibold">Nouveau membre</p>
         <button onClick={onClose} className="text-xs text-white/40 hover:text-white">✕</button>
       </div>
-      <form action={createMember} className="flex flex-col gap-3">
+      <form action={handleSubmit} className="flex flex-col gap-3">
         <input type="hidden" name="pole_id" value={poleId} />
         <Field name="name" label="Nom complet" />
         <Field name="role" label="Rôle" />
@@ -156,25 +189,46 @@ function NewMemberForm({ poleId, poles, onClose }: { poleId: string; poles: Admi
           </select>
         </div>
         <Field name="linkedin" label="LinkedIn (optionnel)" />
-        <button type="submit" className="rounded bg-blue-600 px-4 py-1.5 text-sm font-medium hover:bg-blue-700">Créer</button>
+        {error && <p className="text-xs text-red-400">{error}</p>}
+        <button type="submit" disabled={isPending} className="rounded bg-blue-600 px-4 py-1.5 text-sm font-medium hover:bg-blue-700 disabled:opacity-50">
+          {isPending ? 'Création…' : 'Créer'}
+        </button>
       </form>
     </>
   )
 }
 
 function PoleForm({ pole, onClose }: { pole: AdminPole; onClose: () => void }) {
+  const [isPending, startTransition] = useTransition()
+  const [error, setError] = useState<string | null>(null)
   const updatePoleWithId = updatePole.bind(null, pole.id)
+
+  function handleSubmit(formData: FormData) {
+    setError(null)
+    startTransition(async () => {
+      try {
+        await updatePoleWithId(formData)
+        onClose()
+      } catch (e) {
+        setError(e instanceof Error ? e.message : 'Une erreur est survenue')
+      }
+    })
+  }
+
   return (
     <>
       <div className="flex items-center justify-between">
         <p className="text-sm font-semibold">Éditer le pôle</p>
         <button onClick={onClose} className="text-xs text-white/40 hover:text-white">✕</button>
       </div>
-      <form action={updatePoleWithId} className="flex flex-col gap-3">
+      <form action={handleSubmit} className="flex flex-col gap-3">
         <Field name="name" label="Nom" defaultValue={pole.name} />
         <Field name="badge" label="Badge" defaultValue={pole.badge} />
         <TextareaField name="description" label="Description" defaultValue={pole.description} />
-        <button type="submit" className="rounded bg-blue-600 px-4 py-1.5 text-sm font-medium hover:bg-blue-700">Enregistrer</button>
+        {error && <p className="text-xs text-red-400">{error}</p>}
+        <button type="submit" disabled={isPending} className="rounded bg-blue-600 px-4 py-1.5 text-sm font-medium hover:bg-blue-700 disabled:opacity-50">
+          {isPending ? 'Enregistrement…' : 'Enregistrer'}
+        </button>
       </form>
       <form action={deletePole.bind(null, pole.id)}>
         <button

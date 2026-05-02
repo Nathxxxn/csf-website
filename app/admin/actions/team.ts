@@ -6,6 +6,12 @@ import { requireAdminSession } from '@/lib/session'
 import { getDb } from '@/lib/db'
 import { poleSchema, memberSchema, parseFormData } from '@/lib/validation'
 
+function revalidateAll() {
+  revalidatePath('/')
+  revalidatePath('/equipe')
+  revalidatePath('/admin/dashboard')
+}
+
 export async function createPole(formData: FormData) {
   await requireAdminSession()
   const data = parseFormData(poleSchema, formData)
@@ -16,8 +22,7 @@ export async function createPole(formData: FormData) {
     sql: 'INSERT INTO poles (id, name, badge, description, order_index) VALUES (?, ?, ?, ?, ?)',
     args: [randomUUID(), data.name, data.badge, data.description, maxOrder + 1],
   })
-  revalidatePath('/')
-  revalidatePath('/equipe')
+  revalidateAll()
 }
 
 export async function updatePole(id: string, formData: FormData) {
@@ -28,16 +33,14 @@ export async function updatePole(id: string, formData: FormData) {
     sql: 'UPDATE poles SET name=?, badge=?, description=? WHERE id=?',
     args: [data.name, data.badge, data.description, id],
   })
-  revalidatePath('/')
-  revalidatePath('/equipe')
+  revalidateAll()
 }
 
 export async function deletePole(id: string) {
   await requireAdminSession()
   const db = getDb()
   await db.execute({ sql: 'DELETE FROM poles WHERE id=?', args: [id] })
-  revalidatePath('/')
-  revalidatePath('/equipe')
+  revalidateAll()
 }
 
 export async function reorderPoles(ids: string[]) {
@@ -46,6 +49,7 @@ export async function reorderPoles(ids: string[]) {
   for (let i = 0; i < ids.length; i++) {
     await db.execute({ sql: 'UPDATE poles SET order_index=? WHERE id=?', args: [i, ids[i]] })
   }
+  revalidateAll()
 }
 
 export async function createMember(formData: FormData) {
@@ -59,8 +63,7 @@ export async function createMember(formData: FormData) {
     sql: 'INSERT INTO team_members (id, name, role, photo_url, linkedin, pole_id, order_index) VALUES (?, ?, ?, ?, ?, ?, ?)',
     args: [randomUUID(), data.name, data.role, null, linkedin, data.pole_id, maxOrder + 1],
   })
-  revalidatePath('/')
-  revalidatePath('/equipe')
+  revalidateAll()
 }
 
 export async function updateMember(id: string, formData: FormData) {
@@ -72,24 +75,21 @@ export async function updateMember(id: string, formData: FormData) {
     sql: 'UPDATE team_members SET name=?, role=?, linkedin=?, pole_id=? WHERE id=?',
     args: [data.name, data.role, linkedin, data.pole_id, id],
   })
-  revalidatePath('/')
-  revalidatePath('/equipe')
+  revalidateAll()
 }
 
 export async function updateMemberPhoto(id: string, photoUrl: string) {
   await requireAdminSession()
   const db = getDb()
   await db.execute({ sql: 'UPDATE team_members SET photo_url=? WHERE id=?', args: [photoUrl, id] })
-  revalidatePath('/')
-  revalidatePath('/equipe')
+  revalidateAll()
 }
 
 export async function deleteMember(id: string) {
   await requireAdminSession()
   const db = getDb()
   await db.execute({ sql: 'DELETE FROM team_members WHERE id=?', args: [id] })
-  revalidatePath('/')
-  revalidatePath('/equipe')
+  revalidateAll()
 }
 
 export async function reorderMembers(ids: string[]) {
@@ -98,4 +98,5 @@ export async function reorderMembers(ids: string[]) {
   for (let i = 0; i < ids.length; i++) {
     await db.execute({ sql: 'UPDATE team_members SET order_index=? WHERE id=?', args: [i, ids[i]] })
   }
+  revalidateAll()
 }

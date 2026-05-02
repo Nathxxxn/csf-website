@@ -15,7 +15,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   if (!file) return NextResponse.json({ error: 'No file provided' }, { status: 400 })
 
   try {
-    const blob = await put(file.name, file, { access: 'public', token: process.env.CSF_READ_WRITE_TOKEN })
+    const blob = await put(file.name, file, { access: 'public', token: process.env.CSF_READ_WRITE_TOKEN, addRandomSuffix: true })
     return NextResponse.json({ url: blob.url })
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e)

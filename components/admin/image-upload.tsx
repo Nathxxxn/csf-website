@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef, useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 interface ImageUploadProps {
   currentUrl?: string | null
@@ -13,6 +14,7 @@ export function ImageUpload({ currentUrl, onUpload, label = 'Image' }: ImageUplo
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+  const router = useRouter()
 
   const displayUrl = previewUrl ?? currentUrl
 
@@ -30,6 +32,7 @@ export function ImageUpload({ currentUrl, onUpload, label = 'Image' }: ImageUplo
       const { url } = json as { url: string }
       setPreviewUrl(url)
       await onUpload(url)
+      router.refresh()
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Upload échoué')
     } finally {

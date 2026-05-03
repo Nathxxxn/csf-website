@@ -6,15 +6,17 @@ import { AccueilTab } from '@/components/admin/tabs/accueil-tab'
 import { EvenementsTab } from '@/components/admin/tabs/evenements-tab'
 import { EquipeTab } from '@/components/admin/tabs/equipe-tab'
 import { PartenairesTab } from '@/components/admin/tabs/partenaires-tab'
-import { getSiteContent, getAdminEvents, getAdminTeam, getAdminPartners } from '@/lib/data'
+import { FormationsTab } from '@/components/admin/tabs/formations-tab'
+import { getSiteContent, getAdminEvents, getAdminTeam, getAdminPartners, getAdminFormations } from '@/lib/data'
 import Link from 'next/link'
 
-const TABS = ['accueil', 'evenements', 'equipe', 'partenaires'] as const
+const TABS = ['accueil', 'evenements', 'formations', 'equipe', 'partenaires'] as const
 type Tab = typeof TABS[number]
 
 const TAB_LABELS: Record<Tab, string> = {
   accueil: 'Accueil',
   evenements: 'Événements',
+  formations: 'Formations',
   equipe: 'Équipe',
   partenaires: 'Partenaires',
 }
@@ -32,11 +34,12 @@ export default async function AdminDashboardPage({ searchParams }: Props) {
   const { tab: rawTab } = await searchParams
   const activeTab: Tab = TABS.includes(rawTab as Tab) ? (rawTab as Tab) : 'accueil'
 
-  const [content, events, team, partners] = await Promise.all([
+  const [content, events, team, partners, formations] = await Promise.all([
     getSiteContent(),
     getAdminEvents(),
     getAdminTeam(),
     getAdminPartners(),
+    getAdminFormations(),
   ])
 
   return (
@@ -72,6 +75,7 @@ export default async function AdminDashboardPage({ searchParams }: Props) {
       <main className="p-6">
         {activeTab === 'accueil' && <AccueilTab content={content} />}
         {activeTab === 'evenements' && <EvenementsTab events={events} />}
+        {activeTab === 'formations' && <FormationsTab formations={formations} />}
         {activeTab === 'equipe' && <EquipeTab team={team} />}
         {activeTab === 'partenaires' && <PartenairesTab partners={partners} />}
       </main>

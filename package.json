@@ -8,6 +8,7 @@
     "start": "next start",
     "test": "vitest",
     "test:run": "vitest run",
+    "migrate:schema": "tsx scripts/apply-schema.ts",
     "migrate:team-profiles": "tsx scripts/migrate-team-profile-fields.ts",
     "seed": "tsx scripts/seed.ts"
   },

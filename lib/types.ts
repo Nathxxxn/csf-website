@@ -49,6 +49,18 @@ export interface Partner {
   logo: string
 }
 
+export interface Formation {
+  id: string
+  title: string
+  date: string
+  category: string
+  description: string
+  speakerName: string
+  speakerRole: string
+  supportUrl: string | null
+  supportFilename: string | null
+}
+
 // --- Types admin (avec IDs pour CRUD) ---
 
 export interface AdminMember {
@@ -112,6 +124,19 @@ export interface AdminPartner {
   id: string
   name: string
   logo_url: string
+  order_index: number
+}
+
+export interface AdminFormation {
+  id: string
+  title: string
+  date: string
+  category: string
+  description: string
+  speaker_name: string
+  speaker_role: string
+  support_url: string | null
+  support_filename: string | null
   order_index: number
 }
 

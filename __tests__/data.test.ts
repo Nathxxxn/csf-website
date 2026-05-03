@@ -125,3 +125,67 @@ describe('getPartners', () => {
     expect(partners[0]).toHaveProperty('logo')
   })
 })
+
+describe('getFormations', () => {
+  afterEach(() => { vi.resetAllMocks() })
+
+  it('returns formations sorted by descending date with nullable support metadata', async () => {
+    executeMock.mockResolvedValueOnce({
+      rows: [
+        {
+          id: 'formation-2',
+          title: 'DCF avancé',
+          date: '2026-03-10',
+          category: 'M&A',
+          description: 'Construire un DCF auditable.',
+          speaker_name: 'Léa M.',
+          speaker_role: 'VP Corporate',
+          support_url: null,
+          support_filename: null,
+          order_index: 1,
+        },
+        {
+          id: 'formation-1',
+          title: 'Produits dérivés',
+          date: '2025-10-14',
+          category: 'Marchés',
+          description: 'Forwards, futures et swaps.',
+          speaker_name: 'Antoine R.',
+          speaker_role: 'Responsable Marchés',
+          support_url: 'https://blob.example/derives.pdf',
+          support_filename: 'derives.pdf',
+          order_index: 0,
+        },
+      ],
+    })
+
+    const { getFormations } = await import('@/lib/data')
+    const formations = await getFormations()
+
+    expect(executeMock).toHaveBeenCalledWith('SELECT * FROM formations ORDER BY date DESC, order_index ASC')
+    expect(formations).toEqual([
+      {
+        id: 'formation-2',
+        title: 'DCF avancé',
+        date: '2026-03-10',
+        category: 'M&A',
+        description: 'Construire un DCF auditable.',
+        speakerName: 'Léa M.',
+        speakerRole: 'VP Corporate',
+        supportUrl: null,
+        supportFilename: null,
+      },
+      {
+        id: 'formation-1',
+        title: 'Produits dérivés',
+        date: '2025-10-14',
+        category: 'Marchés',
+        description: 'Forwards, futures et swaps.',
+        speakerName: 'Antoine R.',
+        speakerRole: 'Responsable Marchés',
+        supportUrl: 'https://blob.example/derives.pdf',
+        supportFilename: 'derives.pdf',
+      },
+    ])
+  })
+})

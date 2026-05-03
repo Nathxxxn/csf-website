@@ -1,6 +1,6 @@
 // scripts/seed.ts
 import { createClient } from '@libsql/client'
-import { readFileSync } from 'fs'
+import { existsSync, readFileSync } from 'fs'
 import { randomUUID } from 'crypto'
 import type { PoleData, Event, Partner } from '../lib/types'
 
@@ -14,6 +14,22 @@ const db = createClient({ url, authToken: process.env.TURSO_AUTH_TOKEN })
 const team: PoleData[] = JSON.parse(readFileSync('./data/team.json', 'utf-8'))
 const events: Event[] = JSON.parse(readFileSync('./data/events.json', 'utf-8'))
 const partners: Partner[] = JSON.parse(readFileSync('./data/partners.json', 'utf-8'))
+
+type SeedFormation = {
+  id: string
+  title: string
+  date: string
+  category: string
+  description: string
+  speakerName: string
+  speakerRole: string
+  supportUrl?: string | null
+  supportFilename?: string | null
+}
+
+const formations: SeedFormation[] = existsSync('./data/formations.json')
+  ? JSON.parse(readFileSync('./data/formations.json', 'utf-8'))
+  : []
 
 async function seed() {
   // Apply schema
@@ -86,6 +102,26 @@ async function seed() {
     await db.execute({
       sql: 'INSERT OR IGNORE INTO partners (id, name, logo_url, order_index) VALUES (?, ?, ?, ?)',
       args: [randomUUID(), p.name, p.logo, partnerIndex],
+    })
+  }
+
+  // Seed formations when a real data/formations.json file exists.
+  for (let formationIndex = 0; formationIndex < formations.length; formationIndex++) {
+    const f = formations[formationIndex]
+    await db.execute({
+      sql: 'INSERT OR IGNORE INTO formations (id, title, date, category, description, speaker_name, speaker_role, support_url, support_filename, order_index) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      args: [
+        f.id,
+        f.title,
+        f.date,
+        f.category,
+        f.description,
+        f.speakerName,
+        f.speakerRole,
+        f.supportUrl ?? null,
+        f.supportFilename ?? null,
+        formationIndex,
+      ],
     })
   }
 

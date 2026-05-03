@@ -1,5 +1,5 @@
 import { cache } from 'react'
-import type { PoleData, Event, Partner, AdminPole, AdminEvent, AdminPartner, SiteContent } from './types'
+import type { PoleData, Event, Partner, Formation, AdminPole, AdminEvent, AdminPartner, AdminFormation, SiteContent } from './types'
 import { getDb } from './db'
 
 function requireString(value: unknown, field: string): string {
@@ -109,11 +109,28 @@ async function _fetchPartners(): Promise<Partner[]> {
   }))
 }
 
+async function _fetchFormations(): Promise<Formation[]> {
+  const db = getDb()
+  const { rows } = await db.execute('SELECT * FROM formations ORDER BY date DESC, order_index ASC')
+  return rows.map(f => ({
+    id: requireString(f.id, 'formation.id'),
+    title: requireString(f.title, 'formation.title'),
+    date: requireString(f.date, 'formation.date'),
+    category: requireString(f.category, 'formation.category'),
+    description: requireString(f.description, 'formation.description'),
+    speakerName: requireString(f.speaker_name, 'formation.speaker_name'),
+    speakerRole: requireString(f.speaker_role, 'formation.speaker_role'),
+    supportUrl: (f.support_url as string | null) ?? null,
+    supportFilename: (f.support_filename as string | null) ?? null,
+  }))
+}
+
 // React.cache() déduplique les appels identiques dans la même requête (ex: getUpcomingEvents + getPastEvents
 // appellent tous les deux getEvents() — une seule requête DB grâce à ce cache intra-requête)
 export const getTeam = cache(_fetchTeam)
 export const getEvents = cache(_fetchEvents)
 export const getPartners = cache(_fetchPartners)
+export const getFormations = cache(_fetchFormations)
 
 export async function getUpcomingEvents(): Promise<Event[]> {
   const events = await getEvents()
@@ -223,6 +240,23 @@ export async function getAdminPartners(): Promise<AdminPartner[]> {
     name: requireString(p.name, 'partner.name'),
     logo_url: requireString(p.logo_url, 'partner.logo_url'),
     order_index: p.order_index as number,
+  }))
+}
+
+export async function getAdminFormations(): Promise<AdminFormation[]> {
+  const db = getDb()
+  const { rows } = await db.execute('SELECT * FROM formations ORDER BY date DESC, order_index ASC')
+  return rows.map(f => ({
+    id: requireString(f.id, 'formation.id'),
+    title: requireString(f.title, 'formation.title'),
+    date: requireString(f.date, 'formation.date'),
+    category: requireString(f.category, 'formation.category'),
+    description: requireString(f.description, 'formation.description'),
+    speaker_name: requireString(f.speaker_name, 'formation.speaker_name'),
+    speaker_role: requireString(f.speaker_role, 'formation.speaker_role'),
+    support_url: (f.support_url as string | null) ?? null,
+    support_filename: (f.support_filename as string | null) ?? null,
+    order_index: f.order_index as number,
   }))
 }
 

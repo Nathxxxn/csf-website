@@ -59,6 +59,19 @@ CREATE TABLE IF NOT EXISTS partners (
   order_index INTEGER NOT NULL DEFAULT 0
 );
 
+CREATE TABLE IF NOT EXISTS formations (
+  id TEXT PRIMARY KEY,
+  title TEXT NOT NULL,
+  date TEXT NOT NULL,
+  category TEXT NOT NULL,
+  description TEXT NOT NULL,
+  speaker_name TEXT NOT NULL,
+  speaker_role TEXT NOT NULL,
+  support_url TEXT,
+  support_filename TEXT,
+  order_index INTEGER NOT NULL DEFAULT 0
+);
+
 CREATE TABLE IF NOT EXISTS site_content (
   key TEXT PRIMARY KEY,
   value TEXT NOT NULL

@@ -45,6 +45,7 @@ describe('Navbar', () => {
     expect(screen.getByRole('link', { name: 'Événements' })).toHaveAttribute('href', '/evenements')
     expect(screen.getByRole('link', { name: 'Équipe' })).toHaveAttribute('href', '/equipe')
     expect(screen.queryByRole('link', { name: 'À propos' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: 'Formations' })).not.toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Nous contacter' })).toHaveAttribute('href', '/contact')
   })
 

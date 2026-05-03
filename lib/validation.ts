@@ -43,6 +43,15 @@ export const partnerSchema = z.object({
   logo_url: z.string().url('URL du logo invalide'),
 })
 
+export const formationSchema = z.object({
+  title: z.string().min(1, 'Le titre est requis').max(200),
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Format de date invalide (YYYY-MM-DD)'),
+  category: z.string().min(1, 'La catégorie est requise').max(100),
+  description: z.string().min(1, 'La description est requise').max(5000),
+  speaker_name: z.string().min(1, "Le nom de l'intervenant est requis").max(150),
+  speaker_role: z.string().min(1, "Le rôle de l'intervenant est requis").max(150),
+})
+
 /**
  * Parse un FormData avec un schéma Zod.
  * Retourne { data } en succès ou lance une Error en échec.

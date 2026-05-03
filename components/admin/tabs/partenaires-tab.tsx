@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
+import { useRouter } from 'next/navigation'
 import { updatePartner, deletePartner, reorderPartners, updatePartnerLogo, createPartnerWithLogoUrl } from '@/app/admin/actions/partners'
 import { SortableList } from '@/components/admin/sortable-list'
 import { ImageUpload } from '@/components/admin/image-upload'
@@ -12,97 +13,148 @@ export function PartenairesTab({ partners }: { partners: AdminPartner[] }) {
   const [newName, setNewName] = useState('')
   const [isPending, startTransition] = useTransition()
   const [addError, setAddError] = useState<string | null>(null)
+  const router = useRouter()
+  const editingPartner = partners.find(p => p.id === editingId) ?? null
 
   return (
-    <div className="flex flex-col gap-6 max-w-2xl">
-      <div className="flex items-center justify-between">
-        <span className="text-sm font-semibold">{partners.length} partenaire{partners.length > 1 ? 's' : ''}</span>
-        <span className="text-xs text-white/40">Ordre = ordre dans le bandeau</span>
-      </div>
+    <div className="flex max-w-6xl flex-col gap-6 lg:flex-row lg:items-start">
+      <div className="flex min-w-0 flex-1 flex-col gap-6">
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-semibold">{partners.length} partenaire{partners.length > 1 ? 's' : ''}</span>
+          <span className="text-xs text-white/40">Ordre = ordre dans le bandeau</span>
+        </div>
 
-      <SortableList
-        items={partners}
-        onReorder={reorderPartners}
-        renderItem={(partner, dragHandleProps) => (
-          <div className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/5 px-4 py-3">
-            <span {...dragHandleProps} className="cursor-grab text-white/20 hover:text-white/50">⠿</span>
-            <img src={partner.logo_url} alt={partner.name} className="h-8 w-16 object-contain" />
-            <span className="flex-1 text-sm">{partner.name}</span>
-            <button
-              onClick={() => setEditingId(editingId === partner.id ? null : partner.id)}
-              className="text-xs text-white/40 hover:text-white"
-            >
-              {editingId === partner.id ? 'Fermer' : 'Éditer'}
-            </button>
-            <form action={deletePartner.bind(null, partner.id)}>
+        <SortableList
+          items={partners}
+          onReorder={reorderPartners}
+          renderItem={(partner, dragHandleProps) => (
+            <div className={`flex items-center gap-3 rounded-lg border px-4 py-3 ${editingId === partner.id ? 'border-blue-500/40 bg-blue-500/10' : 'border-white/10 bg-white/5'}`}>
+              <span {...dragHandleProps} className="cursor-grab text-white/20 hover:text-white/50">⠿</span>
+              <img src={partner.logo_url} alt={partner.name} className="h-8 w-16 object-contain" />
+              <span className="flex-1 text-sm">{partner.name}</span>
               <button
-                type="submit"
+                type="button"
+                aria-label={`Éditer ${partner.name}`}
+                onClick={() => setEditingId(partner.id)}
+                className="text-xs text-white/40 hover:text-white"
+              >
+                Éditer
+              </button>
+              <button
+                type="button"
+                aria-label={`Supprimer ${partner.name}`}
                 className="text-xs text-red-400 hover:text-red-300"
-                onClick={e => { if (!confirm('Supprimer ?')) e.preventDefault() }}
+                onClick={() => {
+                  if (!confirm('Supprimer ?')) return
+                  startTransition(async () => {
+                    await deletePartner(partner.id)
+                    router.refresh()
+                  })
+                }}
               >
                 ✕
               </button>
-            </form>
-          </div>
-        )}
-      />
+            </div>
+          )}
+        />
 
-      {editingId && (() => {
-        const partner = partners.find(p => p.id === editingId)
-        if (!partner) return null
-        const updateWithId = updatePartner.bind(null, editingId)
-        return (
-          <div className="rounded-lg border border-blue-500/30 bg-white/5 p-4 flex flex-col gap-3">
-            <p className="text-xs text-white/40">Éditer — {partner.name}</p>
-            <form action={updateWithId} className="flex flex-col gap-3">
-              <div className="flex flex-col gap-1">
-                <label className="text-xs text-white/50">Nom</label>
-                <input name="name" defaultValue={partner.name} className="rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" />
-              </div>
-              <input type="hidden" name="logo_url" value={partner.logo_url} />
-              <button type="submit" className="self-start rounded bg-blue-600 px-4 py-1.5 text-sm font-medium hover:bg-blue-700">Enregistrer</button>
-            </form>
-            <ImageUpload currentUrl={partner.logo_url} label="Logo" onUpload={(url) => updatePartnerLogo(editingId, url)} />
+        <div className="rounded-lg border border-dashed border-white/20 p-4 flex flex-col gap-3">
+          <p className="text-xs text-white/40">Nouveau partenaire</p>
+          <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-1">
+              <label className="text-xs text-white/50">Nom</label>
+              <input
+                value={newName}
+                onChange={e => setNewName(e.target.value)}
+                placeholder="Nom du partenaire"
+                className="rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none"
+              />
+            </div>
+            <ImageUpload label="Logo" onUpload={url => setNewLogoUrl(url)} />
+            {addError && <p className="text-xs text-red-400">{addError}</p>}
+            <button
+              type="button"
+              disabled={!newLogoUrl || !newName || isPending}
+              onClick={() => {
+                setAddError(null)
+                startTransition(async () => {
+                  try {
+                    await createPartnerWithLogoUrl(newName, newLogoUrl)
+                    setNewName('')
+                    setNewLogoUrl('')
+                    router.refresh()
+                  } catch (e) {
+                    setAddError(e instanceof Error ? e.message : 'Une erreur est survenue')
+                  }
+                })
+              }}
+              className="self-start rounded bg-blue-600 px-4 py-1.5 text-sm font-medium hover:bg-blue-700 disabled:opacity-50"
+            >
+              {isPending ? 'Ajout…' : 'Ajouter le partenaire'}
+            </button>
           </div>
-        )
-      })()}
-
-      {/* New partner */}
-      <div className="rounded-lg border border-dashed border-white/20 p-4 flex flex-col gap-3">
-        <p className="text-xs text-white/40">Nouveau partenaire</p>
-        <div className="flex flex-col gap-3">
-          <div className="flex flex-col gap-1">
-            <label className="text-xs text-white/50">Nom</label>
-            <input
-              value={newName}
-              onChange={e => setNewName(e.target.value)}
-              placeholder="Nom du partenaire"
-              className="rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none"
-            />
-          </div>
-          <ImageUpload label="Logo" onUpload={url => setNewLogoUrl(url)} />
-          {addError && <p className="text-xs text-red-400">{addError}</p>}
-          <button
-            type="button"
-            disabled={!newLogoUrl || !newName || isPending}
-            onClick={() => {
-              setAddError(null)
-              startTransition(async () => {
-                try {
-                  await createPartnerWithLogoUrl(newName, newLogoUrl)
-                  setNewName('')
-                  setNewLogoUrl('')
-                } catch (e) {
-                  setAddError(e instanceof Error ? e.message : 'Une erreur est survenue')
-                }
-              })
-            }}
-            className="self-start rounded bg-blue-600 px-4 py-1.5 text-sm font-medium hover:bg-blue-700 disabled:opacity-50"
-          >
-            {isPending ? 'Ajout…' : 'Ajouter le partenaire'}
-          </button>
         </div>
       </div>
+
+      {editingPartner && (
+        <PartnerEditorPanel partner={editingPartner} onClose={() => setEditingId(null)} />
+      )}
     </div>
+  )
+}
+
+function PartnerEditorPanel({ partner, onClose }: { partner: AdminPartner; onClose: () => void }) {
+  const [isPending, startTransition] = useTransition()
+  const [error, setError] = useState<string | null>(null)
+  const router = useRouter()
+  const updateWithId = updatePartner.bind(null, partner.id)
+
+  function handleSubmit(formData: FormData) {
+    setError(null)
+    startTransition(async () => {
+      try {
+        await updateWithId(formData)
+        router.refresh()
+      } catch (e) {
+        setError(e instanceof Error ? e.message : 'Une erreur est survenue')
+      }
+    })
+  }
+
+  return (
+    <aside
+      role="complementary"
+      aria-label="Édition partenaire"
+      className="w-full rounded-lg border border-white/10 bg-white/5 p-4 lg:sticky lg:top-6 lg:w-80"
+    >
+      <div className="mb-4 flex items-start justify-between gap-4">
+        <div>
+          <p className="text-xs uppercase tracking-widest text-white/40">Édition partenaire</p>
+          <p className="mt-1 text-sm font-semibold">{partner.name}</p>
+        </div>
+        <button type="button" onClick={onClose} className="text-xs text-white/40 hover:text-white">Fermer</button>
+      </div>
+      <div className="flex flex-col gap-3">
+        <form action={handleSubmit} className="flex flex-col gap-3">
+          <div className="flex flex-col gap-1">
+            <label className="text-xs text-white/50">Nom</label>
+            <input name="name" defaultValue={partner.name} className="rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" />
+          </div>
+          <input type="hidden" name="logo_url" value={partner.logo_url} />
+          {error && <p className="text-xs text-red-400">{error}</p>}
+          <button type="submit" disabled={isPending} className="self-start rounded bg-blue-600 px-4 py-1.5 text-sm font-medium hover:bg-blue-700 disabled:opacity-50">
+            {isPending ? 'Enregistrement…' : 'Enregistrer'}
+          </button>
+        </form>
+        <ImageUpload
+          currentUrl={partner.logo_url}
+          label="Logo"
+          onUpload={async (url) => {
+            await updatePartnerLogo(partner.id, url)
+            router.refresh()
+          }}
+        />
+      </div>
+    </aside>
   )
 }

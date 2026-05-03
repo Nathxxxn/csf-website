@@ -6,7 +6,7 @@ import Link from 'next/link'
 import {
   updateEvent, updateEventImage,
   createHighlight, updateHighlight, deleteHighlight, reorderHighlights,
-  addPhoto, deletePhoto, reorderPhotos, updatePhotoCaption,
+  addPhotos, deletePhoto, reorderPhotos, updatePhotoCaption,
 } from '@/app/admin/actions/events'
 import { ImageUpload } from '@/components/admin/image-upload'
 import { SortableList } from '@/components/admin/sortable-list'
@@ -34,7 +34,7 @@ function TextareaField({ name, label, defaultValue }: { name: string; label: str
   return (
     <div className="flex flex-col gap-1">
       <label htmlFor={name} className="text-xs text-white/50">{label}</label>
-      <textarea id={name} name={name} defaultValue={defaultValue} rows={4} className="rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white resize-none focus:border-blue-500 focus:outline-none" />
+      <textarea id={name} name={name} defaultValue={defaultValue} rows={4} className="min-h-28 resize-y rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" />
     </div>
   )
 }
@@ -114,7 +114,22 @@ function PartnerSection({ event }: { event: AdminEvent }) {
 }
 
 function HighlightsSection({ event }: { event: AdminEvent }) {
-  const createHighlightWithEventId = createHighlight.bind(null, event.id)
+  const router = useRouter()
+  const [isPending, startTransition] = useTransition()
+  const [error, setError] = useState<string | null>(null)
+
+  function handleCreate(formData: FormData) {
+    setError(null)
+    startTransition(async () => {
+      try {
+        await createHighlight(event.id, formData)
+        router.refresh()
+      } catch (e) {
+        setError(e instanceof Error ? e.message : 'Erreur')
+      }
+    })
+  }
+
   return (
     <SectionCard title="Points clés (Highlights)">
       <SortableList
@@ -125,7 +140,7 @@ function HighlightsSection({ event }: { event: AdminEvent }) {
             <span {...dragHandleProps} className="mt-1 cursor-grab text-white/20 hover:text-white/50">⠿</span>
             <form action={updateHighlight.bind(null, highlight.id)} className="flex flex-1 flex-col gap-2">
               <input name="title" defaultValue={highlight.title} className="rounded border border-white/10 bg-transparent px-2 py-1 text-sm text-white focus:border-blue-500 focus:outline-none" />
-              <textarea name="description" defaultValue={highlight.description} rows={2} className="rounded border border-white/10 bg-transparent px-2 py-1 text-xs text-white/70 resize-none focus:border-blue-500 focus:outline-none" />
+              <textarea name="description" defaultValue={highlight.description} rows={3} className="min-h-20 resize-y rounded border border-white/10 bg-transparent px-2 py-1 text-xs text-white/70 focus:border-blue-500 focus:outline-none" />
               <button type="submit" className="self-start text-xs text-blue-400 hover:text-blue-300">Enregistrer</button>
             </form>
             <form action={deleteHighlight.bind(null, highlight.id)}>
@@ -134,11 +149,14 @@ function HighlightsSection({ event }: { event: AdminEvent }) {
           </div>
         )}
       />
-      <form action={createHighlightWithEventId} className="flex flex-col gap-2 border-t border-white/10 pt-4">
+      <form action={handleCreate} className="flex flex-col gap-2 border-t border-white/10 pt-4">
         <p className="text-xs text-white/40">Ajouter un point clé</p>
         <input name="title" placeholder="Titre" className="rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" />
-        <textarea name="description" placeholder="Description" rows={2} className="rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white resize-none focus:border-blue-500 focus:outline-none" />
-        <button type="submit" className="self-start rounded border border-white/20 px-3 py-1 text-xs hover:border-white/40">+ Ajouter</button>
+        <textarea name="description" placeholder="Description" rows={3} className="min-h-24 resize-y rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" />
+        {error && <p className="text-xs text-red-400">{error}</p>}
+        <button type="submit" disabled={isPending} className="self-start rounded border border-white/20 px-3 py-1 text-xs hover:border-white/40 disabled:opacity-50">
+          {isPending ? 'Ajout…' : '+ Ajouter'}
+        </button>
       </form>
     </SectionCard>
   )
@@ -165,30 +183,56 @@ function PhotosSection({ event }: { event: AdminEvent }) {
         )}
       />
       <ImageUpload
-        label="Ajouter une photo"
-        onUpload={(url) => addPhoto(event.id, url, '')}
+        label="Ajouter des photos"
+        multiple
+        onUpload={(urls) => addPhotos(event.id, urls.map((url) => ({ url })))}
       />
     </SectionCard>
   )
 }
 
-export function EventEditClient({ event }: { event: AdminEvent }) {
-  const router = useRouter()
+export function EventEditorContent({ event }: { event: AdminEvent }) {
+  return (
+    <div className="flex flex-col gap-6">
+      <h1 className="text-lg font-semibold">{event.title}</h1>
+      <GeneralInfoSection event={event} />
+      <PartnerSection event={event} />
+      <HighlightsSection event={event} />
+      <PhotosSection event={event} />
+    </div>
+  )
+}
 
+export function EventEditorPanel({ event, onClose }: { event: AdminEvent; onClose: () => void }) {
+  return (
+    <aside
+      role="complementary"
+      aria-label="Édition événement"
+      className="w-full rounded-lg border border-white/10 bg-white/5 p-4 lg:sticky lg:top-6 lg:max-h-[calc(100vh-3rem)] lg:w-[28rem] lg:overflow-y-auto"
+    >
+      <div className="mb-4 flex items-start justify-between gap-4">
+        <div>
+          <p className="text-xs uppercase tracking-widest text-white/40">Édition événement</p>
+          <p className="mt-1 text-sm font-semibold">{event.title}</p>
+        </div>
+        <button type="button" onClick={onClose} className="text-xs text-white/40 hover:text-white">Fermer</button>
+      </div>
+      <EventEditorContent event={event} />
+    </aside>
+  )
+}
+
+export function EventEditClient({ event }: { event: AdminEvent }) {
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       <header className="flex items-center justify-between border-b border-white/10 bg-[#111] px-6 py-3">
         <span className="font-bold">Console Admin</span>
       </header>
-      <div className="p-6 max-w-2xl flex flex-col gap-6">
+      <div className="flex max-w-5xl flex-col gap-6 p-6">
         <Link href="/admin/dashboard?tab=evenements" className="text-sm text-white/40 hover:text-white">
           ← Retour aux événements
         </Link>
-        <h1 className="text-lg font-semibold">{event.title}</h1>
-        <GeneralInfoSection event={event} />
-        <PartnerSection event={event} />
-        <HighlightsSection event={event} />
-        <PhotosSection event={event} />
+        <EventEditorContent event={event} />
       </div>
     </div>
   )

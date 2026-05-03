@@ -44,6 +44,28 @@ describe('upsertContent', () => {
     )
   })
 
+  it('persists partnership landing content keys', async () => {
+    executeMock.mockResolvedValue({ rows: [] })
+    const { upsertContent } = await import('@/app/admin/actions/content')
+    const fd = new FormData()
+    fd.set('partners_marquee_label', 'Nos partenaires finance')
+    fd.set('partners_cta_eyebrow', 'Relations entreprises')
+    fd.set('partners_cta_title', 'Construire un format ensemble')
+    fd.set('partners_cta_body', 'Conférence, workshop ou immersion métier.')
+    fd.set('partners_cta_primary_label', 'Nous contacter')
+    fd.set('partners_cta_secondary_label', 'Voir les partenaires')
+
+    await upsertContent(fd)
+
+    expect(executeMock).toHaveBeenCalledTimes(6)
+    expect(executeMock).toHaveBeenCalledWith(
+      expect.objectContaining({ args: ['partners_marquee_label', 'Nos partenaires finance'] }),
+    )
+    expect(executeMock).toHaveBeenCalledWith(
+      expect.objectContaining({ args: ['partners_cta_secondary_label', 'Voir les partenaires'] }),
+    )
+  })
+
   it('ignores legacy À propos content fields and does not revalidate /a-propos', async () => {
     executeMock.mockResolvedValue({ rows: [] })
     const { upsertContent } = await import('@/app/admin/actions/content')

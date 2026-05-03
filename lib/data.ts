@@ -236,5 +236,11 @@ export async function getSiteContent(): Promise<SiteContent> {
     stats_poles: map['stats_poles'] ?? '',
     stats_membres: map['stats_membres'] ?? '',
     stats_evenements: map['stats_evenements'] ?? '',
+    partners_marquee_label: map['partners_marquee_label'] ?? '',
+    partners_cta_eyebrow: map['partners_cta_eyebrow'] ?? '',
+    partners_cta_title: map['partners_cta_title'] ?? '',
+    partners_cta_body: map['partners_cta_body'] ?? '',
+    partners_cta_primary_label: map['partners_cta_primary_label'] ?? '',
+    partners_cta_secondary_label: map['partners_cta_secondary_label'] ?? '',
   }
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState, ReactNode } from 'react'
+import { useEffect, useState, ReactNode } from 'react'
 import Image from 'next/image'
 import { motion } from 'motion/react'
 
@@ -25,7 +25,6 @@ export function ScrollExpansionHero({
   const [showContent, setShowContent] = useState(false)
   const [mediaFullyExpanded, setMediaFullyExpanded] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
-  const touchStartY = useRef<number | null>(null)
 
   // Skip animation entirely when user prefers reduced motion
   useEffect(() => {
@@ -50,6 +49,8 @@ export function ScrollExpansionHero({
   }, [])
 
   useEffect(() => {
+    if (isMobile) return
+
     const handleWheel = (e: Event) => {
       const we = e as globalThis.WheelEvent
       if (mediaFullyExpanded && we.deltaY < 0 && window.scrollY <= 5) {
@@ -70,60 +71,40 @@ export function ScrollExpansionHero({
       }
     }
 
-    const handleTouchStart = (e: Event) => {
-      touchStartY.current = (e as TouchEvent).touches[0].clientY
-    }
-
-    const handleTouchMove = (e: Event) => {
-      const te = e as TouchEvent
-      if (touchStartY.current === null) return
-      const deltaY = touchStartY.current - te.touches[0].clientY
-      if (mediaFullyExpanded && deltaY < -20 && window.scrollY <= 5) {
-        setMediaFullyExpanded(false)
-        te.preventDefault()
-      } else if (!mediaFullyExpanded) {
-        te.preventDefault()
-        const factor = deltaY < 0 ? 0.008 : 0.005
-        setScrollProgress((prev) => {
-          const next = Math.min(Math.max(prev + deltaY * factor, 0), 1)
-          if (next >= 1) {
-            setMediaFullyExpanded(true)
-            setShowContent(true)
-          } else if (next < 0.75) {
-            setShowContent(false)
-          }
-          return next
-        })
-        touchStartY.current = te.touches[0].clientY
-      }
-    }
-
-    const handleTouchEnd = () => {
-      touchStartY.current = null
-    }
-
     const handleScroll = () => {
       if (!mediaFullyExpanded) window.scrollTo(0, 0)
     }
 
     window.addEventListener('wheel', handleWheel, { passive: false })
     window.addEventListener('scroll', handleScroll)
-    window.addEventListener('touchstart', handleTouchStart, { passive: false })
-    window.addEventListener('touchmove', handleTouchMove, { passive: false })
-    window.addEventListener('touchend', handleTouchEnd)
 
     return () => {
       window.removeEventListener('wheel', handleWheel)
       window.removeEventListener('scroll', handleScroll)
-      window.removeEventListener('touchstart', handleTouchStart)
-      window.removeEventListener('touchmove', handleTouchMove)
-      window.removeEventListener('touchend', handleTouchEnd)
     }
-  }, [mediaFullyExpanded])
+  }, [mediaFullyExpanded, isMobile])
 
-  const mediaWidth = 300 + scrollProgress * (isMobile ? 650 : 1250)
-  const mediaHeight = 400 + scrollProgress * (isMobile ? 200 : 400)
-  const textTranslateX = scrollProgress * (isMobile ? 180 : 150)
+  if (isMobile) {
+    return (
+      <div className="overflow-x-hidden">
+        <section className="relative flex items-center justify-center min-h-dvh">
+          <Image src={bgImageSrc} alt="" fill className="object-cover object-center" priority />
+          <div className="absolute inset-0 bg-black/50" />
+          <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 gap-3">
+            {title && (
+              <h1 className="text-4xl font-extrabold tracking-tighter text-white">{title}</h1>
+            )}
+            {date && <p className="text-sm text-white/60 tabular-nums">{date}</p>}
+          </div>
+        </section>
+        <div>{children}</div>
+      </div>
+    )
+  }
+
+  const mediaWidth = 300 + scrollProgress * 1250
+  const mediaHeight = 400 + scrollProgress * 400
+  const textTranslateX = scrollProgress * 150
 
   const firstWord = title?.split(' ')[0] ?? ''
   const restOfTitle = title?.split(' ').slice(1).join(' ') ?? ''

@@ -7,7 +7,19 @@ import { getDb } from '@/lib/db'
 export async function upsertContent(formData: FormData) {
   await requireAdminSession()
   const db = getDb()
-  const keys = ['hero_title', 'hero_subtitle', 'stats_poles', 'stats_membres', 'stats_evenements']
+  const keys = [
+    'hero_title',
+    'hero_subtitle',
+    'stats_poles',
+    'stats_membres',
+    'stats_evenements',
+    'partners_marquee_label',
+    'partners_cta_eyebrow',
+    'partners_cta_title',
+    'partners_cta_body',
+    'partners_cta_primary_label',
+    'partners_cta_secondary_label',
+  ]
   for (const key of keys) {
     const value = formData.get(key)
     if (value !== null) {

@@ -1,37 +1,51 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useId, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-interface ImageUploadProps {
+interface CommonImageUploadProps {
   currentUrl?: string | null
-  onUpload: (url: string) => void | Promise<void>
   label?: string
 }
 
-export function ImageUpload({ currentUrl, onUpload, label = 'Image' }: ImageUploadProps) {
+type ImageUploadProps = CommonImageUploadProps & (
+  | { multiple?: false; onUpload: (url: string) => void | Promise<void> }
+  | { multiple: true; onUpload: (urls: string[]) => void | Promise<void> }
+)
+
+export function ImageUpload(props: ImageUploadProps) {
+  const { currentUrl, label = 'Image' } = props
+  const multiple = props.multiple === true
+  const inputId = useId()
   const inputRef = useRef<HTMLInputElement>(null)
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+  const [previewUrls, setPreviewUrls] = useState<string[]>([])
   const router = useRouter()
 
-  const displayUrl = previewUrl ?? currentUrl
+  const displayUrls = previewUrls.length > 0 ? previewUrls : currentUrl ? [currentUrl] : []
 
   async function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0]
-    if (!file) return
+    const files = Array.from(e.target.files ?? [])
+    if (files.length === 0) return
     setError(null)
     setUploading(true)
     try {
-      const formData = new FormData()
-      formData.append('file', file)
-      const res = await fetch('/api/blob', { method: 'POST', body: formData })
-      const json = await res.json() as { url?: string; error?: string }
-      if (!res.ok) throw new Error(json.error ?? `Erreur serveur (${res.status})`)
-      const { url } = json as { url: string }
-      setPreviewUrl(url)
-      await onUpload(url)
+      const urls: string[] = []
+      for (const file of files) {
+        const formData = new FormData()
+        formData.append('file', file)
+        const res = await fetch('/api/blob', { method: 'POST', body: formData })
+        const json = await res.json() as { url?: string; error?: string }
+        if (!res.ok) throw new Error(json.error ?? `Erreur serveur (${res.status})`)
+        urls.push((json as { url: string }).url)
+      }
+      setPreviewUrls(urls)
+      if (props.multiple) {
+        await props.onUpload(urls)
+      } else {
+        await props.onUpload(urls[0])
+      }
       router.refresh()
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Upload échoué')
@@ -43,9 +57,13 @@ export function ImageUpload({ currentUrl, onUpload, label = 'Image' }: ImageUplo
 
   return (
     <div className="flex flex-col gap-2">
-      <label className="text-xs text-white/60">{label}</label>
-      {displayUrl && (
-        <img src={displayUrl} alt="" className="h-20 w-auto rounded object-cover" />
+      <label htmlFor={inputId} className="text-xs text-white/60">{label}</label>
+      {displayUrls.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {displayUrls.map((displayUrl) => (
+            <img key={displayUrl} src={displayUrl} alt="" className="h-20 w-auto rounded object-cover" />
+          ))}
+        </div>
       )}
       <button
         type="button"
@@ -53,10 +71,18 @@ export function ImageUpload({ currentUrl, onUpload, label = 'Image' }: ImageUplo
         disabled={uploading}
         className="rounded border border-dashed border-white/20 bg-white/5 px-3 py-2 text-xs text-white/50 hover:border-white/40 disabled:opacity-50"
       >
-        {uploading ? 'Upload en cours...' : 'Choisir une image'}
+        {uploading ? 'Upload en cours...' : multiple ? 'Choisir des images' : 'Choisir une image'}
       </button>
       {error && <p className="text-xs text-red-400">{error}</p>}
-      <input ref={inputRef} type="file" accept="image/*" className="hidden" onChange={handleChange} />
+      <input
+        id={inputId}
+        ref={inputRef}
+        type="file"
+        accept="image/*"
+        multiple={multiple}
+        className="hidden"
+        onChange={handleChange}
+      />
     </div>
   )
 }

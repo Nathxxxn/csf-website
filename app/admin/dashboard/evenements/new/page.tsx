@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 export default function NewEventPage() {
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white p-6 max-w-2xl">
+    <div className="min-h-screen bg-[#0a0a0a] text-white p-6 max-w-5xl">
       <Link href="/admin/dashboard?tab=evenements" className="mb-6 inline-block text-sm text-white/40 hover:text-white">
         ← Retour aux événements
       </Link>
@@ -41,7 +41,7 @@ function TextareaField({ name, label, required }: { name: string; label: string;
   return (
     <div className="flex flex-col gap-1">
       <label htmlFor={name} className="text-xs text-white/50">{label}</label>
-      <textarea id={name} name={name} required={required} rows={4} className="rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none resize-none" />
+      <textarea id={name} name={name} required={required} rows={5} className="min-h-32 resize-y rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" />
     </div>
   )
 }

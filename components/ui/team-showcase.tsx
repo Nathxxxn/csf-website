@@ -53,9 +53,9 @@ export default function TeamShowcase({ members }: TeamShowcaseProps) {
   return (
     <div className="flex flex-col md:flex-row items-start gap-8 md:gap-10 lg:gap-14 select-none w-full max-w-5xl mx-auto py-8 px-4 md:px-6 font-sans">
 
-      {/* Mobile: uniform 2-col grid with name/role overlay */}
+      {/* Mobile: uniform 2-col grid with name/role overlay, max 6 to fit card height */}
       <div className="grid grid-cols-2 gap-2 w-full md:hidden">
-        {members.map((member) => (
+        {members.slice(0, 6).map((member) => (
           <MobilePhotoCard key={member.id} member={member} />
         ))}
       </div>

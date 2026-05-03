@@ -243,12 +243,21 @@ describe('getSiteContent', () => {
         { key: 'stats_poles', value: '6' },
         { key: 'stats_membres', value: '200+' },
         { key: 'stats_evenements', value: '20+' },
+        { key: 'partners_marquee_label', value: 'Partenaires actuels' },
+        { key: 'partners_cta_eyebrow', value: 'Entreprises' },
+        { key: 'partners_cta_title', value: 'Organisons un événement' },
+        { key: 'partners_cta_body', value: 'Un format utile pour les étudiants.' },
+        { key: 'partners_cta_primary_label', value: 'Discuter' },
+        { key: 'partners_cta_secondary_label', value: 'Logos' },
       ],
     })
     const { getSiteContent } = await import('@/lib/data')
     const result = await getSiteContent()
     expect(result.hero_title).toBe('Bonjour')
     expect(result.stats_poles).toBe('6')
+    expect(result.partners_marquee_label).toBe('Partenaires actuels')
+    expect(result.partners_cta_title).toBe('Organisons un événement')
+    expect(result.partners_cta_secondary_label).toBe('Logos')
     expect(result).not.toHaveProperty('apropos_mission_text')
   })
 
@@ -258,5 +267,7 @@ describe('getSiteContent', () => {
     const result = await getSiteContent()
     expect(result.hero_title).toBe('')
     expect(result.hero_subtitle).toBe('')
+    expect(result.partners_marquee_label).toBe('')
+    expect(result.partners_cta_body).toBe('')
   })
 })

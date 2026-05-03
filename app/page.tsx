@@ -36,8 +36,8 @@ export default async function HomePage() {
     <>
       <MarketWaveBackground />
       <CinematicHeroSection members={teamMembers} events={allEvents} siteContent={siteContent} />
-      <PartnersMarquee />
-      <PartnersCta />
+      <PartnersMarquee content={siteContent} />
+      <PartnersCta content={siteContent} />
     </>
   )
 }

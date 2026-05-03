@@ -1,20 +1,24 @@
 import { Marquee } from '@/components/ui/marquee'
 import { getPartners } from '@/lib/data'
 import { BlurFade } from '@/components/ui/blur-fade'
+import type { SiteContent } from '@/lib/types'
 
-export async function PartnersMarquee() {
+const DEFAULT_LABEL = 'Des entreprises avec qui nous avons déjà travaillé'
+
+export async function PartnersMarquee({ content }: { content?: SiteContent } = {}) {
   const partners = await getPartners()
   const half = Math.ceil(partners.length / 2)
   const row1 = partners.slice(0, half)
   const row2 = partners.slice(half)
+  const label = content?.partners_marquee_label || DEFAULT_LABEL
 
   return (
-    <section id="partenaires" className="relative pt-4 pb-20 border-t border-border overflow-hidden">
+    <section id="partenaires" data-testid="partners-marquee" className="relative pt-4 pb-20 border-t border-border overflow-hidden">
       <div className="absolute inset-0 bg-[#050505]/55" />
       <div className="relative z-10">
         <BlurFade delay={0} inView>
           <p className="text-center text-xs tracking-widest uppercase text-muted-foreground mb-4">
-            Des entreprises avec qui nous avons déjà travaillé
+            {label}
           </p>
         </BlurFade>
 

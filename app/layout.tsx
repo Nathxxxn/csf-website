@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import { Inter, Instrument_Serif } from 'next/font/google'
 import { SiteChrome } from '@/components/layout/site-chrome'
 import { Toaster } from '@/components/ui/sonner'
-import { ThemeProvider } from '@/components/ui/theme-provider'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' })
@@ -20,12 +19,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" suppressHydrationWarning>
-      <body className={`${inter.variable} ${instrumentSerif.variable} antialiased`} suppressHydrationWarning>
-        <ThemeProvider>
-          <SiteChrome>{children}</SiteChrome>
-          <Toaster />
-        </ThemeProvider>
+    <html lang="fr" className="dark">
+      <body className={`${inter.variable} ${instrumentSerif.variable} antialiased`}>
+        <SiteChrome>{children}</SiteChrome>
+        <Toaster />
       </body>
     </html>
   )

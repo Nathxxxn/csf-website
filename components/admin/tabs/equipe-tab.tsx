@@ -35,7 +35,7 @@ export function EquipeTab({ team }: { team: AdminPole[] }) {
           <p className="text-xs text-white/40">Nouveau pôle</p>
           <input name="name" placeholder="Nom du pôle" required className="rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" />
           <input name="badge" placeholder="Badge (ex: BUR)" required className="rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" />
-          <textarea name="description" placeholder="Description" rows={2} className="rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white resize-none focus:border-blue-500 focus:outline-none" />
+          <textarea name="description" placeholder="Description" rows={3} className="min-h-24 resize-y rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" />
           <button type="submit" className="self-start rounded border border-white/20 px-3 py-1 text-xs hover:border-white/40">+ Créer le pôle</button>
         </form>
       </div>
@@ -296,7 +296,7 @@ function TextareaField({ name, label, defaultValue, rows = 3 }: { name: string; 
   return (
     <div className="flex flex-col gap-1">
       <label className="text-xs text-white/50">{label}</label>
-      <textarea name={name} defaultValue={defaultValue} rows={rows} className="rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white resize-none focus:border-blue-500 focus:outline-none" />
+      <textarea name={name} defaultValue={defaultValue} rows={rows} className="min-h-24 resize-y rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" />
     </div>
   )
 }

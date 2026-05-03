@@ -149,7 +149,7 @@ export function ScrollingPartnersIntro({ partners }: ScrollingPartnersIntroProps
                     <OrbitCard
                       key={`${partner.name}-${index}`}
                       partner={partner}
-                      angle={(Math.PI / 4) * index}
+                      angle={(2 * Math.PI / orbitCount) * index}
                       radius={expandRadius}
                       mobile={isMobile}
                     />

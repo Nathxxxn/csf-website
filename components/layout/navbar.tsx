@@ -45,20 +45,11 @@ export function Navbar() {
   const [mobileShellOpen, setMobileShellOpen] = useState(false)
 
   useEffect(() => {
-    let timeoutId: ReturnType<typeof setTimeout> | undefined
-
-    if (mobileMenuOpen) {
-      setMobileShellOpen(true)
-    } else {
-      timeoutId = setTimeout(() => {
+    if (!mobileMenuOpen) {
+      const timeoutId = setTimeout(() => {
         setMobileShellOpen(false)
       }, MOBILE_SHELL_CLOSE_DELAY_MS)
-    }
-
-    return () => {
-      if (timeoutId) {
-        clearTimeout(timeoutId)
-      }
+      return () => clearTimeout(timeoutId)
     }
   }, [mobileMenuOpen])
 
@@ -71,8 +62,8 @@ export function Navbar() {
       <div className="mx-auto flex w-fit justify-center">
         <div
           className={cn(
-            'inline-flex w-auto max-w-[calc(100vw-1rem)] flex-col overflow-hidden rounded-full border border-[#333] bg-[rgba(31,31,31,0.57)] shadow-[0_18px_50px_rgba(0,0,0,0.25)] backdrop-blur-sm transition-[border-radius,box-shadow] duration-300 ease-in-out',
-            mobileShellOpen && 'rounded-xl shadow-[0_24px_70px_rgba(0,0,0,0.35)]',
+            'inline-flex w-auto max-w-[calc(100vw-1rem)] flex-col overflow-hidden rounded-2xl border border-[#333] bg-[rgba(31,31,31,0.57)] shadow-[0_18px_50px_rgba(0,0,0,0.25)] backdrop-blur-sm transition-shadow duration-300 ease-in-out',
+            mobileShellOpen && 'shadow-[0_24px_70px_rgba(0,0,0,0.35)]',
           )}
         >
           <div className="flex items-center gap-4 px-4 py-3 sm:px-5">
@@ -111,7 +102,11 @@ export function Navbar() {
                 aria-expanded={mobileMenuOpen}
                 aria-controls="mobile-nav-panel"
                 className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#333] bg-[#1f1f1f]/70 text-[#f2f2f2] transition-colors hover:bg-[#262626] md:hidden"
-                onClick={() => setMobileMenuOpen(open => !open)}
+                onClick={() => {
+                  const next = !mobileMenuOpen
+                  setMobileMenuOpen(next)
+                  if (next) setMobileShellOpen(true)
+                }}
               >
                 {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </button>

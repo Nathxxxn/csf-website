@@ -121,4 +121,10 @@ export interface SiteContent {
   stats_poles: string
   stats_membres: string
   stats_evenements: string
+  partners_marquee_label: string
+  partners_cta_eyebrow: string
+  partners_cta_title: string
+  partners_cta_body: string
+  partners_cta_primary_label: string
+  partners_cta_secondary_label: string
 }

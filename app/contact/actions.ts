@@ -33,29 +33,40 @@ export async function sendContactEmail(data: ContactFormData): Promise<ActionRes
     return { success: false, error: 'Le message est trop court (10 caractères minimum).' }
   }
 
-  const resend = new Resend(process.env.RESEND_API_KEY)
-  const to = process.env.CONTACT_EMAIL ?? 'contact@csfinance.fr'
-  const fromEmail = process.env.CONTACT_FROM_EMAIL ?? 'noreply@csfinance.fr'
-
-  const { error } = await resend.emails.send({
-    from: `CS Finance <${fromEmail}>`,
-    to,
-    replyTo: data.email,
-    subject: `[CS Finance] Nouveau message — ${data.subject} (${data.company})`,
-    html: `
-      <h2>Nouveau message via le site CS Finance</h2>
-      <p><strong>Nom :</strong> ${data.name}</p>
-      <p><strong>Société :</strong> ${data.company}</p>
-      <p><strong>Email :</strong> ${data.email}</p>
-      <p><strong>Sujet :</strong> ${data.subject}</p>
-      <hr />
-      <p>${data.message.replace(/\n/g, '<br>')}</p>
-    `,
-  })
-
-  if (error) {
-    return { success: false, error: "Une erreur est survenue lors de l'envoi." }
+  const apiKey = process.env.RESEND_API_KEY
+  if (!apiKey) {
+    return { success: false, error: "Configuration email manquante." }
   }
 
-  return { success: true }
+  const resend = new Resend(apiKey)
+  const to = process.env.CONTACT_EMAIL ?? 'prez@csfinance.fr'
+  const fromEmail = process.env.CONTACT_FROM_EMAIL ?? 'noreply@csfinance.fr'
+
+  try {
+    const { error } = await resend.emails.send({
+      from: `CS Finance <${fromEmail}>`,
+      to,
+      replyTo: data.email,
+      subject: `[CS Finance] Nouveau message — ${data.subject} (${data.company})`,
+      html: `
+        <h2>Nouveau message via le site CS Finance</h2>
+        <p><strong>Nom :</strong> ${data.name}</p>
+        <p><strong>Société :</strong> ${data.company}</p>
+        <p><strong>Email :</strong> ${data.email}</p>
+        <p><strong>Sujet :</strong> ${data.subject}</p>
+        <hr />
+        <p>${data.message.replace(/\n/g, '<br>')}</p>
+      `,
+    })
+
+    if (error) {
+      console.error('[Contact] Resend error:', error)
+      return { success: false, error: "Une erreur est survenue lors de l'envoi." }
+    }
+
+    return { success: true }
+  } catch (err) {
+    console.error('[Contact] Unexpected error:', err)
+    return { success: false, error: "Une erreur est survenue lors de l'envoi." }
+  }
 }

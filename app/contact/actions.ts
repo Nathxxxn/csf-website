@@ -26,6 +26,9 @@ export async function sendContactEmail(data: ContactFormData): Promise<ActionRes
   if (!validateEmail(data.email)) {
     return { success: false, error: "L'adresse email n'est pas valide." }
   }
+  if (!data.subject.trim()) {
+    return { success: false, error: 'Le sujet est requis.' }
+  }
   if (data.message.trim().length < 10) {
     return { success: false, error: 'Le message est trop court (10 caractères minimum).' }
   }

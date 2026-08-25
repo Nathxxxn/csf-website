@@ -99,15 +99,36 @@ function MemberImage({
   )
 }
 
-function buildTeam(poles: PoleData[]) {
-  const tabs: PoleTab[] = [
-    {
-      id: "all",
-      label: "Tous",
-      count: poles.reduce((total, pole) => total + pole.members.length, 0),
-    },
-  ]
+function memberIdentityKey(member: Member): string {
+  return [
+    member.name.trim().toLowerCase(),
+    member.linkedin?.trim().toLowerCase() ?? "",
+    member.photo?.trim().toLowerCase() ?? "",
+  ].join("|")
+}
 
+function dedupeAcrossPoles(members: SpotlightMember[]): SpotlightMember[] {
+  const byIdentity = new Map<string, SpotlightMember>()
+
+  members.forEach((member) => {
+    const key = memberIdentityKey(member)
+    const existing = byIdentity.get(key)
+    byIdentity.set(
+      key,
+      existing
+        ? { ...existing, poleLabel: `${existing.poleLabel} · ${member.poleLabel}` }
+        : member,
+    )
+  })
+
+  return Array.from(byIdentity.values()).map((member, index) => ({
+    ...member,
+    absoluteIndex: index + 1,
+  }))
+}
+
+function buildTeam(poles: PoleData[]) {
+  const tabs: PoleTab[] = []
   const members: SpotlightMember[] = []
 
   poles.forEach((pole) => {
@@ -125,7 +146,11 @@ function buildTeam(poles: PoleData[]) {
     })
   })
 
-  return { tabs, members }
+  // A person can belong to several poles, which produces one entry per pole here.
+  // The "Tous" tab should still show each unique person only once.
+  const allMembers = dedupeAcrossPoles(members)
+
+  return { tabs: [{ id: "all", label: "Tous", count: allMembers.length }, ...tabs], members, allMembers }
 }
 
 interface TeamSpotlightProps {
@@ -133,7 +158,7 @@ interface TeamSpotlightProps {
 }
 
 export function TeamSpotlight({ poles }: TeamSpotlightProps) {
-  const { tabs, members } = useMemo(() => buildTeam(poles), [poles])
+  const { tabs, members, allMembers } = useMemo(() => buildTeam(poles), [poles])
   const [filter, setFilter] = useState("all")
   const [idx, setIdx] = useState(0)
   const touchStart = useRef<{ x: number; y: number } | null>(null)
@@ -146,9 +171,9 @@ export function TeamSpotlight({ poles }: TeamSpotlightProps) {
   }, [])
 
   const filteredMembers = useMemo(() => {
-    if (filter === "all") return members
+    if (filter === "all") return allMembers
     return members.filter((member) => member.poleId === filter)
-  }, [filter, members])
+  }, [filter, members, allMembers])
 
   const total = filteredMembers.length
   const selected = filteredMembers[idx] ?? filteredMembers[0]

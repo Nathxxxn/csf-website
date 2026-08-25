@@ -150,6 +150,49 @@ describe('TeamSpotlight', () => {
     )
   })
 
+  it('shows a member who belongs to multiple poles only once in the "Tous" tab', async () => {
+    const polesWithSharedMember: PoleData[] = [
+      {
+        pole: 'Finance de Marché',
+        badge: 'Markets',
+        description: 'Analyse et notes de marché.',
+        members: [
+          {
+            name: 'Alexandre Camps',
+            role: 'Membre',
+            photo: '/team/alexandre.jpeg',
+            linkedin: 'https://www.linkedin.com/in/alexandre-camps-36a916217/',
+          },
+        ],
+      },
+      {
+        pole: 'Alumni',
+        badge: 'Alumni',
+        description: 'Réseau des anciens.',
+        members: [
+          {
+            name: 'Alexandre Camps',
+            role: 'Membre',
+            photo: '/team/alexandre.jpeg',
+            linkedin: 'https://www.linkedin.com/in/alexandre-camps-36a916217/',
+          },
+        ],
+      },
+    ]
+
+    const { TeamSpotlight } = await import('@/components/ui/team-spotlight')
+
+    render(<TeamSpotlight poles={polesWithSharedMember} />)
+
+    expect(screen.getByRole('tab', { name: /tous 1/i })).toBeInTheDocument()
+    expect(
+      screen.getAllByRole('button', { name: /afficher alexandre camps/i }),
+    ).toHaveLength(1)
+
+    await screen.findByRole('tab', { name: /finance de marché 1/i })
+    await screen.findByRole('tab', { name: /alumni 1/i })
+  })
+
   it('keeps fallback metadata and hides enriched blocks for members without enriched profile fields', async () => {
     const user = userEvent.setup()
     const { TeamSpotlight } = await import('@/components/ui/team-spotlight')

@@ -5,7 +5,7 @@ import { Separator } from '@/components/ui/separator'
 export function Footer() {
   return (
     <footer className="bg-[#050505]">
-      <div className="max-w-6xl mx-auto px-6 py-10 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+      <div className="max-w-6xl mx-auto px-6 pt-10 pb-6 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
           <Image
             src="/logo.svg"
@@ -44,6 +44,14 @@ export function Footer() {
             contact@csf.fr
           </a>
         </div>
+      </div>
+      <Separator className="max-w-6xl mx-auto opacity-10" />
+      <div className="max-w-6xl mx-auto px-6 py-6 flex flex-col items-center gap-1 text-[11px] leading-relaxed text-muted-foreground/70 sm:flex-row sm:justify-center sm:gap-4">
+        <address className="not-italic">
+          3 rue Joliot Curie, 91190 Gif-sur-Yvette
+        </address>
+        <Separator orientation="vertical" className="hidden h-3 sm:block" />
+        <span>RNA : W913012869</span>
       </div>
     </footer>
   )

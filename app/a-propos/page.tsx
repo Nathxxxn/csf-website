@@ -1,0 +1,91 @@
+import { BlurFade } from '@/components/ui/blur-fade'
+import { NumberTicker } from '@/components/ui/number-ticker'
+import { Separator } from '@/components/ui/separator'
+import { getTeam } from '@/lib/data'
+import { STATS } from '@/lib/constants'
+
+export const metadata = {
+  title: 'À propos — CentraleSupélec Finance',
+  description: "L'esprit, les pôles et le fonctionnement de CentraleSupélec Finance.",
+}
+
+export default async function AboutPage() {
+  const team = await getTeam()
+
+  return (
+    <div className="mx-auto px-6 pt-24 pb-24 lg:px-10">
+      <BlurFade delay={0.1} inView>
+        <p className="text-xs tracking-widest uppercase text-muted-foreground mb-2">
+          À propos
+        </p>
+        <h1 className="text-4xl sm:text-5xl font-bold text-white tracking-tighter mb-8 max-w-2xl">
+          CS Finance, l&apos;association qui fait le lien entre les élèves de CentraleSupélec et
+          le monde de la finance.
+        </h1>
+        <p className="text-muted-foreground leading-relaxed max-w-2xl text-base mb-12">
+          Concrètement, nous organisons des rencontres avec des professionnels du secteur, des
+          formations pour progresser techniquement et des échanges avec les alumni, pour donner
+          aux élèves les clés pour comprendre la finance, s&apos;y orienter et y construire leur
+          réseau.
+        </p>
+      </BlurFade>
+
+      <Separator className="mb-12" />
+
+      <BlurFade delay={0.2} inView>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
+          {STATS.map(stat => (
+            <div key={stat.label} className="text-center">
+              <div className="text-4xl font-extrabold tracking-tighter leading-none mb-2">
+                <NumberTicker value={stat.value} />
+                <span>{stat.suffix}</span>
+              </div>
+              <p className="text-xs tracking-widest uppercase text-muted-foreground">
+                {stat.label}
+              </p>
+            </div>
+          ))}
+        </div>
+      </BlurFade>
+
+      <Separator className="mb-12" />
+
+      <BlurFade delay={0.3} inView>
+        <h2 className="text-2xl font-bold tracking-tight mb-8">Nos pôles</h2>
+        <div className="grid auto-rows-fr grid-cols-1 items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {team.map((pole, i) => (
+            <BlurFade key={pole.pole} delay={0.3 + i * 0.07} inView className="h-full">
+              <div className="flex h-full min-h-[160px] flex-col rounded-xl border border-border bg-card p-6 sm:aspect-[2/1]">
+                <span className="text-xs tracking-widest uppercase text-muted-foreground">
+                  {pole.badge}
+                </span>
+                <h3 className="text-lg font-semibold mt-2 mb-3">{pole.pole}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {pole.description}
+                </p>
+              </div>
+            </BlurFade>
+          ))}
+        </div>
+      </BlurFade>
+
+      <Separator className="mb-12 mt-12" />
+
+      <BlurFade delay={0.4} inView>
+        <h2 className="text-2xl font-bold tracking-tight mb-6">Informations légales</h2>
+        <dl className="grid grid-cols-1 gap-6 sm:grid-cols-2 max-w-2xl text-sm text-muted-foreground leading-relaxed">
+          <div>
+            <dt className="text-xs tracking-widest uppercase text-foreground mb-1">Adresse</dt>
+            <dd>3 rue Joliot Curie, 91190 Gif-sur-Yvette</dd>
+          </div>
+          <div>
+            <dt className="text-xs tracking-widest uppercase text-foreground mb-1">
+              Identifiant RNA
+            </dt>
+            <dd>W913012869</dd>
+          </div>
+        </dl>
+      </BlurFade>
+    </div>
+  )
+}

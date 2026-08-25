@@ -89,7 +89,10 @@ export function Navbar() {
               ))}
             </nav>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4">
+              <div className="hidden md:flex">
+                <AnimatedNavLink href="/a-propos">À propos</AnimatedNavLink>
+              </div>
               <Link
                 href="/contact"
                 className="hidden rounded-full bg-[#f2f2f2] px-4 py-2 text-sm font-semibold text-[#111] transition-opacity hover:opacity-90 md:inline-flex"
@@ -132,6 +135,13 @@ export function Navbar() {
                     {link.label}
                   </Link>
                 ))}
+                <Link
+                  href="/a-propos"
+                  className="rounded-lg px-2 py-2 text-sm font-medium text-[#f2f2f2] transition-colors hover:bg-white/5"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  À propos
+                </Link>
                 <Link
                   href="/contact"
                   className="rounded-lg bg-[#f2f2f2] px-3 py-2 text-sm font-semibold text-[#111] transition-opacity hover:opacity-90"

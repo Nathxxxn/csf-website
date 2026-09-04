@@ -38,10 +38,10 @@ export function Footer() {
           </Link>
           <Separator orientation="vertical" className="h-3" />
           <a
-            href="mailto:contact@csf.fr"
+            href="mailto:prez@csfinance.fr"
             className="hover:text-foreground transition-colors"
           >
-            contact@csf.fr
+            prez@csfinance.fr
           </a>
         </div>
       </div>

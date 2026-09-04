@@ -19,7 +19,7 @@ export default async function AboutPage() {
           À propos
         </p>
         <h1 className="text-4xl sm:text-5xl font-bold text-white tracking-tighter mb-8 max-w-2xl">
-          CS Finance, l&apos;association qui fait le lien entre les élèves de CentraleSupélec et
+          CentraleSupélec Finance, l&apos;association qui fait le lien entre les élèves de CentraleSupélec et
           le monde de la finance.
         </h1>
         <p className="text-muted-foreground leading-relaxed max-w-2xl text-base mb-12">

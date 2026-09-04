@@ -1,9 +1,10 @@
 'use client'
 
-import { useRef, useState, useTransition } from 'react'
+import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { clearFormationSupport, createFormation, deleteFormation, updateFormation, updateFormationSupport } from '@/app/admin/actions/formations'
 import { FileUpload } from '@/components/admin/file-upload'
+import { useAdminAction } from '@/components/admin/use-admin-action'
 import type { AdminFormation } from '@/lib/types'
 
 function Field({ name, label, defaultValue, type = 'text', required = true }: {
@@ -50,22 +51,11 @@ function TextareaField({ name, label, defaultValue, required = true }: {
 }
 
 function FormationForm({ formation, onClose }: { formation: AdminFormation; onClose: () => void }) {
-  const [isPending, startTransition] = useTransition()
-  const [error, setError] = useState<string | null>(null)
   const router = useRouter()
-  const updateWithId = updateFormation.bind(null, formation.id)
-
-  function handleSubmit(formData: FormData) {
-    setError(null)
-    startTransition(async () => {
-      try {
-        await updateWithId(formData)
-        router.refresh()
-      } catch (e) {
-        setError(e instanceof Error ? e.message : 'Une erreur est survenue')
-      }
-    })
-  }
+  const { run, isPending, error } = useAdminAction(updateFormation.bind(null, formation.id), {
+    successMessage: 'Formation mise à jour',
+    onSuccess: () => router.refresh(),
+  })
 
   return (
     <aside
@@ -82,7 +72,7 @@ function FormationForm({ formation, onClose }: { formation: AdminFormation; onCl
       </div>
 
       <div className="flex flex-col gap-5">
-        <form action={handleSubmit} className="flex flex-col gap-3">
+        <form action={run} className="flex flex-col gap-3">
           <Field name="title" label="Titre" defaultValue={formation.title} />
           <div className="grid grid-cols-2 gap-3">
             <Field name="date" label="Date" type="date" defaultValue={formation.date} />
@@ -110,28 +100,64 @@ function FormationForm({ formation, onClose }: { formation: AdminFormation; onCl
   )
 }
 
+function FormationRow({ formation, isEditing, onEdit, onDeleted }: {
+  formation: AdminFormation
+  isEditing: boolean
+  onEdit: () => void
+  onDeleted: () => void
+}) {
+  const router = useRouter()
+  const { run, isPending } = useAdminAction(deleteFormation.bind(null, formation.id), {
+    successMessage: 'Formation supprimée',
+    onSuccess: () => { onDeleted(); router.refresh() },
+  })
+
+  return (
+    <div className={`flex items-center gap-3 rounded-lg border px-4 py-3 ${isEditing ? 'border-blue-500/40 bg-blue-500/10' : 'border-white/10 bg-white/5'}`}>
+      <div className="flex-1 min-w-0">
+        <p className="truncate text-sm font-medium">{formation.title}</p>
+        <p className="text-xs text-white/40">{formation.category} · {new Date(`${formation.date}T00:00:00`).toLocaleDateString('fr-FR')} · {formation.speaker_name}</p>
+      </div>
+      <span className="shrink-0 rounded-full bg-white/10 px-2 py-0.5 text-xs text-white/40">
+        {formation.support_url ? 'Support' : 'Sans support'}
+      </span>
+      <button
+        type="button"
+        onClick={onEdit}
+        aria-label={`Éditer ${formation.title}`}
+        className="shrink-0 rounded border border-white/20 px-3 py-1 text-xs hover:border-white/40"
+      >
+        Éditer
+      </button>
+      <button
+        type="button"
+        disabled={isPending}
+        className="shrink-0 text-xs text-red-400 hover:text-red-300 disabled:opacity-50"
+        onClick={() => {
+          if (!confirm('Supprimer cette formation ?')) return
+          run()
+        }}
+      >
+        {isPending ? 'Suppression…' : 'Supprimer'}
+      </button>
+    </div>
+  )
+}
+
 export function FormationsTab({ formations }: { formations: AdminFormation[] }) {
   const [editingId, setEditingId] = useState<string | null>(null)
-  const [isPending, startTransition] = useTransition()
-  const [addError, setAddError] = useState<string | null>(null)
   const [newSupport, setNewSupport] = useState<{ url: string; filename: string } | null>(null)
   const formRef = useRef<HTMLFormElement>(null)
   const router = useRouter()
   const editingFormation = formations.find((formation) => formation.id === editingId) ?? null
-
-  function handleCreate(formData: FormData) {
-    setAddError(null)
-    startTransition(async () => {
-      try {
-        await createFormation(formData)
-        formRef.current?.reset()
-        setNewSupport(null)
-        router.refresh()
-      } catch (e) {
-        setAddError(e instanceof Error ? e.message : 'Une erreur est survenue')
-      }
-    })
-  }
+  const { run: runCreate, isPending, error: addError } = useAdminAction(createFormation, {
+    successMessage: 'Formation créée',
+    onSuccess: () => {
+      formRef.current?.reset()
+      setNewSupport(null)
+      router.refresh()
+    },
+  })
 
   return (
     <div className="flex max-w-6xl flex-col gap-6 lg:flex-row lg:items-start">
@@ -143,44 +169,17 @@ export function FormationsTab({ formations }: { formations: AdminFormation[] }) 
 
         <div className="flex flex-col gap-2">
           {formations.map((formation) => (
-            <div
+            <FormationRow
               key={formation.id}
-              className={`flex items-center gap-3 rounded-lg border px-4 py-3 ${editingId === formation.id ? 'border-blue-500/40 bg-blue-500/10' : 'border-white/10 bg-white/5'}`}
-            >
-              <div className="flex-1 min-w-0">
-                <p className="truncate text-sm font-medium">{formation.title}</p>
-                <p className="text-xs text-white/40">{formation.category} · {new Date(`${formation.date}T00:00:00`).toLocaleDateString('fr-FR')} · {formation.speaker_name}</p>
-              </div>
-              <span className="shrink-0 rounded-full bg-white/10 px-2 py-0.5 text-xs text-white/40">
-                {formation.support_url ? 'Support' : 'Sans support'}
-              </span>
-              <button
-                type="button"
-                onClick={() => setEditingId(formation.id)}
-                aria-label={`Éditer ${formation.title}`}
-                className="shrink-0 rounded border border-white/20 px-3 py-1 text-xs hover:border-white/40"
-              >
-                Éditer
-              </button>
-              <button
-                type="button"
-                className="shrink-0 text-xs text-red-400 hover:text-red-300"
-                onClick={() => {
-                  if (!confirm('Supprimer cette formation ?')) return
-                  startTransition(async () => {
-                    await deleteFormation(formation.id)
-                    if (editingId === formation.id) setEditingId(null)
-                    router.refresh()
-                  })
-                }}
-              >
-                Supprimer
-              </button>
-            </div>
+              formation={formation}
+              isEditing={editingId === formation.id}
+              onEdit={() => setEditingId(formation.id)}
+              onDeleted={() => { if (editingId === formation.id) setEditingId(null) }}
+            />
           ))}
         </div>
 
-        <form ref={formRef} action={handleCreate} className="flex flex-col gap-3 rounded-lg border border-dashed border-white/20 p-4">
+        <form ref={formRef} action={runCreate} className="flex flex-col gap-3 rounded-lg border border-dashed border-white/20 p-4">
           <p className="text-xs text-white/40">Nouvelle formation</p>
           <Field name="title" label="Titre" />
           <div className="grid gap-3 sm:grid-cols-2">

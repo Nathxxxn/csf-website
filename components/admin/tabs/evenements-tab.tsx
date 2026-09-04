@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { deleteEvent, reorderEvents } from '@/app/admin/actions/events'
 import { EventEditorPanel } from '@/components/admin/event-edit-client'
 import { SortableList } from '@/components/admin/sortable-list'
+import { useAdminAction } from '@/components/admin/use-admin-action'
 import type { AdminEvent } from '@/lib/types'
 
 export function EvenementsTab({ events }: { events: AdminEvent[] }) {
@@ -78,6 +79,8 @@ function EventRow({
   isEditing: boolean
   onEdit: () => void
 }) {
+  const { run, isPending } = useAdminAction(deleteEvent.bind(null, event.id))
+
   return (
     <div className={`flex items-center gap-3 rounded-lg border px-4 py-3 ${isEditing ? 'border-blue-500/40 bg-blue-500/10' : 'border-white/10 bg-white/5'}`}>
       <span {...dragHandleProps} className="cursor-grab text-white/20 hover:text-white/50">⠿</span>
@@ -96,13 +99,14 @@ function EventRow({
       >
         Éditer
       </button>
-      <form action={deleteEvent.bind(null, event.id)}>
+      <form action={run}>
         <button
           type="submit"
-          className="shrink-0 text-xs text-red-400 hover:text-red-300"
+          disabled={isPending}
+          className="shrink-0 text-xs text-red-400 hover:text-red-300 disabled:opacity-50"
           onClick={e => { if (!confirm('Supprimer cet événement ?')) e.preventDefault() }}
         >
-          Supprimer
+          {isPending ? 'Suppression…' : 'Supprimer'}
         </button>
       </form>
     </div>

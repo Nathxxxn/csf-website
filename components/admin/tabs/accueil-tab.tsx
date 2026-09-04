@@ -1,20 +1,23 @@
 'use client'
 
-import { useRef } from 'react'
 import { upsertContent } from '@/app/admin/actions/content'
+import { useAdminAction } from '@/components/admin/use-admin-action'
 import type { SiteContent } from '@/lib/types'
 
 export function AccueilTab({ content }: { content: SiteContent }) {
-  const formRef = useRef<HTMLFormElement>(null)
+  const { run, isPending, error } = useAdminAction(upsertContent, {
+    successMessage: "Page d'accueil enregistrée",
+  })
 
   return (
-    <form ref={formRef} action={upsertContent} className="flex max-w-5xl flex-col gap-6">
+    <form action={run} className="flex max-w-5xl flex-col gap-6">
       <div className="flex items-center justify-between">
         <h2 className="text-sm font-semibold">{"Page d'accueil"}</h2>
-        <button type="submit" className="rounded bg-blue-600 px-4 py-1.5 text-sm font-medium hover:bg-blue-700">
-          Enregistrer
+        <button type="submit" disabled={isPending} className="rounded bg-blue-600 px-4 py-1.5 text-sm font-medium hover:bg-blue-700 disabled:opacity-50">
+          {isPending ? 'Enregistrement…' : 'Enregistrer'}
         </button>
       </div>
+      {error && <p className="text-xs text-red-400">{error}</p>}
 
       {/* Hero */}
       <section className="rounded-lg border border-white/10 bg-white/5 p-4 flex flex-col gap-4">

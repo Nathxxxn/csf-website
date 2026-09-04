@@ -1,20 +1,30 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { updatePartner, deletePartner, reorderPartners, updatePartnerLogo, createPartnerWithLogoUrl } from '@/app/admin/actions/partners'
 import { SortableList } from '@/components/admin/sortable-list'
 import { ImageUpload } from '@/components/admin/image-upload'
+import { useAdminAction } from '@/components/admin/use-admin-action'
 import type { AdminPartner } from '@/lib/types'
 
 export function PartenairesTab({ partners }: { partners: AdminPartner[] }) {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [newLogoUrl, setNewLogoUrl] = useState('')
   const [newName, setNewName] = useState('')
-  const [isPending, startTransition] = useTransition()
-  const [addError, setAddError] = useState<string | null>(null)
   const router = useRouter()
   const editingPartner = partners.find(p => p.id === editingId) ?? null
+  const { run: runCreate, isPending, error: addError } = useAdminAction(
+    () => createPartnerWithLogoUrl(newName, newLogoUrl),
+    {
+      successMessage: 'Partenaire ajouté',
+      onSuccess: () => {
+        setNewName('')
+        setNewLogoUrl('')
+        router.refresh()
+      },
+    },
+  )
 
   return (
     <div className="flex max-w-6xl flex-col gap-6 lg:flex-row lg:items-start">
@@ -28,33 +38,13 @@ export function PartenairesTab({ partners }: { partners: AdminPartner[] }) {
           items={partners}
           onReorder={reorderPartners}
           renderItem={(partner, dragHandleProps) => (
-            <div className={`flex items-center gap-3 rounded-lg border px-4 py-3 ${editingId === partner.id ? 'border-blue-500/40 bg-blue-500/10' : 'border-white/10 bg-white/5'}`}>
-              <span {...dragHandleProps} className="cursor-grab text-white/20 hover:text-white/50">⠿</span>
-              <img src={partner.logo_url} alt={partner.name} className="h-8 w-16 object-contain" />
-              <span className="flex-1 text-sm">{partner.name}</span>
-              <button
-                type="button"
-                aria-label={`Éditer ${partner.name}`}
-                onClick={() => setEditingId(partner.id)}
-                className="text-xs text-white/40 hover:text-white"
-              >
-                Éditer
-              </button>
-              <button
-                type="button"
-                aria-label={`Supprimer ${partner.name}`}
-                className="text-xs text-red-400 hover:text-red-300"
-                onClick={() => {
-                  if (!confirm('Supprimer ?')) return
-                  startTransition(async () => {
-                    await deletePartner(partner.id)
-                    router.refresh()
-                  })
-                }}
-              >
-                ✕
-              </button>
-            </div>
+            <PartnerRow
+              partner={partner}
+              dragHandleProps={dragHandleProps}
+              isEditing={editingId === partner.id}
+              onEdit={() => setEditingId(partner.id)}
+              onDeleted={() => { if (editingId === partner.id) setEditingId(null) }}
+            />
           )}
         />
 
@@ -75,19 +65,7 @@ export function PartenairesTab({ partners }: { partners: AdminPartner[] }) {
             <button
               type="button"
               disabled={!newLogoUrl || !newName || isPending}
-              onClick={() => {
-                setAddError(null)
-                startTransition(async () => {
-                  try {
-                    await createPartnerWithLogoUrl(newName, newLogoUrl)
-                    setNewName('')
-                    setNewLogoUrl('')
-                    router.refresh()
-                  } catch (e) {
-                    setAddError(e instanceof Error ? e.message : 'Une erreur est survenue')
-                  }
-                })
-              }}
+              onClick={() => runCreate()}
               className="self-start rounded bg-blue-600 px-4 py-1.5 text-sm font-medium hover:bg-blue-700 disabled:opacity-50"
             >
               {isPending ? 'Ajout…' : 'Ajouter le partenaire'}
@@ -103,23 +81,54 @@ export function PartenairesTab({ partners }: { partners: AdminPartner[] }) {
   )
 }
 
-function PartnerEditorPanel({ partner, onClose }: { partner: AdminPartner; onClose: () => void }) {
-  const [isPending, startTransition] = useTransition()
-  const [error, setError] = useState<string | null>(null)
+function PartnerRow({ partner, dragHandleProps, isEditing, onEdit, onDeleted }: {
+  partner: AdminPartner
+  dragHandleProps: object
+  isEditing: boolean
+  onEdit: () => void
+  onDeleted: () => void
+}) {
   const router = useRouter()
-  const updateWithId = updatePartner.bind(null, partner.id)
+  const { run, isPending } = useAdminAction(deletePartner.bind(null, partner.id), {
+    successMessage: 'Partenaire supprimé',
+    onSuccess: () => { onDeleted(); router.refresh() },
+  })
 
-  function handleSubmit(formData: FormData) {
-    setError(null)
-    startTransition(async () => {
-      try {
-        await updateWithId(formData)
-        router.refresh()
-      } catch (e) {
-        setError(e instanceof Error ? e.message : 'Une erreur est survenue')
-      }
-    })
-  }
+  return (
+    <div className={`flex items-center gap-3 rounded-lg border px-4 py-3 ${isEditing ? 'border-blue-500/40 bg-blue-500/10' : 'border-white/10 bg-white/5'}`}>
+      <span {...dragHandleProps} className="cursor-grab text-white/20 hover:text-white/50">⠿</span>
+      <img src={partner.logo_url} alt={partner.name} className="h-8 w-16 object-contain" />
+      <span className="flex-1 text-sm">{partner.name}</span>
+      <button
+        type="button"
+        aria-label={`Éditer ${partner.name}`}
+        onClick={onEdit}
+        className="text-xs text-white/40 hover:text-white"
+      >
+        Éditer
+      </button>
+      <button
+        type="button"
+        aria-label={`Supprimer ${partner.name}`}
+        disabled={isPending}
+        className="text-xs text-red-400 hover:text-red-300 disabled:opacity-50"
+        onClick={() => {
+          if (!confirm('Supprimer ?')) return
+          run()
+        }}
+      >
+        ✕
+      </button>
+    </div>
+  )
+}
+
+function PartnerEditorPanel({ partner, onClose }: { partner: AdminPartner; onClose: () => void }) {
+  const router = useRouter()
+  const { run, isPending, error } = useAdminAction(updatePartner.bind(null, partner.id), {
+    successMessage: 'Partenaire mis à jour',
+    onSuccess: () => router.refresh(),
+  })
 
   return (
     <aside
@@ -135,7 +144,7 @@ function PartnerEditorPanel({ partner, onClose }: { partner: AdminPartner; onClo
         <button type="button" onClick={onClose} className="text-xs text-white/40 hover:text-white">Fermer</button>
       </div>
       <div className="flex flex-col gap-3">
-        <form action={handleSubmit} className="flex flex-col gap-3">
+        <form action={run} className="flex flex-col gap-3">
           <div className="flex flex-col gap-1">
             <label className="text-xs text-white/50">Nom</label>
             <input name="name" defaultValue={partner.name} className="rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" />

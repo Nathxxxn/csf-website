@@ -261,13 +261,19 @@ describe('getSiteContent', () => {
     expect(result).not.toHaveProperty('apropos_mission_text')
   })
 
-  it('falls back to empty string for missing keys', async () => {
+  it('falls back to the current site copy for keys never saved to the database', async () => {
     executeMock.mockResolvedValueOnce({ rows: [] })
     const { getSiteContent } = await import('@/lib/data')
+    const { SITE_CONTENT_DEFAULTS } = await import('@/lib/site-content-defaults')
     const result = await getSiteContent()
-    expect(result.hero_title).toBe('')
-    expect(result.hero_subtitle).toBe('')
-    expect(result.partners_marquee_label).toBe('')
-    expect(result.partners_cta_body).toBe('')
+    expect(result).toEqual(SITE_CONTENT_DEFAULTS)
+  })
+
+  it('falls back to the default when a saved value is an empty string', async () => {
+    executeMock.mockResolvedValueOnce({ rows: [{ key: 'hero_title', value: '' }] })
+    const { getSiteContent } = await import('@/lib/data')
+    const { SITE_CONTENT_DEFAULTS } = await import('@/lib/site-content-defaults')
+    const result = await getSiteContent()
+    expect(result.hero_title).toBe(SITE_CONTENT_DEFAULTS.hero_title)
   })
 })

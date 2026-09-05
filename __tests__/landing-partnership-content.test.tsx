@@ -41,6 +41,7 @@ const content: SiteContent = {
   hero_subtitle: '',
   stats_poles: '',
   stats_membres: '',
+  stats_etudiants: '',
   stats_evenements: '',
   partners_marquee_label: 'Partenaires éditables',
   partners_cta_eyebrow: 'Relations entreprises',
@@ -48,6 +49,12 @@ const content: SiteContent = {
   partners_cta_body: 'Conférence, workshop ou immersion métier avec nos membres.',
   partners_cta_primary_label: 'Contacter CSF',
   partners_cta_secondary_label: 'Voir le réseau',
+  events_eyebrow: '',
+  events_intro: '',
+  about_heading: '',
+  about_intro: '',
+  about_legal_address: '',
+  about_legal_rna: '',
 }
 
 describe('landing partnership content', () => {

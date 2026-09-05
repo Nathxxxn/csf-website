@@ -1,12 +1,13 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useRef, useState } from 'react'
 import {
   createPole, updatePole, deletePole, reorderPoles,
   createMember, updateMember, deleteMember, reorderMembers, updateMemberPhoto,
 } from '@/app/admin/actions/team'
 import { SortableList } from '@/components/admin/sortable-list'
 import { ImageUpload } from '@/components/admin/image-upload'
+import { useAdminAction } from '@/components/admin/use-admin-action'
 import type { AdminPole, AdminMember } from '@/lib/types'
 
 export function EquipeTab({ team }: { team: AdminPole[] }) {
@@ -31,13 +32,7 @@ export function EquipeTab({ team }: { team: AdminPole[] }) {
             />
           )}
         />
-        <form action={createPole} className="rounded-lg border border-dashed border-white/20 p-4 flex flex-col gap-2">
-          <p className="text-xs text-white/40">Nouveau pôle</p>
-          <input name="name" placeholder="Nom du pôle" required className="rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" />
-          <input name="badge" placeholder="Badge (ex: BUR)" required className="rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" />
-          <textarea name="description" placeholder="Description" rows={3} className="min-h-24 resize-y rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" />
-          <button type="submit" className="self-start rounded border border-white/20 px-3 py-1 text-xs hover:border-white/40">+ Créer le pôle</button>
-        </form>
+        <NewPoleForm />
       </div>
 
       {/* Panneau latéral */}
@@ -55,6 +50,27 @@ export function EquipeTab({ team }: { team: AdminPole[] }) {
         </aside>
       )}
     </div>
+  )
+}
+
+function NewPoleForm() {
+  const formRef = useRef<HTMLFormElement>(null)
+  const { run, isPending, error } = useAdminAction(createPole, {
+    successMessage: 'Pôle créé',
+    onSuccess: () => formRef.current?.reset(),
+  })
+
+  return (
+    <form ref={formRef} action={run} className="rounded-lg border border-dashed border-white/20 p-4 flex flex-col gap-2">
+      <p className="text-xs text-white/40">Nouveau pôle</p>
+      <input name="name" placeholder="Nom du pôle" required className="rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" />
+      <input name="badge" placeholder="Badge (ex: BUR)" required className="rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" />
+      <textarea name="description" placeholder="Description" rows={3} className="min-h-24 resize-y rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" />
+      {error && <p className="text-xs text-red-400">{error}</p>}
+      <button type="submit" disabled={isPending} className="self-start rounded border border-white/20 px-3 py-1 text-xs hover:border-white/40 disabled:opacity-50">
+        {isPending ? 'Création…' : '+ Créer le pôle'}
+      </button>
+    </form>
   )
 }
 
@@ -89,6 +105,10 @@ function PoleCard({ pole, dragHandleProps, onEditPole, onEditMember, onAddMember
 
 function MemberRow({ member, dragHandleProps, onEdit }: { member: AdminMember; dragHandleProps: object; onEdit: () => void }) {
   const initials = member.name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase()
+  const { run, isPending } = useAdminAction(deleteMember.bind(null, member.id), {
+    successMessage: 'Membre supprimé',
+  })
+
   return (
     <div className="flex items-center gap-3 rounded px-3 py-2 hover:bg-white/5">
       <span {...dragHandleProps} className="cursor-grab text-white/20 hover:text-white/50 text-xs">⠿</span>
@@ -102,10 +122,11 @@ function MemberRow({ member, dragHandleProps, onEdit }: { member: AdminMember; d
         <p className="text-xs text-white/40">{member.role}</p>
       </div>
       <button onClick={onEdit} className="text-xs text-white/40 hover:text-white">Éditer</button>
-      <form action={deleteMember.bind(null, member.id)}>
+      <form action={run}>
         <button
           type="submit"
-          className="text-red-400 hover:text-red-300 text-xs"
+          disabled={isPending}
+          className="text-red-400 hover:text-red-300 text-xs disabled:opacity-50"
           onClick={e => { if (!confirm('Supprimer ?')) e.preventDefault() }}
         >✕</button>
       </form>
@@ -114,21 +135,10 @@ function MemberRow({ member, dragHandleProps, onEdit }: { member: AdminMember; d
 }
 
 function MemberForm({ member, poles, onClose }: { member: AdminMember; poles: AdminPole[]; onClose: () => void }) {
-  const [isPending, startTransition] = useTransition()
-  const [error, setError] = useState<string | null>(null)
-  const updateMemberWithId = updateMember.bind(null, member.id)
-
-  function handleSubmit(formData: FormData) {
-    setError(null)
-    startTransition(async () => {
-      try {
-        await updateMemberWithId(formData)
-        onClose()
-      } catch (e) {
-        setError(e instanceof Error ? e.message : 'Une erreur est survenue')
-      }
-    })
-  }
+  const { run, isPending, error } = useAdminAction(updateMember.bind(null, member.id), {
+    successMessage: 'Membre mis à jour',
+    onSuccess: onClose,
+  })
 
   return (
     <>
@@ -137,7 +147,7 @@ function MemberForm({ member, poles, onClose }: { member: AdminMember; poles: Ad
         <button onClick={onClose} className="text-xs text-white/40 hover:text-white">✕</button>
       </div>
       <ImageUpload currentUrl={member.photo_url} label="Photo" onUpload={url => updateMemberPhoto(member.id, url)} />
-      <form action={handleSubmit} className="flex flex-col gap-3">
+      <form action={run} className="flex flex-col gap-3">
         <Field name="name" label="Nom complet" defaultValue={member.name} />
         <Field name="role" label="Rôle" defaultValue={member.role} />
         <Field name="tagline" label="Phrase éditoriale (optionnel)" defaultValue={member.tagline ?? ''} />
@@ -171,20 +181,10 @@ function MemberForm({ member, poles, onClose }: { member: AdminMember; poles: Ad
 }
 
 function NewMemberForm({ poleId, poles, onClose }: { poleId: string; poles: AdminPole[]; onClose: () => void }) {
-  const [isPending, startTransition] = useTransition()
-  const [error, setError] = useState<string | null>(null)
-
-  function handleSubmit(formData: FormData) {
-    setError(null)
-    startTransition(async () => {
-      try {
-        await createMember(formData)
-        onClose()
-      } catch (e) {
-        setError(e instanceof Error ? e.message : 'Une erreur est survenue')
-      }
-    })
-  }
+  const { run, isPending, error } = useAdminAction(createMember, {
+    successMessage: 'Membre créé',
+    onSuccess: onClose,
+  })
 
   return (
     <>
@@ -192,7 +192,7 @@ function NewMemberForm({ poleId, poles, onClose }: { poleId: string; poles: Admi
         <p className="text-sm font-semibold">Nouveau membre</p>
         <button onClick={onClose} className="text-xs text-white/40 hover:text-white">✕</button>
       </div>
-      <form action={handleSubmit} className="flex flex-col gap-3">
+      <form action={run} className="flex flex-col gap-3">
         <input type="hidden" name="pole_id" value={poleId} />
         <Field name="name" label="Nom complet" />
         <Field name="role" label="Rôle" />
@@ -226,21 +226,14 @@ function NewMemberForm({ poleId, poles, onClose }: { poleId: string; poles: Admi
 }
 
 function PoleForm({ pole, onClose }: { pole: AdminPole; onClose: () => void }) {
-  const [isPending, startTransition] = useTransition()
-  const [error, setError] = useState<string | null>(null)
-  const updatePoleWithId = updatePole.bind(null, pole.id)
-
-  function handleSubmit(formData: FormData) {
-    setError(null)
-    startTransition(async () => {
-      try {
-        await updatePoleWithId(formData)
-        onClose()
-      } catch (e) {
-        setError(e instanceof Error ? e.message : 'Une erreur est survenue')
-      }
-    })
-  }
+  const { run, isPending, error } = useAdminAction(updatePole.bind(null, pole.id), {
+    successMessage: 'Pôle mis à jour',
+    onSuccess: onClose,
+  })
+  const deletePoleAction = useAdminAction(deletePole.bind(null, pole.id), {
+    successMessage: 'Pôle supprimé',
+    onSuccess: onClose,
+  })
 
   return (
     <>
@@ -248,7 +241,7 @@ function PoleForm({ pole, onClose }: { pole: AdminPole; onClose: () => void }) {
         <p className="text-sm font-semibold">Éditer le pôle</p>
         <button onClick={onClose} className="text-xs text-white/40 hover:text-white">✕</button>
       </div>
-      <form action={handleSubmit} className="flex flex-col gap-3">
+      <form action={run} className="flex flex-col gap-3">
         <Field name="name" label="Nom" defaultValue={pole.name} />
         <Field name="badge" label="Badge" defaultValue={pole.badge} />
         <TextareaField name="description" label="Description" defaultValue={pole.description} />
@@ -257,10 +250,11 @@ function PoleForm({ pole, onClose }: { pole: AdminPole; onClose: () => void }) {
           {isPending ? 'Enregistrement…' : 'Enregistrer'}
         </button>
       </form>
-      <form action={deletePole.bind(null, pole.id)}>
+      <form action={deletePoleAction.run}>
         <button
           type="submit"
-          className="text-xs text-red-400 hover:text-red-300"
+          disabled={deletePoleAction.isPending}
+          className="text-xs text-red-400 hover:text-red-300 disabled:opacity-50"
           onClick={e => { if (!confirm('Supprimer ce pôle et tous ses membres ?')) e.preventDefault() }}
         >
           Supprimer le pôle

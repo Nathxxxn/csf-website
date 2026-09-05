@@ -1,4 +1,4 @@
-import { getEvents } from "@/lib/data"
+import { getEvents, getSiteContent } from "@/lib/data"
 import { EventsPageHeader } from "@/components/events/events-page-header"
 import { EventsGallery } from "@/components/events/events-gallery"
 import { PartnershipCTA } from "@/components/shared/partnership-cta"
@@ -9,11 +9,11 @@ export const metadata = {
 }
 
 export default async function EventsPage() {
-  const allEvents = await getEvents()
+  const [allEvents, content] = await Promise.all([getEvents(), getSiteContent()])
 
   return (
     <div>
-      <EventsPageHeader />
+      <EventsPageHeader content={content} />
 
       <EventsGallery events={allEvents} />
 

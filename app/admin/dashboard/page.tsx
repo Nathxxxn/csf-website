@@ -7,10 +7,11 @@ import { EvenementsTab } from '@/components/admin/tabs/evenements-tab'
 import { EquipeTab } from '@/components/admin/tabs/equipe-tab'
 import { PartenairesTab } from '@/components/admin/tabs/partenaires-tab'
 import { FormationsTab } from '@/components/admin/tabs/formations-tab'
+import { AproposTab } from '@/components/admin/tabs/apropos-tab'
 import { getSiteContent, getAdminEvents, getAdminTeam, getAdminPartners, getAdminFormations } from '@/lib/data'
 import Link from 'next/link'
 
-const TABS = ['accueil', 'evenements', 'formations', 'equipe', 'partenaires'] as const
+const TABS = ['accueil', 'evenements', 'formations', 'equipe', 'partenaires', 'apropos'] as const
 type Tab = typeof TABS[number]
 
 const TAB_LABELS: Record<Tab, string> = {
@@ -19,6 +20,7 @@ const TAB_LABELS: Record<Tab, string> = {
   formations: 'Formations',
   equipe: 'Équipe',
   partenaires: 'Partenaires',
+  apropos: 'À propos',
 }
 
 interface Props {
@@ -74,10 +76,11 @@ export default async function AdminDashboardPage({ searchParams }: Props) {
       {/* Tab content */}
       <main className="p-6">
         {activeTab === 'accueil' && <AccueilTab content={content} />}
-        {activeTab === 'evenements' && <EvenementsTab events={events} />}
+        {activeTab === 'evenements' && <EvenementsTab events={events} content={content} />}
         {activeTab === 'formations' && <FormationsTab formations={formations} />}
         {activeTab === 'equipe' && <EquipeTab team={team} />}
         {activeTab === 'partenaires' && <PartenairesTab partners={partners} />}
+        {activeTab === 'apropos' && <AproposTab content={content} />}
       </main>
     </div>
   )

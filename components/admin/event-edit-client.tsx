@@ -1,7 +1,5 @@
 'use client'
 
-import { useTransition, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {
   updateEvent, updateEventImage,
@@ -10,7 +8,8 @@ import {
 } from '@/app/admin/actions/events'
 import { ImageUpload } from '@/components/admin/image-upload'
 import { SortableList } from '@/components/admin/sortable-list'
-import type { AdminEvent } from '@/lib/types'
+import { useAdminAction } from '@/components/admin/use-admin-action'
+import type { AdminEvent, AdminHighlight, AdminPhoto } from '@/lib/types'
 
 function SectionCard({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -40,21 +39,13 @@ function TextareaField({ name, label, defaultValue }: { name: string; label: str
 }
 
 function GeneralInfoSection({ event }: { event: AdminEvent }) {
-  const [isPending, startTransition] = useTransition()
-  const [error, setError] = useState<string | null>(null)
-  const updateEventWithId = updateEvent.bind(null, event.id)
-
-  function handleSubmit(formData: FormData) {
-    setError(null)
-    startTransition(async () => {
-      try { await updateEventWithId(formData) }
-      catch (e) { setError(e instanceof Error ? e.message : 'Erreur') }
-    })
-  }
+  const { run, isPending, error } = useAdminAction(updateEvent.bind(null, event.id), {
+    successMessage: 'Événement mis à jour',
+  })
 
   return (
     <SectionCard title="Informations générales">
-      <form action={handleSubmit} className="flex flex-col gap-4">
+      <form action={run} className="flex flex-col gap-4">
         <div className="grid grid-cols-2 gap-4">
           <Field name="title" label="Titre" defaultValue={event.title} />
           <Field name="date" label="Date" type="date" defaultValue={event.date} />
@@ -83,21 +74,13 @@ function GeneralInfoSection({ event }: { event: AdminEvent }) {
 }
 
 function PartnerSection({ event }: { event: AdminEvent }) {
-  const [isPending, startTransition] = useTransition()
-  const [error, setError] = useState<string | null>(null)
-  const updateEventWithId = updateEvent.bind(null, event.id)
-
-  function handleSubmit(formData: FormData) {
-    setError(null)
-    startTransition(async () => {
-      try { await updateEventWithId(formData) }
-      catch (e) { setError(e instanceof Error ? e.message : 'Erreur') }
-    })
-  }
+  const { run, isPending, error } = useAdminAction(updateEvent.bind(null, event.id), {
+    successMessage: 'Section partenaire mise à jour',
+  })
 
   return (
     <SectionCard title="Section partenaire (page détail)">
-      <form action={handleSubmit} className="flex flex-col gap-4">
+      <form action={run} className="flex flex-col gap-4">
         <input type="hidden" name="title" value={event.title} />
         <input type="hidden" name="date" value={event.date} />
         <input type="hidden" name="partner" value={event.partner} />
@@ -113,22 +96,35 @@ function PartnerSection({ event }: { event: AdminEvent }) {
   )
 }
 
-function HighlightsSection({ event }: { event: AdminEvent }) {
-  const router = useRouter()
-  const [isPending, startTransition] = useTransition()
-  const [error, setError] = useState<string | null>(null)
+function HighlightRow({ highlight, dragHandleProps }: { highlight: AdminHighlight; dragHandleProps: object }) {
+  const { run: runUpdate, isPending: isUpdating } = useAdminAction(updateHighlight.bind(null, highlight.id), {
+    successMessage: 'Point clé mis à jour',
+  })
+  const { run: runDelete, isPending: isDeleting } = useAdminAction(deleteHighlight.bind(null, highlight.id), {
+    successMessage: 'Point clé supprimé',
+  })
 
-  function handleCreate(formData: FormData) {
-    setError(null)
-    startTransition(async () => {
-      try {
-        await createHighlight(event.id, formData)
-        router.refresh()
-      } catch (e) {
-        setError(e instanceof Error ? e.message : 'Erreur')
-      }
-    })
-  }
+  return (
+    <div className="flex items-start gap-2 rounded border border-white/10 bg-white/5 p-3">
+      <span {...dragHandleProps} className="mt-1 cursor-grab text-white/20 hover:text-white/50">⠿</span>
+      <form action={runUpdate} className="flex flex-1 flex-col gap-2">
+        <input name="title" defaultValue={highlight.title} className="rounded border border-white/10 bg-transparent px-2 py-1 text-sm text-white focus:border-blue-500 focus:outline-none" />
+        <textarea name="description" defaultValue={highlight.description} rows={3} className="min-h-20 resize-y rounded border border-white/10 bg-transparent px-2 py-1 text-xs text-white/70 focus:border-blue-500 focus:outline-none" />
+        <button type="submit" disabled={isUpdating} className="self-start text-xs text-blue-400 hover:text-blue-300 disabled:opacity-50">
+          {isUpdating ? 'Enregistrement…' : 'Enregistrer'}
+        </button>
+      </form>
+      <form action={runDelete}>
+        <button type="submit" disabled={isDeleting} className="text-red-400 hover:text-red-300 text-xs disabled:opacity-50">✕</button>
+      </form>
+    </div>
+  )
+}
+
+function HighlightsSection({ event }: { event: AdminEvent }) {
+  const { run, isPending, error } = useAdminAction(createHighlight.bind(null, event.id), {
+    successMessage: 'Point clé ajouté',
+  })
 
   return (
     <SectionCard title="Points clés (Highlights)">
@@ -136,20 +132,10 @@ function HighlightsSection({ event }: { event: AdminEvent }) {
         items={event.highlights}
         onReorder={reorderHighlights}
         renderItem={(highlight, dragHandleProps) => (
-          <div className="flex items-start gap-2 rounded border border-white/10 bg-white/5 p-3">
-            <span {...dragHandleProps} className="mt-1 cursor-grab text-white/20 hover:text-white/50">⠿</span>
-            <form action={updateHighlight.bind(null, highlight.id)} className="flex flex-1 flex-col gap-2">
-              <input name="title" defaultValue={highlight.title} className="rounded border border-white/10 bg-transparent px-2 py-1 text-sm text-white focus:border-blue-500 focus:outline-none" />
-              <textarea name="description" defaultValue={highlight.description} rows={3} className="min-h-20 resize-y rounded border border-white/10 bg-transparent px-2 py-1 text-xs text-white/70 focus:border-blue-500 focus:outline-none" />
-              <button type="submit" className="self-start text-xs text-blue-400 hover:text-blue-300">Enregistrer</button>
-            </form>
-            <form action={deleteHighlight.bind(null, highlight.id)}>
-              <button type="submit" className="text-red-400 hover:text-red-300 text-xs">✕</button>
-            </form>
-          </div>
+          <HighlightRow highlight={highlight} dragHandleProps={dragHandleProps} />
         )}
       />
-      <form action={handleCreate} className="flex flex-col gap-2 border-t border-white/10 pt-4">
+      <form action={run} className="flex flex-col gap-2 border-t border-white/10 pt-4">
         <p className="text-xs text-white/40">Ajouter un point clé</p>
         <input name="title" placeholder="Titre" className="rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" />
         <textarea name="description" placeholder="Description" rows={3} className="min-h-24 resize-y rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" />
@@ -162,6 +148,29 @@ function HighlightsSection({ event }: { event: AdminEvent }) {
   )
 }
 
+function PhotoRow({ photo, dragHandleProps }: { photo: AdminPhoto; dragHandleProps: object }) {
+  const { run: runCaption, isPending: isSavingCaption } = useAdminAction(updatePhotoCaption.bind(null, photo.id), {
+    successMessage: 'Légende mise à jour',
+  })
+  const { run: runDelete, isPending: isDeleting } = useAdminAction(deletePhoto.bind(null, photo.id), {
+    successMessage: 'Photo supprimée',
+  })
+
+  return (
+    <div className="flex items-center gap-3 rounded border border-white/10 bg-white/5 p-2">
+      <span {...dragHandleProps} className="cursor-grab text-white/20 hover:text-white/50">⠿</span>
+      <img src={photo.url} alt="" className="h-14 w-20 rounded object-cover" />
+      <form action={runCaption} className="flex flex-1 items-center gap-2">
+        <input name="caption" defaultValue={photo.caption ?? ''} placeholder="Légende..." className="flex-1 rounded border border-white/10 bg-transparent px-2 py-1 text-xs text-white focus:border-blue-500 focus:outline-none" />
+        <button type="submit" disabled={isSavingCaption} className="text-xs text-blue-400 hover:text-blue-300 disabled:opacity-50">OK</button>
+      </form>
+      <form action={runDelete}>
+        <button type="submit" disabled={isDeleting} className="text-red-400 hover:text-red-300 text-xs disabled:opacity-50">✕</button>
+      </form>
+    </div>
+  )
+}
+
 function PhotosSection({ event }: { event: AdminEvent }) {
   return (
     <SectionCard title="Galerie photos">
@@ -169,17 +178,7 @@ function PhotosSection({ event }: { event: AdminEvent }) {
         items={event.photos}
         onReorder={reorderPhotos}
         renderItem={(photo, dragHandleProps) => (
-          <div className="flex items-center gap-3 rounded border border-white/10 bg-white/5 p-2">
-            <span {...dragHandleProps} className="cursor-grab text-white/20 hover:text-white/50">⠿</span>
-            <img src={photo.url} alt="" className="h-14 w-20 rounded object-cover" />
-            <form action={updatePhotoCaption.bind(null, photo.id)} className="flex flex-1 items-center gap-2">
-              <input name="caption" defaultValue={photo.caption ?? ''} placeholder="Légende..." className="flex-1 rounded border border-white/10 bg-transparent px-2 py-1 text-xs text-white focus:border-blue-500 focus:outline-none" />
-              <button type="submit" className="text-xs text-blue-400 hover:text-blue-300">OK</button>
-            </form>
-            <form action={deletePhoto.bind(null, photo.id)}>
-              <button type="submit" className="text-red-400 hover:text-red-300 text-xs">✕</button>
-            </form>
-          </div>
+          <PhotoRow photo={photo} dragHandleProps={dragHandleProps} />
         )}
       />
       <ImageUpload

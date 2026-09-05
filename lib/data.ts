@@ -269,6 +269,7 @@ export async function getSiteContent(): Promise<SiteContent> {
     hero_subtitle: map['hero_subtitle'] ?? '',
     stats_poles: map['stats_poles'] ?? '',
     stats_membres: map['stats_membres'] ?? '',
+    stats_etudiants: map['stats_etudiants'] ?? '',
     stats_evenements: map['stats_evenements'] ?? '',
     partners_marquee_label: map['partners_marquee_label'] ?? '',
     partners_cta_eyebrow: map['partners_cta_eyebrow'] ?? '',
@@ -276,5 +277,11 @@ export async function getSiteContent(): Promise<SiteContent> {
     partners_cta_body: map['partners_cta_body'] ?? '',
     partners_cta_primary_label: map['partners_cta_primary_label'] ?? '',
     partners_cta_secondary_label: map['partners_cta_secondary_label'] ?? '',
+    events_eyebrow: map['events_eyebrow'] ?? '',
+    events_intro: map['events_intro'] ?? '',
+    about_heading: map['about_heading'] ?? '',
+    about_intro: map['about_intro'] ?? '',
+    about_legal_address: map['about_legal_address'] ?? '',
+    about_legal_rna: map['about_legal_rna'] ?? '',
   }
 }

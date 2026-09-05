@@ -1,15 +1,16 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import type { AdminEvent, AdminFormation, AdminPartner } from '@/lib/types'
+import type { AdminEvent, AdminFormation, AdminPartner, SiteContent } from '@/lib/types'
 
-const { refreshMock, addPhotosMock, updatePartnerLogoMock, createFormationMock, updateFormationSupportMock, clearFormationSupportMock } = vi.hoisted(() => ({
+const { refreshMock, addPhotosMock, updatePartnerLogoMock, createFormationMock, updateFormationSupportMock, clearFormationSupportMock, upsertContentMock } = vi.hoisted(() => ({
   refreshMock: vi.fn(),
   addPhotosMock: vi.fn(),
   updatePartnerLogoMock: vi.fn(),
   createFormationMock: vi.fn(),
   updateFormationSupportMock: vi.fn(),
   clearFormationSupportMock: vi.fn(),
+  upsertContentMock: vi.fn(),
 }))
 
 vi.mock('next/navigation', () => ({
@@ -38,6 +39,10 @@ vi.mock('@/app/admin/actions/partners', () => ({
   reorderPartners: vi.fn(),
   updatePartnerLogo: updatePartnerLogoMock,
   createPartnerWithLogoUrl: vi.fn(),
+}))
+
+vi.mock('@/app/admin/actions/content', () => ({
+  upsertContent: upsertContentMock,
 }))
 
 vi.mock('@/app/admin/actions/formations', () => ({
@@ -99,6 +104,27 @@ const formationWithSupport: AdminFormation = {
   support_filename: 'support.pdf',
 }
 
+const siteContent: SiteContent = {
+  hero_title: '',
+  hero_subtitle: '',
+  stats_poles: '',
+  stats_membres: '',
+  stats_etudiants: '',
+  stats_evenements: '',
+  partners_marquee_label: '',
+  partners_cta_eyebrow: '',
+  partners_cta_title: '',
+  partners_cta_body: '',
+  partners_cta_primary_label: '',
+  partners_cta_secondary_label: '',
+  events_eyebrow: '',
+  events_intro: '',
+  about_heading: '',
+  about_intro: '',
+  about_legal_address: '',
+  about_legal_rna: '',
+}
+
 describe('admin management panels', () => {
   beforeEach(() => {
     refreshMock.mockClear()
@@ -107,6 +133,7 @@ describe('admin management panels', () => {
     createFormationMock.mockClear()
     updateFormationSupportMock.mockClear()
     clearFormationSupportMock.mockClear()
+    upsertContentMock.mockClear().mockResolvedValue(undefined)
     vi.stubGlobal('fetch', vi.fn())
   })
 
@@ -114,7 +141,7 @@ describe('admin management panels', () => {
     const user = userEvent.setup()
     const { EvenementsTab } = await import('@/components/admin/tabs/evenements-tab')
 
-    render(<EvenementsTab events={[event]} />)
+    render(<EvenementsTab events={[event]} content={siteContent} />)
     await user.click(screen.getByRole('button', { name: /éditer conférence finance/i }))
 
     const panel = screen.getByRole('complementary', { name: /édition événement/i })
@@ -249,5 +276,35 @@ describe('admin management panels', () => {
     await waitFor(() => expect(createFormationMock).toHaveBeenCalled())
     await waitFor(() => expect(screen.queryByText('new-support.pdf')).not.toBeInTheDocument())
     expect(document.querySelector('input[name="support_url"]')).toHaveAttribute('value', '')
+  })
+
+  it('saves the events page intro text from the events tab', async () => {
+    const user = userEvent.setup()
+    const { EvenementsTab } = await import('@/components/admin/tabs/evenements-tab')
+
+    render(<EvenementsTab events={[]} content={siteContent} />)
+    await user.type(screen.getByLabelText('Sur-titre'), 'Agenda & Rétrospective')
+    await user.type(screen.getByLabelText('Texte sous "Événements"'), 'Nos temps forts.')
+    await user.click(screen.getByRole('button', { name: /enregistrer/i }))
+
+    await waitFor(() => expect(upsertContentMock).toHaveBeenCalled())
+    const submitted = upsertContentMock.mock.calls[0][0] as FormData
+    expect(submitted.get('events_eyebrow')).toBe('Agenda & Rétrospective')
+    expect(submitted.get('events_intro')).toBe('Nos temps forts.')
+  })
+
+  it('saves the About page fields from the new À propos tab', async () => {
+    const user = userEvent.setup()
+    const { AproposTab } = await import('@/components/admin/tabs/apropos-tab')
+
+    render(<AproposTab content={siteContent} />)
+    await user.type(screen.getByLabelText('Titre principal'), 'Notre mission')
+    await user.type(screen.getByLabelText('Identifiant RNA'), 'W913012869')
+    await user.click(screen.getByRole('button', { name: /enregistrer/i }))
+
+    await waitFor(() => expect(upsertContentMock).toHaveBeenCalled())
+    const submitted = upsertContentMock.mock.calls[0][0] as FormData
+    expect(submitted.get('about_heading')).toBe('Notre mission')
+    expect(submitted.get('about_legal_rna')).toBe('W913012869')
   })
 })

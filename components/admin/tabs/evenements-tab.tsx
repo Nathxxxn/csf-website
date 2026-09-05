@@ -2,13 +2,58 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
+import { upsertContent } from '@/app/admin/actions/content'
 import { deleteEvent, reorderEvents } from '@/app/admin/actions/events'
 import { EventEditorPanel } from '@/components/admin/event-edit-client'
 import { SortableList } from '@/components/admin/sortable-list'
 import { useAdminAction } from '@/components/admin/use-admin-action'
-import type { AdminEvent } from '@/lib/types'
+import type { AdminEvent, SiteContent } from '@/lib/types'
 
-export function EvenementsTab({ events }: { events: AdminEvent[] }) {
+function EventsPageContentForm({ content }: { content: SiteContent }) {
+  const { run, isPending, error } = useAdminAction(upsertContent, {
+    successMessage: 'Page événements enregistrée',
+  })
+
+  return (
+    <form action={run} className="rounded-lg border border-white/10 bg-white/5 p-4 flex flex-col gap-3">
+      <div className="flex items-center justify-between">
+        <h3 className="text-xs uppercase tracking-widest text-white/40">
+          Page événements — texte d&apos;intro
+        </h3>
+        <button type="submit" disabled={isPending} className="rounded border border-white/20 px-3 py-1 text-xs hover:border-white/40 disabled:opacity-50">
+          {isPending ? 'Enregistrement…' : 'Enregistrer'}
+        </button>
+      </div>
+      <p className="text-[11px] leading-snug text-white/35">
+        Affiché en haut de la page /evenements du site, au-dessus de la liste.
+      </p>
+      <div className="flex flex-col gap-1">
+        <label htmlFor="events_eyebrow" className="text-xs text-white/50">Sur-titre</label>
+        <input
+          id="events_eyebrow"
+          name="events_eyebrow"
+          defaultValue={content.events_eyebrow}
+          placeholder="Agenda & Rétrospective"
+          className="rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none"
+        />
+      </div>
+      <div className="flex flex-col gap-1">
+        <label htmlFor="events_intro" className="text-xs text-white/50">Texte sous &quot;Événements&quot;</label>
+        <textarea
+          id="events_intro"
+          name="events_intro"
+          defaultValue={content.events_intro}
+          rows={3}
+          placeholder="Conférences, ateliers, visites, rencontres alumni…"
+          className="min-h-20 resize-y rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none"
+        />
+      </div>
+      {error && <p className="text-xs text-red-400">{error}</p>}
+    </form>
+  )
+}
+
+export function EvenementsTab({ events, content }: { events: AdminEvent[]; content: SiteContent }) {
   const [editingId, setEditingId] = useState<string | null>(null)
   const upcoming = events.filter(e => e.status === 'upcoming')
   const past = events.filter(e => e.status === 'past')
@@ -17,6 +62,8 @@ export function EvenementsTab({ events }: { events: AdminEvent[] }) {
   return (
     <div className="flex max-w-6xl flex-col gap-6 lg:flex-row lg:items-start">
       <div className="flex min-w-0 flex-1 flex-col gap-6">
+        <EventsPageContentForm content={content} />
+
         <div className="flex items-center justify-between">
           <span className="text-sm font-semibold">{events.length} événement{events.length > 1 ? 's' : ''}</span>
           <Link href="/admin/dashboard/evenements/new" className="rounded bg-blue-600 px-4 py-1.5 text-sm font-medium hover:bg-blue-700">

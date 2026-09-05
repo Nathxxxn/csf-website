@@ -29,9 +29,13 @@ export function AccueilTab({ content }: { content: SiteContent }) {
       {/* Stats */}
       <section className="rounded-lg border border-white/10 bg-white/5 p-4 flex flex-col gap-4">
         <h3 className="text-xs uppercase tracking-widest text-white/40">Statistiques</h3>
-        <div className="grid grid-cols-3 gap-4">
+        <p className="text-[11px] leading-snug text-white/35">
+          Affichées sur la page d&apos;accueil et sur la page À propos.
+        </p>
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           <Field name="stats_poles" label="Pôles" defaultValue={content.stats_poles} />
           <Field name="stats_membres" label="Membres" defaultValue={content.stats_membres} />
+          <Field name="stats_etudiants" label="Étudiants" defaultValue={content.stats_etudiants} />
           <Field name="stats_evenements" label="Événements / an" defaultValue={content.stats_evenements} />
         </div>
       </section>
@@ -44,6 +48,7 @@ export function AccueilTab({ content }: { content: SiteContent }) {
           label="Libellé bandeau partenaires"
           defaultValue={content.partners_marquee_label}
           rows={2}
+          help="Affiché au-dessus du bandeau défilant des logos partenaires, sur la page d'accueil."
         />
         <div className="grid gap-4 md:grid-cols-2">
           <Field name="partners_cta_eyebrow" label="Sur-titre CTA" defaultValue={content.partners_cta_eyebrow} />
@@ -51,7 +56,13 @@ export function AccueilTab({ content }: { content: SiteContent }) {
           <Field name="partners_cta_secondary_label" label="Bouton secondaire" defaultValue={content.partners_cta_secondary_label} />
         </div>
         <TextareaField name="partners_cta_title" label="Titre CTA" defaultValue={content.partners_cta_title} rows={2} />
-        <TextareaField name="partners_cta_body" label="Texte CTA" defaultValue={content.partners_cta_body} rows={4} />
+        <TextareaField
+          name="partners_cta_body"
+          label="Texte CTA"
+          defaultValue={content.partners_cta_body}
+          rows={4}
+          help={"Ces 5 champs forment la section « Monter un événement avec CS Finance », tout en bas de la page d'accueil."}
+        />
       </section>
     </form>
   )
@@ -71,16 +82,19 @@ function TextareaField({
   label,
   defaultValue,
   rows = 3,
+  help,
 }: {
   name: string
   label: string
   defaultValue: string
   rows?: number
+  help?: string
 }) {
   return (
     <div className="flex flex-col gap-1">
       <label htmlFor={name} className="text-xs text-white/50">{label}</label>
       <textarea id={name} name={name} defaultValue={defaultValue} rows={rows} className="min-h-20 resize-y rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" />
+      {help && <p className="text-[11px] leading-snug text-white/35">{help}</p>}
     </div>
   )
 }

@@ -1,16 +1,22 @@
 import { BlurFade } from '@/components/ui/blur-fade'
 import { NumberTicker } from '@/components/ui/number-ticker'
 import { Separator } from '@/components/ui/separator'
-import { getTeam } from '@/lib/data'
-import { STATS } from '@/lib/constants'
+import { getSiteContent, getTeam } from '@/lib/data'
+import { getStatsWithOverrides } from '@/lib/stats'
 
 export const metadata = {
   title: 'À propos — CentraleSupélec Finance',
   description: "L'esprit, les pôles et le fonctionnement de CentraleSupélec Finance.",
 }
 
+const DEFAULT_HEADING = "CentraleSupélec Finance, l'association qui fait le lien entre les élèves de CentraleSupélec et le monde de la finance."
+const DEFAULT_INTRO = "Concrètement, nous organisons des rencontres avec des professionnels du secteur, des formations pour progresser techniquement et des échanges avec les alumni, pour donner aux élèves les clés pour comprendre la finance, s'y orienter et y construire leur réseau."
+const DEFAULT_ADDRESS = '3 rue Joliot Curie, 91190 Gif-sur-Yvette'
+const DEFAULT_RNA = 'W913012869'
+
 export default async function AboutPage() {
-  const team = await getTeam()
+  const [team, content] = await Promise.all([getTeam(), getSiteContent()])
+  const stats = getStatsWithOverrides(content)
 
   return (
     <div className="mx-auto px-6 pt-24 pb-24 lg:px-10">
@@ -19,14 +25,10 @@ export default async function AboutPage() {
           À propos
         </p>
         <h1 className="text-4xl sm:text-5xl font-bold text-white tracking-tighter mb-8 max-w-2xl">
-          CentraleSupélec Finance, l&apos;association qui fait le lien entre les élèves de CentraleSupélec et
-          le monde de la finance.
+          {content.about_heading || DEFAULT_HEADING}
         </h1>
         <p className="text-muted-foreground leading-relaxed max-w-2xl text-base mb-12">
-          Concrètement, nous organisons des rencontres avec des professionnels du secteur, des
-          formations pour progresser techniquement et des échanges avec les alumni, pour donner
-          aux élèves les clés pour comprendre la finance, s&apos;y orienter et y construire leur
-          réseau.
+          {content.about_intro || DEFAULT_INTRO}
         </p>
       </BlurFade>
 
@@ -34,7 +36,7 @@ export default async function AboutPage() {
 
       <BlurFade delay={0.2} inView>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
-          {STATS.map(stat => (
+          {stats.map(stat => (
             <div key={stat.label} className="text-center">
               <div className="text-4xl font-extrabold tracking-tighter leading-none mb-2">
                 <NumberTicker value={stat.value} />
@@ -76,13 +78,13 @@ export default async function AboutPage() {
         <dl className="grid grid-cols-1 gap-6 sm:grid-cols-2 max-w-2xl text-sm text-muted-foreground leading-relaxed">
           <div>
             <dt className="text-xs tracking-widest uppercase text-foreground mb-1">Adresse</dt>
-            <dd>3 rue Joliot Curie, 91190 Gif-sur-Yvette</dd>
+            <dd>{content.about_legal_address || DEFAULT_ADDRESS}</dd>
           </div>
           <div>
             <dt className="text-xs tracking-widest uppercase text-foreground mb-1">
               Identifiant RNA
             </dt>
-            <dd>W913012869</dd>
+            <dd>{content.about_legal_rna || DEFAULT_RNA}</dd>
           </div>
         </dl>
       </BlurFade>

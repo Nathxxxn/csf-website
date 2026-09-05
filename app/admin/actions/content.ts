@@ -12,6 +12,7 @@ export async function upsertContent(formData: FormData) {
     'hero_subtitle',
     'stats_poles',
     'stats_membres',
+    'stats_etudiants',
     'stats_evenements',
     'partners_marquee_label',
     'partners_cta_eyebrow',
@@ -19,6 +20,12 @@ export async function upsertContent(formData: FormData) {
     'partners_cta_body',
     'partners_cta_primary_label',
     'partners_cta_secondary_label',
+    'events_eyebrow',
+    'events_intro',
+    'about_heading',
+    'about_intro',
+    'about_legal_address',
+    'about_legal_rna',
   ]
   for (const key of keys) {
     const value = formData.get(key)

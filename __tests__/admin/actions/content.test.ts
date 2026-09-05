@@ -66,6 +66,29 @@ describe('upsertContent', () => {
     )
   })
 
+  it('persists the missing stat, the events page intro, and the new À propos fields', async () => {
+    executeMock.mockResolvedValue({ rows: [] })
+    const { upsertContent } = await import('@/app/admin/actions/content')
+    const fd = new FormData()
+    fd.set('stats_etudiants', '5000')
+    fd.set('events_eyebrow', 'Agenda')
+    fd.set('events_intro', 'Nos événements en un coup d\'œil.')
+    fd.set('about_heading', 'Notre mission')
+    fd.set('about_intro', 'Ce que nous faisons.')
+    fd.set('about_legal_address', '3 rue Joliot Curie, 91190 Gif-sur-Yvette')
+    fd.set('about_legal_rna', 'W913012869')
+
+    await upsertContent(fd)
+
+    expect(executeMock).toHaveBeenCalledTimes(7)
+    expect(executeMock).toHaveBeenCalledWith(
+      expect.objectContaining({ args: ['stats_etudiants', '5000'] }),
+    )
+    expect(executeMock).toHaveBeenCalledWith(
+      expect.objectContaining({ args: ['about_legal_rna', 'W913012869'] }),
+    )
+  })
+
   it('ignores legacy À propos content fields and does not revalidate /a-propos', async () => {
     executeMock.mockResolvedValue({ rows: [] })
     const { upsertContent } = await import('@/app/admin/actions/content')

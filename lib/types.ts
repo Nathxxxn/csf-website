@@ -145,6 +145,7 @@ export interface SiteContent {
   hero_subtitle: string
   stats_poles: string
   stats_membres: string
+  stats_etudiants: string
   stats_evenements: string
   partners_marquee_label: string
   partners_cta_eyebrow: string
@@ -152,4 +153,10 @@ export interface SiteContent {
   partners_cta_body: string
   partners_cta_primary_label: string
   partners_cta_secondary_label: string
+  events_eyebrow: string
+  events_intro: string
+  about_heading: string
+  about_intro: string
+  about_legal_address: string
+  about_legal_rna: string
 }

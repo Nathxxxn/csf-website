@@ -10,7 +10,7 @@ import { LiquidButton } from "@/components/ui/liquid-glass-button";
 import MotionButton from "@/components/ui/motion-button";
 import TeamShowcase, { type TeamMember } from "@/components/ui/team-showcase";
 import { LOADING_DONE_EVENT } from "@/components/layout/loading-screen";
-import { STATS } from "@/lib/constants";
+import { getStatsWithOverrides } from "@/lib/stats";
 import { EventsMagazine } from "@/components/landing/events-magazine";
 import type { Event, SiteContent } from "@/lib/types";
 
@@ -163,11 +163,7 @@ export function CinematicHeroSection({ members, events, siteContent }: { members
   const heroTitle   = siteContent?.hero_title   || ''
   const heroSubtitle = siteContent?.hero_subtitle || "Des rencontres avec des professionnels, des formats pour progresser et un réseau qui aide vraiment à comprendre les métiers de la finance."
   const titleLines  = heroTitle ? heroTitle.split('\n').filter(Boolean) : ['La finance', 'à CentraleSupélec']
-  const stats = STATS.map((stat, i) => {
-    const raw = [siteContent?.stats_poles, siteContent?.stats_membres, undefined, siteContent?.stats_evenements][i]
-    const n = raw ? Number(raw) : NaN
-    return Number.isFinite(n) && n > 0 ? { ...stat, value: n } : stat
-  })
+  const stats = getStatsWithOverrides(siteContent)
   const containerRef = useRef<HTMLDivElement>(null);
   const cardRef      = useRef<HTMLDivElement>(null);
   const card2Ref     = useRef<HTMLDivElement>(null);

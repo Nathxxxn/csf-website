@@ -14,8 +14,9 @@ export async function TeamPreview() {
   const allMembers: TeamMember[] = poles
     .flatMap((pole) => pole.members)
     .filter((member) => {
-      if (member.photo === null || seen.has(member.name)) return false
-      seen.add(member.name)
+      const identity = member.name.trim().toLowerCase()
+      if (member.photo === null || seen.has(identity)) return false
+      seen.add(identity)
       return true
     })
     .map((member, index) => ({

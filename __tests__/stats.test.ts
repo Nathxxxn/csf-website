@@ -47,4 +47,9 @@ describe('getStatsWithOverrides', () => {
     expect(stats[0].value).toBe(STATS[0].value)
     expect(stats[2].value).toBe(STATS[2].value)
   })
+
+  it('parses a value saved with its display suffix still attached (e.g. "10+")', () => {
+    const stats = getStatsWithOverrides({ ...baseContent, stats_evenements: '10+' })
+    expect(stats[3].value).toBe(10)
+  })
 })

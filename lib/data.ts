@@ -1,6 +1,7 @@
 import { cache } from 'react'
 import type { PoleData, Event, Partner, Formation, AdminPole, AdminEvent, AdminPartner, AdminFormation, SiteContent } from './types'
 import { getDb } from './db'
+import { SITE_CONTENT_DEFAULTS } from './site-content-defaults'
 
 function requireString(value: unknown, field: string): string {
   if (typeof value !== 'string') throw new Error(`Expected string for field "${field}", got ${typeof value}`)
@@ -264,24 +265,9 @@ export async function getSiteContent(): Promise<SiteContent> {
   const db = getDb()
   const { rows } = await db.execute('SELECT key, value FROM site_content')
   const map = Object.fromEntries(rows.map(r => [r.key as string, r.value as string]))
-  return {
-    hero_title: map['hero_title'] ?? '',
-    hero_subtitle: map['hero_subtitle'] ?? '',
-    stats_poles: map['stats_poles'] ?? '',
-    stats_membres: map['stats_membres'] ?? '',
-    stats_etudiants: map['stats_etudiants'] ?? '',
-    stats_evenements: map['stats_evenements'] ?? '',
-    partners_marquee_label: map['partners_marquee_label'] ?? '',
-    partners_cta_eyebrow: map['partners_cta_eyebrow'] ?? '',
-    partners_cta_title: map['partners_cta_title'] ?? '',
-    partners_cta_body: map['partners_cta_body'] ?? '',
-    partners_cta_primary_label: map['partners_cta_primary_label'] ?? '',
-    partners_cta_secondary_label: map['partners_cta_secondary_label'] ?? '',
-    events_eyebrow: map['events_eyebrow'] ?? '',
-    events_intro: map['events_intro'] ?? '',
-    about_heading: map['about_heading'] ?? '',
-    about_intro: map['about_intro'] ?? '',
-    about_legal_address: map['about_legal_address'] ?? '',
-    about_legal_rna: map['about_legal_rna'] ?? '',
+  const result = {} as SiteContent
+  for (const key of Object.keys(SITE_CONTENT_DEFAULTS) as (keyof SiteContent)[]) {
+    result[key] = map[key] || SITE_CONTENT_DEFAULTS[key]
   }
+  return result
 }
